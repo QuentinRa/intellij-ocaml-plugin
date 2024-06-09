@@ -266,6 +266,13 @@ The goal is to have a plugin similar to VSCode with OCaml LSP server, but withou
 * [x] **Using a bundle** (possible support for Localization later)
 * [x] Working in minor IDEs (CLion, PHPStorm, etc.)
 
+## 🛣️ Project Notes
+
+To update the gradle project to the latest version:
+
+* The plugin is based on [the official template](https://github.com/JetBrains/intellij-platform-plugin-template)
+* Manually check important files for changes (`build.gradle.kts`, `gradle/libs.versions.toml`, `gradle/wrapper/gradle-wrapper.properties`, etc.)
+
 ## 📄 License
 
 This project is [MIT licensed](LICENSE).

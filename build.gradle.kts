@@ -9,10 +9,13 @@ import java.util.Properties
 // You won't have to edit this file unless you want to modify
 // the build "framework" itself.
 
+// NOTE:
+// Refer to gradle/libs.versions.toml for versions
+// <!> The project may not compile if you don't update gradleIntelliJPlugin
 plugins {
   id("java")
-  id("org.jetbrains.kotlin.jvm") version "1.9.0"
-  id("org.jetbrains.intellij") version "1.16.0"
+  alias(libs.plugins.kotlin)
+  alias(libs.plugins.gradleIntelliJPlugin)
 }
 
 // Load Configuration File
