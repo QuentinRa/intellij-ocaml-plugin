@@ -278,10 +278,16 @@ method_name ::= lowercase_ident
 
 // https://v2.ocaml.org/releases/4.14/htmlman/names.html#sss:refer-named
 value_path ::= [ module_path DOT ] value_name
+{
+    mixin="com.ocaml.language.psi.mixin.OCamlValuePathBindingMixin"
+}
 
 // [CHANGES]: we need to ensure that the
 //constr ::= [ module_path DOT ] constr_name
-constr ::= module_name DOT constr_name
+constr ::=
+// the first line is basically module_path, but with at least one module_name
+// this is a patch to ensure we always parse as many modules as possible
+  module_name DOT constr_name { DOT constr_name } *
 | module_path DOT constr_name
 | constr_name
 
@@ -848,8 +854,8 @@ module_type_definition ::= MODULE TYPE module_name EQ module_type
 { pin=2 }
 
 private module_binding_body ::= // { ( module-name : module-type ) } [ : module-type ] = module-expr
-  { LPAREN module_name COLON module_type RPAREN }*
-  [COLON module_type] EQ module_expr
+  { LPAREN module_name COLON module_type RPAREN } * [COLON module_type] EQ module_expr
+| { LPAREN module_name COLON module_type RPAREN } * [COLON module_type] // fixme: possible in ML like in MLI?
 
 module_binding ::= MODULE module_name module_binding_body
 { pin=1 }

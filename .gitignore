@@ -1,6 +1,9 @@
 src/main/gen/*
 
+idea-flex.skeleton
+jflex-*
 .idea
+.kotlin
 .gradle
 build/
 !gradle/wrapper/gradle-wrapper.jar

@@ -81,6 +81,12 @@ User features
     * [x] Implementation
     * [x] Show a nice presentation
     * [x] Works with pattern variables (ex: "a,b,c")
+* [ ] References
+  * [x] Let statement is a named element. Only the element that defines a name should be a named element. But, it should be "x" and not "let x = ..." that is the named element...
+  * [x] I understood how it works, but it needs more refining. I should smartly resolve things, including if they are declared in other files. I should return both MLI and ML references if they are both present.
+  * [ ] Rework named element
+  * [ ] Test the dummy reference with named element indexes
+  * [ ] Use a dummy implement for "open" and "modules"; not "let" and "value path" as it is for now
 * [x] Settings
   * [X] Color Settings Page For Highlighter
   * [x] Add Highlighter Annotator to Color Settings Page
@@ -138,6 +144,8 @@ FilenameIndex.getVirtualFilesByName(
 * Add template tests
 * Extract StructureView#getChildren and test it
 * Add OCamlLanguageUtils tests
+  * `let test = A.B.C xxx`
+  * `module A (B: C)` in ML
 * Add dune tests (annotator, parser)
 * Test DunePsiFactory
   * Cannot rename ":xxx"
@@ -245,7 +253,7 @@ The goal is to have a plugin similar to VSCode with OCaml LSP server, but withou
 
 <sup>4</sup> Ability of the plugin to work on a file that doesn't compile
 
-**External Dependencies**
+**External Dependencies Integration**
 
 |             | OCaml | ReasonML | VSCode |
 |-------------|-------|----------|--------|
@@ -272,6 +280,16 @@ To update the gradle project to the latest version:
 
 * The plugin is based on [the official template](https://github.com/JetBrains/intellij-platform-plugin-template)
 * Manually check important files for changes (`build.gradle.kts`, `gradle/libs.versions.toml`, `gradle/wrapper/gradle-wrapper.properties`, etc.)
+
+To build the plugin (🪦 please make this easier...):
+
+* Download the project and run a gradle build
+* Locate `OCaml.bnf` and generate OCamlParser
+* Locate `OCaml.bnf` and use the commented out `parserClass` and the commented out `unit_interface` instead of the current `parserClass` and `unit_implementation` (respectively). This will generate the OCamlInterfaceParser
+* Locate `Dune.bnf` and generate DuneParser
+* Locate `_OCamlLexer.flex` to generate _OCamlLexer
+* Locate `_DuneLexer.flex` to generate _DuneLexer
+* You can now use `Run Plugin`
 
 ## 📄 License
 
