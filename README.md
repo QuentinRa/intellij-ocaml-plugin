@@ -21,28 +21,6 @@ This plugin is providing support for OCaml for JetBrains IDEs. It's based on bot
 
 ## Current Progress Of The Rework
 
-**Goal**: implement the least feature to have a working plugin using the new parser. This is PoC to test if we can use JetBrains Grammar File.
-
-Internal
-
-* [x] Parser implemented
-  * [x] Add some pins
-    * [ ] Add more pins
-    * [ ] Verify pins
-  * [ ] Parser Errors are not handled
-  * [ ] Parser recovery is not handled
-  * [ ] Parser tests were not implemented
-  * [ ] Handle visibility (Has MLI? Has VAL? etc. ==> related: icons and structure view)
-* [ ] Stubs
-  * [x] Add Stubs For Variables
-  * [ ] Use stubs in structure view
-  * [x] Do not store anonymous variables
-* [ ] Indexes
-  * [x] Add indexes for variables
-  * [ ] Indexes include nested variables (Scopes?)
-  * [ ] Use an index of integers?
-* [ ] GitHub CI
-
 User features
 
 * [x] Highlighter
