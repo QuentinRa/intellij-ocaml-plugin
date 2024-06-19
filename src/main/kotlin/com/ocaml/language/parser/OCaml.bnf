@@ -440,17 +440,19 @@ private seq_expr ::= expr { SEMI expr } *  [SEMI] // expr ; expr
 
 expr ::=
     expr_comma_list
-  | minus_unary_expr | minusdot_unary_expr | prefix_unary_expr
+  | minus_unary_expr | plus_unary_expr | minusdot_unary_expr | prefix_unary_expr
   | non_op_expr
   | coloncolon_bin_expr
   | infix_expr
-
++
 expr_comma_list ::= expr { COMMA expr } +                               // expr { , expr } +
 coloncolon_bin_expr ::= expr SHORTCUT expr { rightAssociative = true }  // expr :: expr
 infix_expr ::= expr infix_op expr                                       // expr infix-op expr
 minus_unary_expr ::= MINUS expr                                         // - expr
 minusdot_unary_expr ::= MINUSDOT expr                                   // -. expr
 prefix_unary_expr ::= prefix_symbol expr                                // prefix-symbol expr
+// [BETS]: adding PLUS
+plus_unary_expr ::= PLUS expr                                           // + expr
 
 // [BETS]: removed "FUN LPAREN TYPE lident_list RPAREN fun_def"
 // [BETS]: removed "FOR pattern_expression"
@@ -539,10 +541,9 @@ list_constructor_expr ::= LARRAY [expr { SEMI expr }* [SEMI]] RARRAY // // [ exp
 
 // Other elements
 argument ::=
-  // [BETS]: merging "TILDE label_name"
+  // [BETS]: merging "TILDE label_name", same for "QUESTION_MARK label_name"
   TILDE label_name [COLON simple_expr]
-| QUESTION_MARK label_name COLON simple_expr
-| QUESTION_MARK label_name
+| QUESTION_MARK label_name [COLON simple_expr]
 | simple_expr
 { pin(".*")=1 }
 
