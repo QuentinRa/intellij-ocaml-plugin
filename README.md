@@ -21,65 +21,6 @@ This plugin is providing support for OCaml for JetBrains IDEs. It's based on bot
 
 ## Current Progress Of The Rework
 
-User features
-
-* [x] Highlighter
-  * [x] Add Lexer Highlighter
-  * [x] Add Annotator Highlighter
-  * [ ] ~~Highlight pattern variables~~
-* [x] Spell-checker
-  * [x] Comments
-  * [x] Strings
-  * [x] Identifiers
-* [ ] Typing
-  * [x] Braces matching (hover the other)
-  * [ ] Quotes handler
-  * [ ] Paste processor
-  * [ ] Smart enter processor
-  * [x] Single Line Comments Handler (CTRL+/)
-  * [x] Multi Lines Comments Handler (CTRL+SHIFT+/)
-  * [ ] Comments: space not removed after uncommenting ("(* ")
-  * [ ] Other handlers
-* [ ] Smart Features
-  * [ ] Warning/Error Annotations
-  * [X] Structure View (ALT+7)
-    * [x] Variables
-    * [x] Handle Visibility (public/private)
-    * [ ] Filters (nested variables?)
-    * [ ] Add types?
-    * [ ] Add function arguments?
-  * [ ] Surround With
-  * [x] Live Templates
-    * [x] Basic implementation
-    * [ ] Add scopes (no for in MLI?)
-    * [x] Not available in comments
-    * [x] Not available in other files
-  * [X] Line Markers
-    * [X] Declaration
-    * [x] Implementation
-    * [x] Show a nice presentation
-    * [x] Works with pattern variables (ex: "a,b,c")
-* [ ] References
-  * [x] Let statement is a named element. Only the element that defines a name should be a named element. But, it should be "x" and not "let x = ..." that is the named element...
-  * [x] I understood how it works, but it needs more refining. I should smartly resolve things, including if they are declared in other files. I should return both MLI and ML references if they are both present.
-  * [ ] Rework named element
-  * [ ] Test the dummy reference with named element indexes
-  * [ ] Use a dummy implement for "open" and "modules"; not "let" and "value path" as it is for now
-* [x] Settings
-  * [X] Color Settings Page For Highlighter
-  * [x] Add Highlighter Annotator to Color Settings Page
-
-Dune
-
-* [x] Highlight
-* [x] Annotator Highlight
-* [x] Structure View
-* [x] Braces matching
-* [x] Commenter
-* [ ] Add references for paths/files
-* [ ] Add folding for variables
-* [ ] Live Templates
-
 **Roadmap I**
 
 * Check references

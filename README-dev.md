@@ -73,3 +73,69 @@ From a fully qualified path, we can find the declarations for:
 From all others, e.g. nested variables, included variables, local variables:
 
 * [ ] Determine how to handle that (compiler? manual?)
+
+Additional problems
+
+* [ ] The named element should be "x" and not "let x = ..."
+
+## User Features
+
+#### Highlighter
+
+* [x] Add Lexer Highlighter
+* [x] Add Annotator Highlighter
+* [ ] ~~Highlight pattern variables~~ (e.g. in "match")
+
+#### Spellchecker
+
+* [x] Comments
+* [x] Strings
+* [x] Identifiers
+
+#### Typing
+
+* [x] Braces matching (hover the other)
+* [ ] Quotes handler
+* [ ] Paste processor
+* [ ] Smart enter processor
+* [x] Single Line Comments Handler (CTRL+/)
+* [x] Multi Lines Comments Handler (CTRL+SHIFT+/)
+* [ ] Comments: space not removed after uncommenting ("(* ")
+* [ ] Other handlers
+
+#### Smart Features
+
+* [ ] Warning/Error Annotations
+* [X] Structure View (ALT+7)
+  * [x] Variables
+  * [x] Handle Visibility (public/private)
+  * [ ] Filters (nested variables?)
+  * [ ] Add types?
+  * [ ] Add function arguments?
+* [ ] Surround With
+* [x] Live Templates
+  * [x] Basic implementation
+  * [ ] Add scopes (no for in MLI?)
+  * [x] Not available in comments
+  * [x] Not available in other files
+* [X] Line Markers
+  * [X] Declaration
+  * [x] Implementation
+  * [x] Show a nice presentation
+  * [x] Works with pattern variables (ex: "a,b,c")
+
+#### Settings
+
+* [X] Color Settings Page For Highlighter
+* [x] Add Highlighter Annotator to Color Settings Page
+
+## Dune
+
+* [x] Highlight
+* [x] Annotator Highlight
+* [x] Structure View
+* [x] Braces matching
+* [x] Commenter
+* [ ] Add references for paths/files
+* [ ] Add folding for variables
+* [ ] Live Templates
