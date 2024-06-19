@@ -66,6 +66,11 @@
 
         <!-- SPELL-CHECKER -->
         <spellchecker.support language="OCaml" implementationClass="com.ocaml.ide.spelling.OCamlSpellcheckingStrategy"/>
+
+        <!-- MODULES -->
+        <moduleBuilder builderClass="com.ocaml.ide.module.wizard.OCamlModuleBuilder" order="first"/>
+<!--        <moduleConfigurationEditorProvider order="first" implementation="com.ocaml.ide.module.OCamlModuleEditorProvider"/>-->
+<!--        <directoryProjectGenerator implementation="com.ocaml.ide.wizard.minor.OCamlDirectoryProjectGenerator"/>-->
     </extensions>
 
     <xi:include href="/META-INF/dune.xml" xpointer="xpointer(/idea-plugin/*)"/>
