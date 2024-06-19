@@ -17,39 +17,6 @@ import java.util.Arrays;
 
 public final class OCamlFileUtils {
 
-    /**
-     * Load a file stored in resources.
-     * The path must starts with a /.
-     * The separators for the lines in the returned file will be \n.
-     */
-    public static @NotNull String loadFileContent(@NotNull String filePath, @Nullable Logger logger) {
-        try {
-            var url = OCamlFileUtils.class.getClassLoader().getResource(filePath.replaceFirst("/", ""));
-            if (url == null) throw new IOException("Couldn't get URL for " + filePath);
-            VirtualFile virtualFile = VfsUtil.findFileByURL(url);
-            if (virtualFile == null) throw new IOException("Couldn't find file by URL for " + filePath);
-            String text = VfsUtil.loadText(virtualFile);
-            String[] split = text.split("\r\n");
-            return String.join("\n", split);
-        } catch (IOException e) {
-            if (logger != null) logger.error("Error loading file " + filePath, e);
-            return "";
-        }
-    }
-
-    /**
-     * Create a file with some text.
-     */
-    public static void createFile(@NotNull File sourceRootFile, @NotNull String fileName,
-                                  @NotNull String text, @Nullable Logger logger) {
-        try {
-            File mainFile = new File(sourceRootFile, fileName);
-            Files.write(mainFile.toPath(), new ArrayList<>(Arrays.asList(text.split("\n"))));
-        } catch (IOException e) {
-            if (logger != null) logger.error("Error creating file " + fileName, e);
-        }
-    }
-
     @Nullable
     public static File copyToTempFile(@NotNull File tempCompilationDirectory, @NotNull PsiFile psiFile,
                                       @NotNull String name, Logger logger) {
