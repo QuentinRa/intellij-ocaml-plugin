@@ -125,6 +125,18 @@ Additional problems
   * [x] Show a nice presentation
   * [x] Works with pattern variables (ex: "a,b,c")
 
+## Menus
+
+#### New Project Wizard
+
+* [x] Can create a new project
+* [ ] Can set the SDK
+* [ ] Can use a template (Refer to [this](https://github.com/intellij-rust/intellij-rust/blob/master/src/main/kotlin/org/rust/ide/newProject/RsProjectGeneratorPeer.kt))
+
+#### New Module Wizard
+
+* [ ] Can create a new module
+
 #### Settings
 
 * [X] Color Settings Page For Highlighter

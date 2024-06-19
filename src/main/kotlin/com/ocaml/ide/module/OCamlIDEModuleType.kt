@@ -3,7 +3,6 @@ package com.ocaml.ide.module
 import com.intellij.openapi.module.ModuleType
 import com.ocaml.OCamlBundle.message
 import com.ocaml.icons.OCamlIcons
-import com.ocaml.ide.module.wizard.OCamlModuleBuilder
 import org.jetbrains.annotations.Nls
 import javax.swing.Icon
 

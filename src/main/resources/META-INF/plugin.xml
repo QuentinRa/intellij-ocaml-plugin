@@ -22,6 +22,12 @@
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html -->
     <depends>com.intellij.modules.platform</depends>
 
+    <extensionPoints>
+        <extensionPoint qualifiedName="com.intellij.newProjectWizard.ocaml.buildSystem"
+                        interface="com.ocaml.ide.module.wizard.buildSystem.BuildSystemOCamlNewProjectWizard"
+                        dynamic="true"/>
+    </extensionPoints>
+
     <!-- Extension points defined by the plugin.
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html -->
     <extensions defaultExtensionNs="com.intellij">
@@ -69,6 +75,7 @@
 
         <!-- MODULES -->
         <newProjectWizard.languageGenerator implementation="com.ocaml.ide.module.wizard.OCamlNewProjectWizard"/>
+        <newProjectWizard.ocaml.buildSystem implementation="com.ocaml.ide.module.wizard.OCamlDefaultBuiltSystemWizard" />
 <!--        <moduleBuilder builderClass="com.ocaml.ide.module.wizard.OCamlModuleBuilder" order="first"/>-->
 <!--        <moduleConfigurationEditorProvider order="first" implementation="com.ocaml.ide.module.OCamlModuleEditorProvider"/>-->
 <!--        <directoryProjectGenerator implementation="com.ocaml.ide.wizard.minor.OCamlDirectoryProjectGenerator"/>-->

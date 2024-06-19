@@ -1,49 +1,20 @@
-package com.ocaml.ide.module.wizard
+package com.ocaml.ide.module
 
 import com.intellij.ide.util.projectWizard.ModuleBuilder
-import com.intellij.ide.wizard.AbstractNewProjectWizardStep
-import com.intellij.ide.wizard.NewProjectWizardStep
-import com.intellij.ide.wizard.language.LanguageGeneratorNewProjectWizard
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.module.ModuleType
-import com.intellij.openapi.project.Project
 import com.intellij.openapi.projectRoots.Sdk
 import com.intellij.openapi.roots.CompilerModuleExtension
 import com.intellij.openapi.roots.ModifiableRootModel
 import com.intellij.openapi.util.io.FileUtil
 import com.intellij.openapi.vfs.LocalFileSystem
 import com.intellij.platform.ProjectTemplate
-import com.intellij.ui.dsl.builder.Panel
-import com.ocaml.OCamlBundle.message
-import com.ocaml.icons.OCamlIcons
-import com.ocaml.ide.module.OCamlIDEModuleType
 import com.ocaml.ide.module.wizard.templates.OCamlTemplateProvider
 import com.ocaml.ide.module.wizard.templates.TemplateBuildInstructions
 import java.io.File
 import java.util.function.Supplier
-import javax.swing.Icon
 
 typealias StringSupplier = () -> String?
-
-class OCamlNewProjectWizard : LanguageGeneratorNewProjectWizard {
-    override val icon: Icon get() = OCamlIcons.Nodes.OCAML_MODULE
-    override val name: String = message("language.name")
-    override val ordinal: Int = 900
-
-    override fun createStep(parent: NewProjectWizardStep): NewProjectWizardStep = Step(parent)
-
-    private class Step(parent: NewProjectWizardStep) : AbstractNewProjectWizardStep(parent) {
-        override fun setupUI(builder: Panel) {
-            with(builder) {
-                row {
-                }
-            }
-        }
-
-        override fun setupProject(project: Project) {
-        }
-    }
-}
 
 open class BaseOCamlModuleBuilder : ModuleBuilder() {
     private var contentEntryPath: StringSupplier? = null
