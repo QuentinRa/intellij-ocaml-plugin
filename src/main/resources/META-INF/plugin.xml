@@ -68,7 +68,8 @@
         <spellchecker.support language="OCaml" implementationClass="com.ocaml.ide.spelling.OCamlSpellcheckingStrategy"/>
 
         <!-- MODULES -->
-        <moduleBuilder builderClass="com.ocaml.ide.module.wizard.OCamlModuleBuilder" order="first"/>
+        <newProjectWizard.languageGenerator implementation="com.ocaml.ide.module.wizard.OCamlNewProjectWizard"/>
+<!--        <moduleBuilder builderClass="com.ocaml.ide.module.wizard.OCamlModuleBuilder" order="first"/>-->
 <!--        <moduleConfigurationEditorProvider order="first" implementation="com.ocaml.ide.module.OCamlModuleEditorProvider"/>-->
 <!--        <directoryProjectGenerator implementation="com.ocaml.ide.wizard.minor.OCamlDirectoryProjectGenerator"/>-->
     </extensions>
