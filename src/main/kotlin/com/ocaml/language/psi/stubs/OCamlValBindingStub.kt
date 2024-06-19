@@ -5,7 +5,6 @@ import com.intellij.psi.stubs.*
 import com.ocaml.language.psi.OCamlValueDescription
 import com.ocaml.language.psi.api.OCamlNamedStub
 import com.ocaml.language.psi.api.OCamlStubElementType
-import com.ocaml.language.psi.api.isAnonymous
 import com.ocaml.language.psi.createStubIfNotAnonymous
 import com.ocaml.language.psi.impl.OCamlValueDescriptionImpl
 import com.ocaml.language.psi.stubs.index.OCamlNamedElementIndex

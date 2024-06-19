@@ -5,6 +5,7 @@ import com.intellij.psi.*
 import com.intellij.psi.tree.IElementType
 import com.ocaml.language.psi.OCamlValuePath
 import com.ocaml.language.psi.api.OCamlElementImpl
+import com.ocaml.language.psi.stubs.index.OCamlNamedElementIndex
 
 
 abstract class OCamlValuePathBindingMixin(type: IElementType) : OCamlElementImpl(type), OCamlValuePath {
@@ -28,9 +29,7 @@ class OCamlValuePathReference(element: OCamlValuePathBindingMixin) : PsiReferenc
 
     override fun multiResolve(incompleteCode: Boolean): Array<ResolveResult> {
         val propertiesFiles = mutableListOf<PsiElement>()
-        // this is a dummy example
-        // we resolve everything including whitespaces boubou
-        //element.getContainingFile().children.forEach(propertiesFiles::add)
+        propertiesFiles += OCamlNamedElementIndex.Utils.findElementsByName(element.project, element.text)
         return PsiElementResolveResult.createResults(propertiesFiles)
     }
 
