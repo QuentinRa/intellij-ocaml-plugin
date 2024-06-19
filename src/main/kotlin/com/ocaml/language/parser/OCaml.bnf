@@ -488,7 +488,8 @@ simple_expr ::=
   | object_simple_expr | self_copy_object_expr | send_message_object_expr
   | first_class_module_expr
 
-non_op_simple_expr ::= value_path                  // value-path
+// [BETS]: added optional prefix_symbol such as "!a"
+non_op_simple_expr ::= [prefix_symbol] value_path  // value-path
   | constant                                       // constant
   | constr                                         // **** duplicate
   | BACKTICK ident                                 // **** duplicate
@@ -537,11 +538,13 @@ array_constructor_expr ::= LBRACKET [expr { SEMI expr }* [SEMI]] RBRACKET // // 
 list_constructor_expr ::= LARRAY [expr { SEMI expr }* [SEMI]] RARRAY // // [ expr { ; expr } [;] ]
 
 // Other elements
-argument ::= simple_expr
-  | TILDE label_name COLON simple_expr
-  | TILDE label_name
-  | QUESTION_MARK label_name COLON simple_expr
-  | QUESTION_MARK label_name
+argument ::=
+  // [BETS]: merging "TILDE label_name"
+  TILDE label_name [COLON simple_expr]
+| QUESTION_MARK label_name COLON simple_expr
+| QUESTION_MARK label_name
+| simple_expr
+{ pin(".*")=1 }
 
 pattern_matching ::=
     [PIPE] pattern_expression [WHEN seq_expr] RIGHT_ARROW seq_expr
@@ -662,9 +665,13 @@ field_decl ::= [MUTABLE] field_name COLON poly_typexpr_no_attr
 type_constraint ::= CONSTRAINT typexpr EQ typexpr
 
 // https://v2.ocaml.org/releases/4.14/htmlman/typedecl.html#ss:exndef
-exception_definition ::= exception_specification
-| EXCEPTION constr_name EQ constr
+exception_definition ::= EXCEPTION exception_definition_element
 { pin(".*")=1 }
+
+exception_definition_element ::=
+  constr_decl_name OF constr_args
+| constr_name EQ constr
+| constr_decl
 
 exception_specification ::= EXCEPTION constr_decl
 { pin=1 }
