@@ -9,11 +9,16 @@ The project is complex, so here are some notes for you.
 
 **Roadmap**
 
-* [ ] Create Wizard (in progress, SDK is not set, select template and add back "generate code UI option")
+* [ ] Create Wizard
+  * [x] Can set the basic common settings
+  * [x] Can use an existing SDK
+  * [x] Can load a detected SDK
+  * [ ] Can add a SDK from an arbitrary path (I removed the code...)
+  * [ ] Can add a "SimpleSDK" (non-opam) | Add Removed Code
+  * [ ] Can generate code from a template, implement `withOCamlSampleCodeAsset`
 * [ ] Add WSL tests (+one new)
 * [ ] Add developer documentation for SDK
 * [ ] Add developer documentation for Module Builder
-* [ ] Determine what to do with "SimpleSDK" (non-opam)
 
 ## Parser Rules
 

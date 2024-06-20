@@ -28,17 +28,22 @@ open class OCamlNewProjectWizardBaseStep(parent: OCamlNewProjectWizard.OCamlNewP
                         commentCell.comment?.let { it.text = component.comment }
                     }
                 }
-                .onChanged {
-                    val sdk = when (val intent = combo.selectedItem) {
-                        is ProjectWizardJdkIntent.ExistingJdk -> intent.jdk
-                        else -> null
-                    }
-                    sdkProperty.set(sdk)
-                }
+                .onChanged { loadSdkFromCombobox(combo) }
+
+            // load the initial value
+            loadSdkFromCombobox(combo)
         }.bottomGap(BottomGap.SMALL)
 
         // Show Generate Sample
-        setupSampleCodeUI(builder)
+        // setupSampleCodeUI(builder)
+    }
+
+    private fun loadSdkFromCombobox(combo: OCamlProjectWizardJdkComboBox) {
+        val sdk = when (val intent = combo.selectedItem) {
+            is ProjectWizardJdkIntent.ExistingJdk -> intent.jdk
+            else -> null
+        }
+        sdkProperty.set(sdk)
     }
 
     override fun setupProject(project: Project) {
@@ -55,7 +60,8 @@ open class OCamlNewProjectWizardAssetStep(private val parent: OCamlNewProjectWiz
         if (context.isCreatingNewProject) {
             addAssets(StandardAssetsProvider().getIntelliJIgnoreAssets())
         }
-//
+
+// Show the button again too
 //        if (parent.addSampleCode) {
 //            withOCamlSampleCodeAsset("src", parent.parent.buildSystem)
 //        }
