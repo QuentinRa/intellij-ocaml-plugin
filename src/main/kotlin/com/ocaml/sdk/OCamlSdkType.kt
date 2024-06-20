@@ -6,12 +6,16 @@ import com.intellij.openapi.roots.ui.configuration.projectRoot.SdkDownload
 import com.intellij.openapi.roots.ui.configuration.projectRoot.SdkDownloadTask
 import com.intellij.openapi.util.io.FileUtil
 import com.intellij.openapi.vfs.LocalFileSystem
+import com.ocaml.OCamlBundle.message
 import com.ocaml.icons.OCamlIcons
+import com.ocaml.sdk.providers.InvalidHomeError
 import com.ocaml.sdk.utils.OCamlSdkHomeUtils
 import com.ocaml.sdk.utils.OCamlSdkRootsUtils
 import com.ocaml.sdk.utils.OCamlSdkVersionUtils
+import com.ocaml.sdk.utils.OCamlSdkWebsiteUtils
 import org.jdom.Element
 import java.io.File
+import java.nio.file.Path
 import java.util.function.Consumer
 import javax.swing.Icon
 import javax.swing.JComponent
@@ -26,65 +30,34 @@ import javax.swing.JComponent
  *
  */
 class OCamlSdkType : SdkType(OCAML_SDK), SdkDownload {
-    //
-    // Name + Icon
-    //
-    override fun getPresentableName(): String {
-        return "OCaml"
+    // Metadata
+    override fun getPresentableName(): String = "OCaml"
+    override fun getIcon(): Icon = OCamlIcons.Nodes.OCAML_SDK
+    override fun getDefaultDocumentationUrl(sdk: Sdk): String = OCamlSdkWebsiteUtils.getManualURL(sdk.versionString!!)
+
+    // SDK Folders
+    override fun suggestHomePaths(): Collection<String> = OCamlSdkHomeUtils.suggestHomePaths()
+    override fun suggestHomePath(): String? = OCamlSdkHomeUtils.defaultOCamlLocation()
+    override fun isValidSdkHome(sdkHome: String): Boolean = OCamlSdkHomeUtils.isValid(sdkHome)
+    override fun getInvalidHomeMessage(path: String): String {
+        val kind: InvalidHomeError = OCamlSdkHomeUtils.invalidHomeErrorMessage(Path.of(path)) ?: return message("sdk.home.error.no.provider")
+        return when (kind) {
+            InvalidHomeError.INVALID_HOME_PATH -> message("sdk.home.error.invalid")
+            InvalidHomeError.NO_TOP_LEVEL -> message("sdk.home.error.no.top.level")
+            InvalidHomeError.NO_COMPILER -> message("sdk.home.error.no.compiler")
+            InvalidHomeError.NO_SOURCES -> message("sdk.home.error.no.sources")
+            InvalidHomeError.NONE, InvalidHomeError.GENERIC -> super.getInvalidHomeMessage(path)
+        }
     }
 
-    override fun getIcon(): Icon {
-        return OCamlIcons.Nodes.OCAML_SDK
-    }
-
-    //
-    // Home path
-    //
-    override fun suggestHomePaths(): Collection<String> {
-        return OCamlSdkHomeUtils.suggestHomePaths()
-    }
-
-    override fun suggestHomePath(): String? {
-        return OCamlSdkHomeUtils.defaultOCamlLocation()
-    }
-
-    //
-    // suggestSdkName, getVersionString
-    //
-    override fun suggestSdkName(currentSdkName: String?, sdkHome: String): String {
-        return "OCaml-" + getVersionString(sdkHome)
-    }
-
-    override fun getVersionString(sdkHome: String): String {
-        return OCamlSdkVersionUtils.parse(sdkHome)
-    }
-
-    //
-    // Valid
-    //
-    override fun isValidSdkHome(sdkHome: String): Boolean {
-        return OCamlSdkHomeUtils.isValid(sdkHome)
-    }
-
-//    override fun getInvalidHomeMessage(path: String): String {
-//        val kind: InvalidHomeError = OCamlSdkHomeUtils.invalidHomeErrorMessage(Path.of(path))
-//            ?: return message("sdk.home.error.no.provider")
-//        return when (kind) {
-//            INVALID_HOME_PATH -> message("sdk.home.error.invalid")
-//            NO_TOP_LEVEL -> message("sdk.home.error.no.top.level")
-//            NO_COMPILER -> message("sdk.home.error.no.compiler")
-//            NO_SOURCES -> message("sdk.home.error.no.sources")
-//            NONE, GENERIC -> super.getInvalidHomeMessage(path)
-//            else -> super.getInvalidHomeMessage(path)
-//        }
-//    }
+    // SDK Metadata
+    override fun suggestSdkName(currentSdkName: String?, sdkHome: String): String = "OCaml-" + getVersionString(sdkHome)
+    override fun getVersionString(sdkHome: String): String = OCamlSdkVersionUtils.parse(sdkHome)
 
     //
     // Data
     //
-    override fun isRootTypeApplicable(type: OrderRootType): Boolean {
-        return type === OrderRootType.CLASSES
-    }
+    override fun isRootTypeApplicable(type: OrderRootType): Boolean = type === OrderRootType.CLASSES
 
     override fun createAdditionalDataConfigurable(
         sdkModel: SdkModel,
@@ -125,19 +98,8 @@ class OCamlSdkType : SdkType(OCAML_SDK), SdkDownload {
         addSources(File(homePath), sdkModificator)
         // 0.0.6 - added by default
         sdkModificator.addRoot(getDefaultDocumentationUrl(sdk), OrderRootType.DOCUMENTATION)
-        sdkModificator.addRoot(getDefaultAPIUrl(sdk), OrderRootType.DOCUMENTATION)
+        sdkModificator.addRoot(OCamlSdkWebsiteUtils.getApiURL(sdk.versionString!!), OrderRootType.DOCUMENTATION)
         sdkModificator.commitChanges()
-    }
-
-    //
-    // Documentation
-    //
-    override fun getDefaultDocumentationUrl(sdk: Sdk): String {
-        return getManualURL(sdk.versionString)
-    }
-
-    fun getDefaultAPIUrl(sdk: Sdk): String {
-        return getApiURL(sdk.versionString)
     }
 
     //
@@ -170,30 +132,6 @@ class OCamlSdkType : SdkType(OCAML_SDK), SdkDownload {
         val instance: OCamlSdkType?
             get() = EP_NAME.findExtension(OCamlSdkType::class.java)
 
-        fun getApiURL(version: String?): String {
-            var version = version
-            version = getMajorAndMinorVersion(version!!)
-            if (version == null) version = "4.12"
-            if (OCamlSdkVersionUtils.isNewerThan(
-                    "4.12",
-                    version
-                )
-            ) return "https://ocaml.org/releases/$version/api/index.html"
-            return "https://ocaml.org/releases/$version/htmlman/libref/index.html"
-        }
-
-        fun getManualURL(version: String?): String {
-            var version = version
-            version = getMajorAndMinorVersion(version!!)
-            if (version == null) version = "4.12"
-            if (OCamlSdkVersionUtils.isNewerThan(
-                    "4.12",
-                    version
-                )
-            ) return "https://ocaml.org/releases/$version/manual/index.html"
-            return "https://ocaml.org/releases/$version/htmlman/index.html"
-        }
-
         //
         // Sources
         //
@@ -215,15 +153,6 @@ class OCamlSdkType : SdkType(OCAML_SDK), SdkDownload {
                 if (rootCandidate == null) continue
                 sdkModificator.addRoot(rootCandidate, OrderRootType.CLASSES)
             }
-        }
-
-        fun getMajorAndMinorVersion(version: String): String? {
-            var version = version
-            if (!OCamlSdkVersionUtils.isValid(version)) return null
-            // if we got two ".", then we trunc the patch number
-            val last = version.lastIndexOf('.')
-            if (last != version.indexOf('.')) version = version.substring(0, last)
-            return version
         }
     }
 }
