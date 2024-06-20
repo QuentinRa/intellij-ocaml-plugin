@@ -75,7 +75,8 @@
 
         <!-- MODULES -->
         <newProjectWizard.languageGenerator implementation="com.ocaml.ide.module.wizard.OCamlNewProjectWizard"/>
-        <newProjectWizard.ocaml.buildSystem implementation="com.ocaml.ide.module.wizard.OCamlDefaultBuiltSystemWizard" />
+        <newProjectWizard.ocaml.buildSystem implementation="com.ocaml.ide.module.wizard.buildSystem.OCamlDefaultBuildSystemWizard" />
+        <newProjectWizard.ocaml.buildSystem implementation="com.ocaml.ide.module.wizard.buildSystem.OCamlMakefileBuildSystemWizard" />
 <!--        <moduleBuilder builderClass="com.ocaml.ide.module.wizard.OCamlModuleBuilder" order="first"/>-->
 <!--        <moduleConfigurationEditorProvider order="first" implementation="com.ocaml.ide.module.OCamlModuleEditorProvider"/>-->
 <!--        <directoryProjectGenerator implementation="com.ocaml.ide.wizard.minor.OCamlDirectoryProjectGenerator"/>-->

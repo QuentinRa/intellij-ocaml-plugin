@@ -18,6 +18,9 @@
         <lang.psiStructureViewFactory language="Dune" implementationClass="com.dune.ide.structure.DuneStructureViewFactory"/>
         <lang.commenter language="Dune" implementationClass="com.dune.ide.commenter.DuneCommenter"/>
 
+        <!-- MODULES -->
+        <newProjectWizard.ocaml.buildSystem implementation="com.dune.ide.module.wizard.buildSystem.DuneBuildSystemWizard" />
+
         <!-- TYPING -->
         <lang.braceMatcher language="Dune" implementationClass="com.dune.ide.typing.DuneBraceMatcher"/>
     </extensions>
