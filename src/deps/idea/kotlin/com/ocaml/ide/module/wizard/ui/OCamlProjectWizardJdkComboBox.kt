@@ -1,5 +1,6 @@
 // Copyright 2000-2024 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license.
 // Adapted from the code for Java to use OCamlSDk instead
+// Refer to "ProjectWizardJdkComboBox.kt"
 package com.ocaml.ide.module.wizard.ui
 
 import com.intellij.ide.JavaUiBundle
