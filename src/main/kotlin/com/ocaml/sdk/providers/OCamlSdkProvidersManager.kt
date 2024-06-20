@@ -1,6 +1,9 @@
 package com.ocaml.sdk.providers
 
 import com.intellij.execution.configurations.GeneralCommandLine
+import com.intellij.openapi.util.SystemInfo
+import com.ocaml.sdk.providers.unix.UnixOCamlSdkProvider
+import com.ocaml.sdk.providers.windows.WindowsOCamlSdkProvider
 import java.nio.file.Path
 
 /**
@@ -11,13 +14,13 @@ import java.nio.file.Path
 object OCamlSdkProvidersManager : OCamlSdkProvider {
     private val myProviders = ArrayList<OCamlSdkProvider>()
 
-//    init {
-//        if (SystemInfo.isWindows) {
-//            addProvider(WindowsOCamlSdkProvider())
-//        } else {
-//            addProvider(BaseOCamlSdkProvider())
-//        }
-//    }
+    init {
+        if (SystemInfo.isWindows) {
+            addProvider(WindowsOCamlSdkProvider())
+        } else {
+            addProvider(UnixOCamlSdkProvider())
+        }
+    }
 
     // providers
     private fun addProvider(provider: OCamlSdkProvider) {
@@ -36,8 +39,8 @@ object OCamlSdkProvidersManager : OCamlSdkProvider {
     override fun isOpamBinary(ocamlBinary: String): Boolean? =
         callProvidersValue { provider -> provider.isOpamBinary(ocamlBinary) }
 
-    override fun createSdkFromBinaries(ocaml: String?, compiler: String?, version: String?,
-                                       sources: String?, sdkFolder: String?, sdkModifier: String?): String? =
+    override fun createSdkFromBinaries(ocaml: String, compiler: String, version: String,
+                                       sources: String, sdkFolder: String, sdkModifier: String): String? =
         callProvidersValue { provider ->
             provider.createSdkFromBinaries(ocaml, compiler, version, sources, sdkFolder, sdkModifier)
         }
@@ -64,7 +67,7 @@ object OCamlSdkProvidersManager : OCamlSdkProvider {
         provider.getCompileCommandWithCmt(sdkHomePath, rootFolderForTempering, file, outputDirectory, executableName)
     }
 
-    override val installationFolders: Set<String?>
+    override val installationFolders: Set<String>
         get() = callProvidersValuesSet(OCamlSdkProvider::installationFolders)
 
     override fun suggestHomePaths(): Set<String?> = callProvidersValue { obj -> obj.suggestHomePaths() } ?: emptySet()
@@ -86,8 +89,8 @@ object OCamlSdkProvidersManager : OCamlSdkProvider {
     }
 
     // call providers
-    private fun <R> callProvidersValuesSet(computeValues: (OCamlSdkProvider) -> Set<R?>): Set<R?> {
-        val values = HashSet<R?>()
+    private fun <R> callProvidersValuesSet(computeValues: (OCamlSdkProvider) -> Set<R>): Set<R> {
+        val values = HashSet<R>()
         for (p in myProviders) values.addAll(computeValues(p))
         return values
     }

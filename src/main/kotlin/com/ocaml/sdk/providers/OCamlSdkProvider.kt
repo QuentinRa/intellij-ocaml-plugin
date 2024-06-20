@@ -58,8 +58,8 @@ interface OCamlSdkProvider {
      * @return a path to the created SDK, or null
      */
     fun createSdkFromBinaries(
-        ocaml: String?, compiler: String?, version: String?,
-        sources: String?, sdkFolder: String?, sdkModifier: String?
+        ocaml: String, compiler: String, version: String,
+        sources: String, sdkFolder: String, sdkModifier: String
     ): String?
 
     /**
@@ -83,7 +83,7 @@ interface OCamlSdkProvider {
      * @return a list of installation folder.
      * Paths may be relatives or absolutes.
      */
-    val installationFolders: Set<String?>
+    val installationFolders: Set<String>
 
     /**
      * @return tries to find existing OCaml SDKs on this computer.

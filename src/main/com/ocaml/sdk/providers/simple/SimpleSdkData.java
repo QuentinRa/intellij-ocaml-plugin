@@ -8,6 +8,8 @@ import com.ocaml.sdk.utils.OCamlSdkVersionManager;
 import com.ocaml.utils.logs.OCamlLogger;
 import org.jetbrains.annotations.NotNull;
 
+// fixme: multiple lines commented out
+
 /**
  * A simple SDK is an SDK having the same folder structure
  * than opam, while using native binaries (ex: /bin/ocaml), for those
