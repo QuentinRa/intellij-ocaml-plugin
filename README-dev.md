@@ -9,9 +9,10 @@ The project is complex, so here are some notes for you.
 
 **Roadmap**
 
-* [ ] Create Wizard (in progress, adding SDK doesn't work)
+* [ ] Create Wizard (in progress, SDK is not set, select template and add back "generate code UI option")
 * [ ] Add WSL tests (+one new)
 * [ ] Add developer documentation for SDK
+* [ ] Add developer documentation for Module Builder
 * [ ] Determine what to do with "SimpleSDK" (non-opam)
 
 ## Parser Rules

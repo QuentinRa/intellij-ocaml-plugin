@@ -4,12 +4,14 @@ import com.intellij.ide.util.projectWizard.ModuleBuilder
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.module.ModuleType
 import com.intellij.openapi.projectRoots.Sdk
+import com.intellij.openapi.projectRoots.SdkTypeId
 import com.intellij.openapi.roots.ModifiableRootModel
 import com.intellij.openapi.util.io.FileUtil
 import com.intellij.openapi.vfs.LocalFileSystem
 import com.intellij.platform.ProjectTemplate
 import com.ocaml.ide.module.wizard.templates.OCamlTemplateProvider
 import com.ocaml.ide.module.wizard.templates.TemplateBuildInstructions
+import com.ocaml.sdk.OCamlSdkType
 import java.io.File
 import java.util.function.Supplier
 
@@ -18,7 +20,8 @@ typealias StringSupplier = () -> String?
 open class BaseOCamlModuleBuilder : ModuleBuilder() {
     private var contentEntryPath: StringSupplier? = null
 
-    override fun getModuleType(): ModuleType<*> = OCamlIDEModuleType
+    override fun isSuitableSdkType(sdkType: SdkTypeId?): Boolean = sdkType is OCamlSdkType
+    override fun getModuleType(): ModuleType<*> = OCamlIdeaModuleType
     override fun getContentEntryPath(): String? = contentEntryPath!!()
     private val defaultContentEntryPath = { super.getContentEntryPath() }
 
