@@ -16,6 +16,7 @@ import javax.swing.Icon
  * By using BuildSystemOCamlNewProjectWizard EP and registering "<newProjectWizard.ocaml.buildSystem ...>" in the XML,
  * We can add buildSystems (such as Gradle, Maven, IntelliJ for Java) and their options.
  */
+@Deprecated("Not used yet.")
 class OCamlNewProjectWizard : LanguageGeneratorNewProjectWizard {
     override val icon: Icon get() = OCamlIcons.Nodes.OCAML_MODULE
     override val name: String = message("language.name")

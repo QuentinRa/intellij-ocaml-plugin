@@ -67,7 +67,7 @@ intellij {
   ))
   if (useJava) plugins.add("java")
 
-  sandboxDir.set("$buildDir/idea-sandbox-$platformVersion-$platformType")
+  sandboxDir.set("${layout.buildDirectory}/idea-sandbox-$platformVersion-$platformType")
 
   sourceSets["main"].java.srcDirs("src/main/gen")
   if (allPlatforms.isNotBlank()) {
@@ -78,6 +78,9 @@ intellij {
         sourceSets["main"].kotlin.srcDirs("src/$platform/$platform-/kotlin")
     }
   }
+  if (useJava) {
+    sourceSets["main"].kotlin.srcDirs("src/deps/idea/kotlin")
+  }
 
   idea {
     module {
@@ -87,13 +90,16 @@ intellij {
 }
 
 tasks {
+
   // Set the JVM compatibility versions
   withType<JavaCompile> {
     sourceCompatibility = "17"
     targetCompatibility = "17"
   }
   withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
-    kotlinOptions.jvmTarget = "17"
+    compilerOptions {
+      jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
+    }
   }
 
   patchPluginXml {

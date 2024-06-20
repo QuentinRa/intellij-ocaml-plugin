@@ -26,7 +26,7 @@ internal class OCamlMakefileTemplate : ProjectTemplate, TemplateBuildInstruction
     override fun createModuleBuilder(): AbstractModuleBuilder =
         throw UnsupportedOperationException("OCamlMakefileTemplate#createModuleBuilder should not be called")
 
-    @Deprecated("Deprecated in Java")
+    @Deprecated("Deprecated in Java", ReplaceWith("null"))
     override fun validateSettings(): ValidationInfo? = null
 
     override fun createFiles(rootModel: ModifiableRootModel?, sourceRoot: VirtualFile?) {

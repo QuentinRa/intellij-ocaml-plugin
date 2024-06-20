@@ -11,6 +11,7 @@ import com.intellij.ui.dsl.builder.Panel
 import com.ocaml.OCamlBundle.message
 import com.ocaml.ide.module.wizard.OCamlNewProjectWizard
 
+@Deprecated("Not used yet.")
 open class OCamlDefaultBuildSystemWizard : BuildSystemOCamlNewProjectWizard {
     override val name: String = message("project.wizard.build.system.none")
     override fun createStep(parent: OCamlNewProjectWizard.OCamlNewProjectWizardStep): NewProjectWizardStep = Step(parent)

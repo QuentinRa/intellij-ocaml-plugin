@@ -28,7 +28,7 @@ internal class OCamlDuneTemplate : ProjectTemplate, TemplateBuildInstructions {
     override fun createModuleBuilder(): AbstractModuleBuilder =
         throw UnsupportedOperationException("OCamlDuneTemplate#createModuleBuilder should not be called")
 
-    @Deprecated("Deprecated in Java")
+    @Deprecated("Deprecated in Java", ReplaceWith("null"))
     override fun validateSettings(): ValidationInfo? = null
 
     override fun createFiles(rootModel: ModifiableRootModel?, sourceRoot: VirtualFile?) = Unit
