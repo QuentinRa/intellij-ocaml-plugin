@@ -70,7 +70,11 @@ object OCamlSdkProvidersManager : OCamlSdkProvider {
     override val installationFolders: Set<String>
         get() = callProvidersValuesSet(OCamlSdkProvider::installationFolders)
 
-    override fun suggestHomePaths(): Set<String?> = callProvidersValue { obj -> obj.suggestHomePaths() } ?: emptySet()
+    override fun suggestHomePaths(): Set<String?> = callProvidersValue { obj ->
+        return@callProvidersValue obj.suggestHomePaths().ifEmpty {
+            null
+        }
+    } ?: emptySet()
 
     override fun isHomePathValid(homePath: Path): Boolean? =
         callProvidersValue { provider -> provider.isHomePathValid(homePath) }

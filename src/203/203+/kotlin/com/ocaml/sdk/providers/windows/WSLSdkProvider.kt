@@ -9,6 +9,7 @@ import com.intellij.openapi.vfs.impl.wsl.WslConstants
 import com.ocaml.sdk.providers.AssociatedBinaries
 import com.ocaml.sdk.providers.CompileWithCmtInfo
 import com.ocaml.sdk.providers.InvalidHomeError
+import com.ocaml.sdk.providers.unix.UnixOCamlSdkProvider
 import com.ocaml.sdk.utils.OCamlSdkVersionUtils
 import java.io.IOException
 import java.nio.file.Files
@@ -20,7 +21,7 @@ import java.nio.file.Path
  * Everything involving WSL is complex, because the paths must be converted
  * again and again, and we have to look for installed distributions sometimes (slow).
  */
-class WSLSdkProvider : AbstractWindowsBaseProvider() {
+class WSLSdkProvider : UnixOCamlSdkProvider() {
     override fun canUseProviderForOCamlBinary(path: String): Boolean = false
 
     override val installationFolders: Set<String>
@@ -206,8 +207,10 @@ class WSLSdkProvider : AbstractWindowsBaseProvider() {
         if (!WSLUtil.isSystemCompatible()) return false
         val windowsUncPath = homePath.toFile().absolutePath
         var path = FileUtil.toSystemDependentName(windowsUncPath)
-        if (!path.startsWith(WslConstants.UNC_PREFIX)) return false
-        path = StringUtil.trimStart(path, WslConstants.UNC_PREFIX)
+        // fixme: hardcoded new WSL prefix
+        if (path.startsWith(WslConstants.UNC_PREFIX)) path = StringUtil.trimStart(path, WslConstants.UNC_PREFIX)
+        else if (path.startsWith("\\\\wsl.localhost\\")) path = StringUtil.trimStart(path, "\\\\wsl.localhost\\")
+        else return false
         val index = path.indexOf('\\')
         return index > 0
     }

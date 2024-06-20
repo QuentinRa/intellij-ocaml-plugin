@@ -72,6 +72,10 @@
 <!--        <moduleBuilder builderClass="com.ocaml.ide.module.OCamlModuleBuilder" order="first"/>-->
 <!--        <moduleConfigurationEditorProvider order="first" implementation="com.ocaml.ide.module.OCamlModuleEditorProvider"/>-->
 <!--        <directoryProjectGenerator implementation="com.ocaml.ide.wizard.minor.OCamlDirectoryProjectGenerator"/>-->
+
+        <!-- SDK -->
+        <sdkType implementation="com.ocaml.sdk.OCamlSdkType"/>
+        <sdkDownload implementation="com.ocaml.sdk.OCamlSdkType"/>
     </extensions>
 
     <xi:include href="/META-INF/dune.xml" xpointer="xpointer(/idea-plugin/*)"/>
