@@ -11,6 +11,7 @@ import com.intellij.ui.dsl.builder.COLUMNS_LARGE
 import com.intellij.ui.dsl.builder.Panel
 import com.intellij.ui.dsl.builder.columns
 import com.ocaml.OCamlBundle.message
+import com.ocaml.sdk.OCamlSdkType
 import com.ocaml.utils.adaptor.ui.JdkComboBoxAdaptor
 
 // com.intellij.ide.projectWizard.generators.IntelliJNewProjectWizardStep
@@ -25,9 +26,7 @@ open class OCamlNewProjectWizardBaseStep(parent: OCamlNewProjectWizard.OCamlNewP
     override fun setupUI(builder: Panel) {
         super.setupUI(builder)
 
-        val sdkTypeFilter: Condition<in SdkTypeId> = Condition<SdkTypeId> { sdk -> true }
-        //{ sdk -> sdk is OCamlSdkType }
-
+        val sdkTypeFilter: Condition<in SdkTypeId> = Condition<SdkTypeId> { sdk -> sdk is OCamlSdkType }
         builder.row(message("project.wizard.ocaml.sdk")) {
             val combo = JdkComboBoxAdaptor(myProject, mySdksModel, sdkTypeFilter, null, null, null)
             if (!context.isCreatingNewProject) combo.showProjectSdkItem()

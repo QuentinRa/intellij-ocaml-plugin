@@ -45,7 +45,7 @@ object OCamlSdkProvidersManager : OCamlSdkProvider {
     override fun getAssociatedBinaries(ocamlBinary: String): AssociatedBinaries? =
         callProvidersValue { provider -> provider.getAssociatedBinaries(ocamlBinary) }
 
-    override fun getAssociatedSourcesFolders(sdkHome: String): Set<String?> =
+    override fun getAssociatedSourcesFolders(sdkHome: String): Set<String> =
         callProvidersValue { provider -> provider.getAssociatedSourcesFolders(sdkHome) } ?: emptySet()
 
     override fun getCompilerVersionCLI(ocamlcCompilerPath: String?): GeneralCommandLine? =

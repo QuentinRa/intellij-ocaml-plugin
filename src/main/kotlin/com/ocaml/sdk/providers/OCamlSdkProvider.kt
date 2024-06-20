@@ -75,7 +75,7 @@ interface OCamlSdkProvider {
      * @return the path to the sources folders,
      * relatives to the sdk home. Usually, sources are only stored in "lib/".
      */
-    fun getAssociatedSourcesFolders(sdkHome: String): Set<String?>
+    fun getAssociatedSourcesFolders(sdkHome: String): Set<String>
 
     /**
      * Usual installations folders
