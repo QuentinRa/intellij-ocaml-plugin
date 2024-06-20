@@ -42,6 +42,11 @@ val psiViewerPluginVersion : String = configProperties.getProperty("psiViewerPlu
 val pluginSinceBuild : String = configProperties.getProperty("pluginSinceBuild")
 val pluginUntilBuild : String = configProperties.getProperty("pluginUntilBuild")
 val allPlatforms : String by project
+val useJava = when (platformType) {
+  "IC", "IU" -> true
+  "CL", "PY", "GO" -> false
+  else -> throw IllegalStateException("Unexpected IDE name '"+platformType+"'")
+}
 
 group = "com.ocaml"
 version = "$majorVersion.$minorVersion.$patchVersion-$platformVersion"
@@ -60,6 +65,7 @@ intellij {
     "com.jetbrains.hackathon.indices.viewer:$indicesVersion",
     "PsiViewer:$psiViewerPluginVersion"
   ))
+  if (useJava) plugins.add("java")
 
   sandboxDir.set("$buildDir/idea-sandbox-$platformVersion-$platformType")
 
