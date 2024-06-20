@@ -21,13 +21,7 @@
     <!-- Product and plugin compatibility requirements.
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html -->
     <depends>com.intellij.modules.platform</depends>
-    <depends>com.intellij.modules.java</depends>
-
-    <extensionPoints>
-<!--        <extensionPoint qualifiedName="com.intellij.newProjectWizard.ocaml.buildSystem"-->
-<!--                        interface="com.ocaml.ide.module.wizard.buildSystem.BuildSystemOCamlNewProjectWizard"-->
-<!--                        dynamic="true"/>-->
-    </extensionPoints>
+    <depends optional="true" config-file="deps/java-deps.xml">com.intellij.modules.java</depends>
 
     <!-- Extension points defined by the plugin.
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html -->
@@ -75,10 +69,7 @@
         <spellchecker.support language="OCaml" implementationClass="com.ocaml.ide.spelling.OCamlSpellcheckingStrategy"/>
 
         <!-- MODULES -->
-<!--        <newProjectWizard.languageGenerator implementation="com.ocaml.ide.module.wizard.OCamlNewProjectWizard"/>-->
-<!--        <newProjectWizard.ocaml.buildSystem implementation="com.ocaml.ide.module.wizard.buildSystem.OCamlDefaultBuildSystemWizard" />-->
-<!--        <newProjectWizard.ocaml.buildSystem implementation="com.ocaml.ide.module.wizard.buildSystem.OCamlMakefileBuildSystemWizard" />-->
-<!--        <moduleBuilder builderClass="com.ocaml.ide.module.wizard.OCamlModuleBuilder" order="first"/>-->
+<!--        <moduleBuilder builderClass="com.ocaml.ide.module.OCamlModuleBuilder" order="first"/>-->
 <!--        <moduleConfigurationEditorProvider order="first" implementation="com.ocaml.ide.module.OCamlModuleEditorProvider"/>-->
 <!--        <directoryProjectGenerator implementation="com.ocaml.ide.wizard.minor.OCamlDirectoryProjectGenerator"/>-->
     </extensions>

@@ -1,0 +1,16 @@
+<!-- Java-only extensions -->
+<idea-plugin>
+    <extensionPoints>
+        <extensionPoint qualifiedName="com.intellij.newProjectWizard.ocaml.buildSystem"
+                        interface="com.ocaml.ide.module.wizard.buildSystem.BuildSystemOCamlNewProjectWizard"
+                        dynamic="true"/>
+    </extensionPoints>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <newProjectWizard.languageGenerator implementation="com.ocaml.ide.module.wizard.OCamlNewProjectWizard"/>
+        <newProjectWizard.ocaml.buildSystem implementation="com.ocaml.ide.module.wizard.buildSystem.OCamlDefaultBuildSystemWizard" />
+        <newProjectWizard.ocaml.buildSystem implementation="com.ocaml.ide.module.wizard.buildSystem.OCamlMakefileBuildSystemWizard" />
+        <newProjectWizard.ocaml.buildSystem implementation="com.ocaml.ide.module.wizard.buildSystem.DuneBuildSystemWizard" />
+    </extensions>
+
+</idea-plugin>

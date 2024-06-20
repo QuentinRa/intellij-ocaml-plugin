@@ -67,7 +67,7 @@ intellij {
   ))
   if (useJava) plugins.add("java")
 
-  sandboxDir.set("${layout.buildDirectory}/idea-sandbox-$platformVersion-$platformType")
+  sandboxDir.set("$buildDir/idea-sandbox-$platformVersion-$platformType")
 
   sourceSets["main"].java.srcDirs("src/main/gen")
   if (allPlatforms.isNotBlank()) {

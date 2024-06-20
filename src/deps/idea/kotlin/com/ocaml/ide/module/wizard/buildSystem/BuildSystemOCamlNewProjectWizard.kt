@@ -5,7 +5,6 @@ import com.intellij.ide.wizard.NewProjectWizardMultiStepFactory
 import com.intellij.openapi.extensions.ExtensionPointName
 import com.ocaml.ide.module.wizard.OCamlNewProjectWizard
 
-@Deprecated("Not used yet.")
 interface BuildSystemOCamlNewProjectWizard : NewProjectWizardMultiStepFactory<OCamlNewProjectWizard.OCamlNewProjectWizardStep> {
     override fun isEnabled(context: WizardContext): Boolean = true
 
