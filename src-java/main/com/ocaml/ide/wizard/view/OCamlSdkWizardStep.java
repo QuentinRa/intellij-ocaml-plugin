@@ -314,22 +314,7 @@ public class OCamlSdkWizardStep extends ModuleWizardStep {
     // that's why this code can't be moved in the constructor.
     // Moreover, variables that are initialized by the ".form" are also null here.
     public void createUIComponents() {
-        myProject = myWizardContext.getProject();
-        myProject = myProject != null ? myProject : ProjectManager.getInstance().getDefaultProject();
-
-        mySdksModel = new ProjectSdksModel();
-        mySdksModel.reset(myProject);
-
         Condition<? super SdkTypeId> sdkTypeFilter = sdk -> sdk instanceof OCamlSdkType;
-
-        myJdkChooser = new JdkComboBoxAdaptor(myProject,
-                mySdksModel,
-                sdkTypeFilter,
-                null,
-                null,
-                null);
-        // show if we are inside a module
-        if (!myWizardContext.isCreatingNewProject()) myJdkChooser.showProjectSdkItem();
 
         // adding the instructions
         myPluginDocumentation = OCamlBrowseUtil.toDocumentation();
