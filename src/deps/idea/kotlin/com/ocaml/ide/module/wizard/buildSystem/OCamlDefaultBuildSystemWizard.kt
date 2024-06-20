@@ -8,9 +8,13 @@ import com.ocaml.ide.module.wizard.OCamlNewProjectWizardAssetStep
 import com.ocaml.ide.module.wizard.OCamlNewProjectWizardBaseStep
 
 open class OCamlDefaultBuildSystemWizard : BuildSystemOCamlNewProjectWizard {
-    override val name: String = message("project.wizard.build.system.none")
+    override val name: String = NAME
     override fun createStep(parent: OCamlNewProjectWizard.OCamlNewProjectWizardStep): NewProjectWizardStep =
         Step(parent).nextStep(::OCamlNewProjectWizardAssetStep)
 
     private class Step(parent: OCamlNewProjectWizard.OCamlNewProjectWizardStep) : OCamlNewProjectWizardBaseStep(parent)
+
+    companion object {
+        val NAME = message("project.wizard.build.system.none")
+    }
 }
