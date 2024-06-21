@@ -76,6 +76,9 @@
         <!-- SDK -->
         <sdkType implementation="com.ocaml.sdk.OCamlSdkType"/>
         <sdkDownload implementation="com.ocaml.sdk.OCamlSdkType"/>
+
+        <!-- BUILD/RUN -->
+        <configurationType implementation="com.ocaml.sdk.runConfiguration.OCamlRunConfigurationType"/>
     </extensions>
 
     <xi:include href="/META-INF/dune.xml" xpointer="xpointer(/idea-plugin/*)"/>

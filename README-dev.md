@@ -16,7 +16,9 @@ The project is complex, so here are some notes for you.
   * [ ] Can add a SDK from an arbitrary path (I removed the code...)
   * [ ] Can add a "SimpleSDK" (non-opam) | Add Removed Code
   * [x] Can generate project from a template
-* [ ] Add WSL tests (+one new)
+* [x] Add WSL tests
+* [x] Can create a new module
+* [ ] Project Structure Module Configuration
 * [ ] Add developer documentation for SDK
 * [ ] Add developer documentation for Module Builder
 
