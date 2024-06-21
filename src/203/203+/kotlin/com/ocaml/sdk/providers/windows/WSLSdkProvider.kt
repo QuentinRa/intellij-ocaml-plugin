@@ -270,12 +270,13 @@ class WSLSdkProvider : UnixOCamlSdkProvider() {
             // create command
             val cli = GeneralCommandLine(path.linuxPath + "/bin/dune", "--version")
             // same code as for the base provider ><
-            return String(
+            val s = String(
                 distribution.patchCommandLine(cli, null, WSLCommandLineOptions())
                     .createProcess()
                     .inputStream
                     .readAllBytes()
             ).trim { it <= ' ' } // remove \n
+            return s.ifEmpty { null }
         } catch (e: IOException) {
             LOG.warn("Get dune version error:" + e.message)
             return null

@@ -1,7 +1,6 @@
 package com.ocaml.ide.module.wizard.templates
 
 import com.intellij.ide.util.projectWizard.AbstractModuleBuilder
-import com.intellij.openapi.roots.ModifiableRootModel
 import com.intellij.openapi.ui.ValidationInfo
 import com.intellij.openapi.vfs.VfsUtilCore
 import com.intellij.openapi.vfs.VirtualFile
@@ -29,7 +28,7 @@ internal class OCamlMakefileTemplate : ProjectTemplate, TemplateBuildInstruction
     @Deprecated("Deprecated in Java", ReplaceWith("null"))
     override fun validateSettings(): ValidationInfo? = null
 
-    override fun createFiles(rootModel: ModifiableRootModel?, sourceRoot: VirtualFile?) {
+    override fun createFiles(sourceRoot: VirtualFile?) {
         val sourceFolder = VfsUtilCore.virtualToIoFile(sourceRoot!!)
         val makefileContent: String = OCamlFileUtils.loadFileContent("/templates/Makefile/Makefile")
         OCamlFileUtils.createFile(sourceFolder, "hello_world.mli", "val hello_world : unit -> unit")

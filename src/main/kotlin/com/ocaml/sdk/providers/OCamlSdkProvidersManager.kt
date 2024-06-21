@@ -86,7 +86,8 @@ object OCamlSdkProvidersManager : OCamlSdkProvider {
         var result : String? = null
         if (sdkHomePath != null) {
             result = callProvidersValue { provider ->
-                provider.getDuneVersion(sdkHomePath)
+                val v = provider.getDuneVersion(sdkHomePath)
+                return@callProvidersValue if (v.isNullOrBlank()) null else v
             }
         }
         return result ?: "2.9" // default is 2.9

@@ -31,8 +31,8 @@ internal class OCamlDuneTemplate : ProjectTemplate, TemplateBuildInstructions {
     @Deprecated("Deprecated in Java", ReplaceWith("null"))
     override fun validateSettings(): ValidationInfo? = null
 
-    override fun createFiles(rootModel: ModifiableRootModel?, sourceRoot: VirtualFile?) = Unit
-    override fun createFiles(rootModel: ModifiableRootModel?, sourceRoot: VirtualFile?, sdkHomePath: String?) {
+    override fun createFiles(sourceRoot: VirtualFile?) = Unit
+    override fun createFiles(sourceRoot: VirtualFile?, sdkHomePath: String?) {
         val sourceFolder = VfsUtilCore.virtualToIoFile(sourceRoot!!)
         val rootFolder = sourceFolder.parentFile
         val version = OCamlSdkProvidersManager.getDuneVersion(sdkHomePath)

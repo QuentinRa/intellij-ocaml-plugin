@@ -247,7 +247,7 @@ open class UnixOCamlSdkProvider : OCamlSdkProvider {
                     .inputStream
                     .readAllBytes()
             ).trim { it <= ' ' } // remove \n
-            return if (s.isEmpty()) null else s
+            return s.ifEmpty { null }
         } catch (e: IOException) {
             LOG.warn("Get dune version error:" + e.message)
             return null
