@@ -1,5 +1,6 @@
 package com.ocaml.sdk
 
+import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.projectRoots.*
 import com.intellij.openapi.roots.OrderRootType
 import com.intellij.openapi.roots.ui.configuration.projectRoot.SdkDownload
@@ -8,6 +9,8 @@ import com.intellij.openapi.util.io.FileUtil
 import com.intellij.openapi.vfs.LocalFileSystem
 import com.ocaml.OCamlBundle.message
 import com.ocaml.icons.OCamlIcons
+import com.ocaml.sdk.docs.OCamlSdkAdditionalData
+import com.ocaml.sdk.docs.OCamlSdkAdditionalDataConfigurable
 import com.ocaml.sdk.providers.InvalidHomeError
 import com.ocaml.sdk.utils.OCamlSdkHomeUtils
 import com.ocaml.sdk.utils.OCamlSdkRootsUtils
@@ -34,6 +37,7 @@ class OCamlSdkType : SdkType(OCAML_SDK), SdkDownload {
     override fun getPresentableName(): String = "OCaml"
     override fun getIcon(): Icon = OCamlIcons.Nodes.OCAML_SDK
     override fun getDefaultDocumentationUrl(sdk: Sdk): String = OCamlSdkWebsiteUtils.getManualURL(sdk.versionString!!)
+    fun getDefaultAPIUrl(sdk: Sdk): String = OCamlSdkWebsiteUtils.getApiURL(sdk.versionString!!)
 
     // SDK Folders
     override fun suggestHomePaths(): Collection<String> = OCamlSdkHomeUtils.suggestHomePaths()
@@ -57,49 +61,42 @@ class OCamlSdkType : SdkType(OCAML_SDK), SdkDownload {
     //
     // Data
     //
-    override fun isRootTypeApplicable(type: OrderRootType): Boolean = type === OrderRootType.CLASSES
+    override fun createAdditionalDataConfigurable(sdkModel: SdkModel, sdkModificator: SdkModificator) =
+        OCamlSdkAdditionalDataConfigurable()
 
-    override fun createAdditionalDataConfigurable(
-        sdkModel: SdkModel,
-        sdkModificator: SdkModificator
-    ): AdditionalDataConfigurable? {
-//        return OCamlSdkAdditionalDataConfigurable()
-        return null
+    override fun loadAdditionalData(currentSdk: Sdk, additional: Element): SdkAdditionalData {
+        val sdkAdditionalData = OCamlSdkAdditionalData()
+        sdkAdditionalData.ocamlManualURL = additional.getAttributeValue("ocamlManualURL")
+        sdkAdditionalData.ocamlApiURL = additional.getAttributeValue("ocamlApiURL")
+        if (sdkAdditionalData.shouldFillWithDefaultValues()) {
+            sdkAdditionalData.ocamlApiURL = getDefaultAPIUrl(currentSdk)
+            sdkAdditionalData.ocamlManualURL = getDefaultDocumentationUrl(currentSdk)
+        }
+        return sdkAdditionalData
     }
 
-    override fun loadAdditionalData(currentSdk: Sdk, additional: Element): SdkAdditionalData? {
-//        val sdkAdditionalData: OCamlSdkAdditionalData = OCamlSdkAdditionalData()
-//        sdkAdditionalData.ocamlManualURL = additional.getAttributeValue("ocamlManualURL")
-//        sdkAdditionalData.ocamlApiURL = additional.getAttributeValue("ocamlApiURL")
-//        if (sdkAdditionalData.shouldFillWithDefaultValues()) {
-//            sdkAdditionalData.ocamlApiURL = getDefaultAPIUrl(currentSdk)
-//            sdkAdditionalData.ocamlManualURL = getDefaultDocumentationUrl(currentSdk)
-//        }
-//        return sdkAdditionalData
-        return null
-    }
-
-    override fun saveAdditionalData(
-        additionalData: SdkAdditionalData,
-        additional: Element
-    ) {
-//        val sdkAdditionalData: OCamlSdkAdditionalData = additionalData as OCamlSdkAdditionalData
-//        additional.setAttribute("ocamlManualURL", sdkAdditionalData.ocamlManualURL)
-//        additional.setAttribute("ocamlApiURL", sdkAdditionalData.ocamlApiURL)
+    override fun saveAdditionalData(additionalData: SdkAdditionalData, additional: Element) {
+        val sdkAdditionalData = additionalData as OCamlSdkAdditionalData
+        additional.setAttribute("ocamlManualURL", sdkAdditionalData.ocamlManualURL)
+        additional.setAttribute("ocamlApiURL", sdkAdditionalData.ocamlApiURL)
     }
 
     //
     // Setup
     //
+    override fun isRootTypeApplicable(type: OrderRootType): Boolean = type === OrderRootType.CLASSES
     override fun setupSdkPaths(sdk: Sdk) {
         val homePath = checkNotNull(sdk.homePath) { sdk }
         val sdkModificator = sdk.sdkModificator
         sdkModificator.removeRoots(OrderRootType.CLASSES)
-        addSources(File(homePath), sdkModificator)
+        sdkModificator.addSources(File(homePath))
         // 0.0.6 - added by default
         sdkModificator.addRoot(getDefaultDocumentationUrl(sdk), OrderRootType.DOCUMENTATION)
         sdkModificator.addRoot(OCamlSdkWebsiteUtils.getApiURL(sdk.versionString!!), OrderRootType.DOCUMENTATION)
-        sdkModificator.commitChanges()
+        // 0.4.0 - Write access is allowed inside write-action only
+        ApplicationManager.getApplication().invokeAndWait {
+            ApplicationManager.getApplication().runWriteAction { sdkModificator.commitChanges() }
+        }
     }
 
     //
@@ -122,37 +119,28 @@ class OCamlSdkType : SdkType(OCAML_SDK), SdkDownload {
     // WSL
     //
     @Suppress("unused")
-    override fun allowWslSdkForLocalProject(): Boolean {
-        return true
-    }
+    override fun allowWslSdkForLocalProject(): Boolean = true
 
     companion object {
         private const val OCAML_SDK = "OCaml SDK"
 
         val instance: OCamlSdkType?
             get() = EP_NAME.findExtension(OCamlSdkType::class.java)
+    }
+}
 
-        //
-        // Sources
-        //
-        fun addSources(sdkHomeFile: File, sdkModificator: SdkModificator) {
-            val sources: List<String> = OCamlSdkRootsUtils.getSourcesFolders(sdkHomeFile.path)
-            for (source in sources) {
-                addSources(source, sdkHomeFile, sdkModificator)
-            }
-        }
+fun SdkModificator.addSources(sdkHomeFile: File) {
+    val sources: List<String> = OCamlSdkRootsUtils.getSourcesFolders(sdkHomeFile.path)
+    for (sourceName in sources) {
+        val rootFolder = File(sdkHomeFile, sourceName)
+        if (!rootFolder.exists()) return
 
-        private fun addSources(sourceName: String, sdkHomeFile: File, sdkModificator: SdkModificator) {
-            val rootFolder = File(sdkHomeFile, sourceName)
-            if (!rootFolder.exists()) return
-
-            val files = rootFolder.listFiles() ?: return
-            for (file in files) {
-                val rootCandidate = LocalFileSystem.getInstance()
-                    .findFileByPath(FileUtil.toSystemIndependentName(file.absolutePath))
-                if (rootCandidate == null) continue
-                sdkModificator.addRoot(rootCandidate, OrderRootType.CLASSES)
-            }
+        val files = rootFolder.listFiles() ?: return
+        for (file in files) {
+            val rootCandidate = LocalFileSystem.getInstance()
+                .findFileByPath(FileUtil.toSystemIndependentName(file.absolutePath))
+            if (rootCandidate == null) continue
+            addRoot(rootCandidate, OrderRootType.CLASSES)
         }
     }
 }

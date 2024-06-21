@@ -170,7 +170,7 @@ The goal is to have a plugin similar to VSCode with OCaml LSP server, but withou
 | UML Generation               | ❌     | ❌        | ❌      | ?          |
 | Parser Recovery <sup>4</sup> | ✅     | ❌        | ❌      | ✅          |
 
-<sup>4</sup> Ability of the plugin to work on a file that doesn't compile
+<sup>4</sup> The ability of the plugin to function with a file that doesn't compile
 
 **External Dependencies Integration**
 

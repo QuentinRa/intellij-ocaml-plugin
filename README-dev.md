@@ -21,7 +21,7 @@ The project is complex, so here are some notes for you.
 * [ ] Can build project
 * [ ] Project Structure Module Configuration
 * [ ] Add developer documentation for SDK
-* [ ] Add developer documentation for Module Builder
+* [x] Add developer documentation for Module Builder
 
 ## Parser Rules
 
