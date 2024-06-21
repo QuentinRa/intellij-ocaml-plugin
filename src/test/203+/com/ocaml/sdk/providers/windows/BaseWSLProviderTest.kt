@@ -11,7 +11,7 @@ import com.ocaml.sdk.providers.OCamlTestSdkInfo
 import com.ocaml.sdk.utils.OCamlSdkHomeUtils.isValid
 import java.io.IOException
 
-open class WSLBaseTest : BaseSdkProviderTest() {
+abstract class BaseWSLProviderTest : BaseSdkProviderTest() {
     private var _folders: WSLFolders? = null
     protected val folders: WSLFolders get() = _folders!!
 

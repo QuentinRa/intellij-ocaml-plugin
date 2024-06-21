@@ -2,7 +2,7 @@ package com.ocaml.sdk.providers.windows
 
 import org.junit.Test
 
-class WSLHomePathTest : WSLBaseTest() {
+class WSLHomePathTest : BaseWSLProviderTest() {
 
     @Test
     fun testFilesOkNoVersion() {

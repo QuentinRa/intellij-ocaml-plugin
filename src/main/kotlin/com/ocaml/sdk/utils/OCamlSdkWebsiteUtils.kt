@@ -22,7 +22,7 @@ object OCamlSdkWebsiteUtils {
         var newVersion = getMajorAndMinorVersion(version)
         if (newVersion == null) newVersion = "4.12"
         if (OCamlSdkVersionUtils.isNewerThan("4.12", newVersion))
-            return "https://ocaml.org/releases/$version/manual/index.html"
-        return "https://ocaml.org/releases/$version/htmlman/index.html"
+            return "https://ocaml.org/releases/$newVersion/manual/index.html"
+        return "https://ocaml.org/releases/$newVersion/htmlman/index.html"
     }
 }
