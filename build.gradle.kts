@@ -67,20 +67,23 @@ intellij {
   ))
   if (useJava) plugins.add("java")
 
-  sandboxDir.set("$buildDir/idea-sandbox-$platformVersion-$platformType")
+  sandboxDir.set("${layout.buildDirectory.get()}/idea-sandbox-$platformVersion-$platformType")
 
   sourceSets["main"].java.srcDirs("src/main/gen")
   if (allPlatforms.isNotBlank()) {
     for (platform in allPlatforms.splitToSequence(",")) {
-      if (platform <= platformVersion)
+      if (platform <= platformVersion) {
         sourceSets["main"].kotlin.srcDirs("src/$platform/$platform+/kotlin")
-      if (platform > platformVersion)
+        sourceSets["test"].kotlin.srcDirs("src/test/$platform+/")
+      }
+      if (platform > platformVersion) {
         sourceSets["main"].kotlin.srcDirs("src/$platform/$platform-/kotlin")
+        sourceSets["test"].kotlin.srcDirs("src/test/$platform-/")
+      }
     }
   }
-  if (useJava) {
-    sourceSets["main"].kotlin.srcDirs("src/deps/idea/kotlin")
-  }
+  if (useJava) sourceSets["main"].kotlin.srcDirs("src/deps/idea/kotlin")
+  else sourceSets["main"].kotlin.srcDirs("src/deps/others/kotlin")
 
   idea {
     module {
