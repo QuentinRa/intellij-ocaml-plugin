@@ -7,7 +7,6 @@ package com.ocaml.ide.presentation
 import com.intellij.ide.projectView.PresentationData
 import com.intellij.navigation.ItemPresentation
 import com.intellij.openapi.util.Iconable
-import com.intellij.openapi.vfs.VfsUtil
 import com.intellij.psi.PsiElement
 import com.ocaml.language.base.OCamlFileBase
 import com.ocaml.language.psi.OCamlLetBindings

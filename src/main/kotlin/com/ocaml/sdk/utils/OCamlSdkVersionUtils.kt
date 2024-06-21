@@ -13,7 +13,7 @@ object OCamlSdkVersionUtils {
     private val VERSION_REGEXP: Pattern = Pattern.compile("[a-z-.]*(\\d\\.\\d\\d(\\.\\d)?([+~][0-9a-z-]+)*)")
 
     /** unknown version  */
-    private val UNKNOWN_VERSION: String = message("sdk.version.unknown")
+    internal val UNKNOWN_VERSION: String = message("sdk.version.unknown")
 
     fun isUnknownVersion(version: String): Boolean {
         return UNKNOWN_VERSION == version

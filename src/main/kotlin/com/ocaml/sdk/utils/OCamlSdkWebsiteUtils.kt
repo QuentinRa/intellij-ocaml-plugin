@@ -1,7 +1,7 @@
 package com.ocaml.sdk.utils
 
 object OCamlSdkWebsiteUtils {
-    private fun getMajorAndMinorVersion(version: String): String? {
+    internal fun getMajorAndMinorVersion(version: String): String? {
         var newVersion = version
         if (!OCamlSdkVersionUtils.isValid(newVersion)) return null
         // if we got two ".", then we trunc the patch number
