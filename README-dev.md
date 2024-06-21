@@ -19,7 +19,9 @@ The project is complex, so here are some notes for you.
 * [x] Add WSL tests
 * [x] Can create a new module
 * [ ] Can build project
-* [ ] Project Structure Module Configuration
+* [x] Project Structure Module Configuration
+  * [x] JB changed something and it doesn't work
+  * [ ] Can manually set the SDK additional data
 * [ ] Add developer documentation for SDK
 * [x] Add developer documentation for Module Builder
 

@@ -24,14 +24,12 @@ class OCamlDocumentationURLsForm {
     private var myApiBefore: ActionLink? = null
     private var myApiAfter: ActionLink? = null
 
-    private var myData: OCamlSdkAdditionalData? = null
+    fun createUIComponents(sdk: Sdk) {
+        myDocumentationURL!!.text = getManualURL(sdk.versionString!!)
+        myApiURL!!.text = getApiURL(sdk.versionString!!)
 
-    fun createUIComponents(mySdk: Sdk) {
-        myData = mySdk.sdkAdditionalData as OCamlSdkAdditionalData?
-        if (myData == null) return  // should never happen
-
-        myDocumentationURL!!.text = myData!!.ocamlManualURL
-        myApiURL!!.text = myData!!.ocamlApiURL
+        myDocumentationURL!!.isEnabled = false
+        myApiURL!!.isEnabled = false
     }
 
     val component: JComponent?
@@ -39,19 +37,11 @@ class OCamlDocumentationURLsForm {
 
     val isModified: Boolean
         get() {
-            if (myData != null) {
-                return (myDocumentationURL!!.text.trim { it <= ' ' } != myData!!.ocamlManualURL
-                        || myApiURL!!.text.trim { it <= ' ' } != myData!!.ocamlApiURL)
-            }
             return false
         }
 
     @Throws(ConfigurationException::class)
     fun apply() {
-        if (myData != null) {
-            myData!!.ocamlManualURL = myDocumentationURL!!.text.trim { it <= ' ' }
-            myData!!.ocamlApiURL = myApiURL!!.text.trim { it <= ' ' }
-        }
     }
 
     private fun createUIComponents() {

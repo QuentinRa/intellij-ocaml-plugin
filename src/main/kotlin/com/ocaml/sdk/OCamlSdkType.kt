@@ -61,8 +61,7 @@ class OCamlSdkType : SdkType(OCAML_SDK), SdkDownload {
     //
     // Data
     //
-    override fun createAdditionalDataConfigurable(sdkModel: SdkModel, sdkModificator: SdkModificator) =
-        OCamlSdkAdditionalDataConfigurable()
+    override fun createAdditionalDataConfigurable(sdkModel: SdkModel, sdkModificator: SdkModificator) = OCamlSdkAdditionalDataConfigurable()
 
     override fun loadAdditionalData(currentSdk: Sdk, additional: Element): SdkAdditionalData {
         val sdkAdditionalData = OCamlSdkAdditionalData()

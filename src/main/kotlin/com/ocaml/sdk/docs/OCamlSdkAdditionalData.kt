@@ -3,17 +3,32 @@ package com.ocaml.sdk.docs
 import com.intellij.openapi.projectRoots.SdkAdditionalData
 
 class OCamlSdkAdditionalData : SdkAdditionalData {
+    private var markedAsCommited = false
+
     /**
      * URL to the manual of the current SDK version of OCaml
      */
-    @JvmField
     var ocamlManualURL: String? = ""
+        set(value) {
+            if (!markedAsCommited)
+                field = value
+            else error("OCaml SDK Additional data was already committed")
+        }
 
     /**
      * URL to the API of the current SDK version of OCaml
      */
-    @JvmField
     var ocamlApiURL: String? = ""
+        set(value) {
+            if (!markedAsCommited)
+                field = value
+            else error("OCaml SDK Additional data was already committed")
+        }
+
+    override fun markAsCommited() {
+        super.markAsCommited()
+        markedAsCommited = true
+    }
 
     // utils
     override fun toString(): String {
