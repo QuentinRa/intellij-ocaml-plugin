@@ -7,10 +7,14 @@
     </extensionPoints>
 
     <extensions defaultExtensionNs="com.intellij">
+        <!-- Create a new project -->
         <newProjectWizard.languageGenerator implementation="com.ocaml.ide.module.wizard.OCamlNewProjectWizard"/>
         <newProjectWizard.ocaml.buildSystem implementation="com.ocaml.ide.module.wizard.buildSystem.OCamlDefaultBuildSystemWizard" />
         <newProjectWizard.ocaml.buildSystem implementation="com.ocaml.ide.module.wizard.buildSystem.OCamlMakefileBuildSystemWizard" />
         <newProjectWizard.ocaml.buildSystem implementation="com.ocaml.ide.module.wizard.buildSystem.OCamlDuneBuildSystemWizard" />
+
+        <!-- Edit the configuration of a module -->
+        <moduleConfigurationEditorProvider order="first" implementation="com.ocaml.ide.module.OCamlModuleEditorProvider"/>
     </extensions>
 
 </idea-plugin>

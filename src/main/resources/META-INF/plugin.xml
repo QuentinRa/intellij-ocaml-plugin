@@ -70,7 +70,7 @@
 
         <!-- MODULES -->
         <moduleBuilder builderClass="com.ocaml.ide.module.OCamlModuleBuilder" order="first"/>
-<!--        <moduleConfigurationEditorProvider order="first" implementation="com.ocaml.ide.module.OCamlModuleEditorProvider"/>-->
+        <moduleType id="OCAML_MODULE" implementationClass="com.ocaml.ide.module.OCamlIdeaModuleType"/>
 <!--        <directoryProjectGenerator implementation="com.ocaml.ide.wizard.minor.OCamlDirectoryProjectGenerator"/>-->
 
         <!-- SDK -->

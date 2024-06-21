@@ -13,7 +13,7 @@ import java.io.File
 
 open class BaseOCamlModuleBuilder : ModuleBuilder() {
     override fun isSuitableSdkType(sdkType: SdkTypeId?): Boolean = sdkType is OCamlSdkType
-    override fun getModuleType(): ModuleType<*> = OCamlIdeaModuleType
+    override fun getModuleType(): ModuleType<*> = OCamlIdeaModuleType.instance
 
     // The templates are not handled here anymore
     // The code of this method was heavily aligned with what is done with JAVA
