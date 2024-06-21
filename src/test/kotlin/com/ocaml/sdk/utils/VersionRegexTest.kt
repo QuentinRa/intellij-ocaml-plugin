@@ -1,11 +1,10 @@
-package com.ocaml.sdk.utils.version
+package com.ocaml.sdk.utils
 
-import com.intellij.testFramework.UsefulTestCase
+import com.ocaml.OCamlBaseUtilityTest
 import com.ocaml.sdk.utils.OCamlSdkVersionUtils.isValid
 import org.junit.Test
 
-@Suppress("JUnitMixedFramework")
-class VersionRegexTest : UsefulTestCase() {
+class VersionRegexTest : OCamlBaseUtilityTest() {
     // invalid
     @Test
     fun test1d() {

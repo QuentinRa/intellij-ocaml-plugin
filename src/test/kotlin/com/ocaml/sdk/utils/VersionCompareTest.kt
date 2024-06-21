@@ -1,11 +1,9 @@
-package com.ocaml.sdk.utils.version
+package com.ocaml.sdk.utils
 
-import com.intellij.testFramework.UsefulTestCase
-import com.ocaml.sdk.utils.OCamlSdkVersionUtils
+import com.ocaml.OCamlBaseUtilityTest
 import org.junit.Test
 
-@Suppress("JUnitMixedFramework")
-class VersionCompareTest : UsefulTestCase() {
+class VersionCompareTest : OCamlBaseUtilityTest() {
     private fun assertIsNewer(path1: String, path2: String, equals: Boolean) {
         // This function is an alias of compare, or is working the same
         // but, the base is the older version, and the version is the version

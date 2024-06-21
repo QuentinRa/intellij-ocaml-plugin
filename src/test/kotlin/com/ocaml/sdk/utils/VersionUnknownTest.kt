@@ -1,11 +1,9 @@
-package com.ocaml.sdk.utils.version
+package com.ocaml.sdk.utils
 
-import com.intellij.testFramework.UsefulTestCase
-import com.ocaml.sdk.utils.OCamlSdkVersionUtils
+import com.ocaml.OCamlBaseUtilityTest
 import org.junit.Test
 
-@Suppress("JUnitMixedFramework")
-class VersionUnknownTest : UsefulTestCase() {
+class VersionUnknownTest : OCamlBaseUtilityTest() {
     @Test
     fun testIsUnknown() {
         assertTrue(OCamlSdkVersionUtils.isUnknownVersion(OCamlSdkVersionUtils.UNKNOWN_VERSION))

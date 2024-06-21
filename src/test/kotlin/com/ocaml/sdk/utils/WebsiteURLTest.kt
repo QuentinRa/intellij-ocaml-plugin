@@ -1,11 +1,9 @@
-package com.ocaml.sdk.utils.website
+package com.ocaml.sdk.utils
 
-import com.intellij.testFramework.UsefulTestCase
-import com.ocaml.sdk.utils.OCamlSdkWebsiteUtils
+import com.ocaml.OCamlBaseUtilityTest
 import org.junit.Test
 
-@Suppress("JUnitMixedFramework")
-class WebsiteURLTest : UsefulTestCase() {
+class WebsiteURLTest : OCamlBaseUtilityTest() {
     private fun makeAPIURLOld(version: String): String = "https://ocaml.org/releases/$version/htmlman/libref/index.html"
     private fun makeAPIURLNew(version: String): String = "https://ocaml.org/releases/$version/api/index.html"
     private fun makeManualURLOld(version: String): String = "https://ocaml.org/releases/$version/htmlman/index.html"
