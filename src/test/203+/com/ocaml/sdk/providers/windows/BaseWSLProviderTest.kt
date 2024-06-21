@@ -65,6 +65,7 @@ class WSLFolders : OCamlSdkProviderFolders {
 
     init {
         loadWSLSdks()
+        //println(this)
     }
 
     private fun loadWSLSdks() {
@@ -86,7 +87,7 @@ class WSLFolders : OCamlSdkProviderFolders {
                 if (version.isEmpty() || process.exitValue() != 0) throw ExecutionException("No version / switch.")
 
                 /* path to the opam folder **/
-                val opamFolder = distribution.userHome + "/.opam/"
+                val opamFolder = distribution.safeUserHome() + "/.opam/"
                 OPAM_HOME = distribution.getWindowsPath(opamFolder)
 
                 /* everything should be valid */
@@ -152,4 +153,19 @@ class WSLFolders : OCamlSdkProviderFolders {
         HOME_INVALID = "\\\\wsl$\\Debian\\invalid"
         OCAML_BIN_INVALID = "\\\\wsl$\\Debian\\invalid\\ocaml"
     }
+
+    override fun toString(): String {
+        return "WSLFolders(BIN_VALID_SDK=$BIN_VALID_SDK, \n" +
+                "BIN_CREATE_SDK=$BIN_CREATE_SDK, \n" +
+                "BIN_VALID=$BIN_VALID, \n" +
+                "OPAM_HOME=$OPAM_HOME, \n" +
+                "OPAM_VALID_SDK=$OPAM_VALID_SDK, \n" +
+                "OPAM_INVALID_DIST=$OPAM_INVALID_DIST, \n" +
+                "OPAM_INVALID=$OPAM_INVALID, \n" +
+                "OPAM_INVALID_BIN=$OPAM_INVALID_BIN, \n" +
+                "HOME_INVALID=$HOME_INVALID, \n" +
+                "OCAML_BIN_INVALID=$OCAML_BIN_INVALID)\n"
+    }
+
+
 }

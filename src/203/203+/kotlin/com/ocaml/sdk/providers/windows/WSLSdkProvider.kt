@@ -29,7 +29,7 @@ class WSLSdkProvider : UnixOCamlSdkProvider() {
             val homePaths: MutableSet<String> = HashSet()
             // WSL
             for (distro: WSLDistribution in WslDistributionManager.getInstance().installedDistributions) {
-                val wslPath = distro.userHome ?: continue
+                val wslPath = distro.safeUserHome() ?: continue
                 val windowsPath = distro.getWindowsPath("$wslPath/.opam/")
                 homePaths.add(windowsPath)
                 // we may have Simple SDKs
@@ -207,9 +207,8 @@ class WSLSdkProvider : UnixOCamlSdkProvider() {
         if (!WSLUtil.isSystemCompatible()) return false
         val windowsUncPath = homePath.toFile().absolutePath
         var path = FileUtil.toSystemDependentName(windowsUncPath)
-        // fixme: hardcoded new WSL prefix
         if (path.startsWith(WslConstants.UNC_PREFIX)) path = StringUtil.trimStart(path, WslConstants.UNC_PREFIX)
-        else if (path.startsWith("\\\\wsl.localhost\\")) path = StringUtil.trimStart(path, "\\\\wsl.localhost\\")
+        else if (path.startsWith(ALTERNATIVE_WSL_PREFIX)) path = StringUtil.trimStart(path, ALTERNATIVE_WSL_PREFIX)
         else return false
         val index = path.indexOf('\\')
         return index > 0
@@ -290,8 +289,14 @@ class WSLSdkProvider : UnixOCamlSdkProvider() {
         // move to another class?
         fun expandUserHome(distro: WSLDistribution, folder: String): String {
             if (!folder.contains("~")) return folder
-            val userHome = distro.userHome ?: return folder
+            val userHome = distro.safeUserHome() ?: return folder
             return folder.replace("~", userHome)
         }
+
+        const val ALTERNATIVE_WSL_PREFIX = "\\\\wsl.localhost\\"
     }
+}
+
+fun WSLDistribution.safeUserHome() : String {
+    return this.userHome ?: this.getEnvironmentVariable("HOME") ?: error("Could not get WSL user home.")
 }
