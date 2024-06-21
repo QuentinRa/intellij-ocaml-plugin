@@ -18,6 +18,7 @@ The project is complex, so here are some notes for you.
   * [x] Can generate project from a template
 * [x] Add WSL tests
 * [x] Can create a new module
+* [ ] Can build project
 * [ ] Project Structure Module Configuration
 * [ ] Add developer documentation for SDK
 * [ ] Add developer documentation for Module Builder
