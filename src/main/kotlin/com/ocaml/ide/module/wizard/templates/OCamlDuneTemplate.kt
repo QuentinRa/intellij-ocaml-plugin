@@ -1,7 +1,6 @@
 package com.ocaml.ide.module.wizard.templates
 
 import com.intellij.ide.util.projectWizard.AbstractModuleBuilder
-import com.intellij.openapi.roots.ModifiableRootModel
 import com.intellij.openapi.ui.ValidationInfo
 import com.intellij.openapi.vfs.VfsUtilCore
 import com.intellij.openapi.vfs.VirtualFile
@@ -9,7 +8,7 @@ import com.intellij.platform.ProjectTemplate
 import com.ocaml.OCamlBundle.message
 import com.ocaml.icons.OCamlIcons
 import com.ocaml.sdk.providers.OCamlSdkProvidersManager
-import com.ocaml.utils.OCamlFileUtils
+import com.ocaml.utils.OCamlFileSystemUtils
 import javax.swing.Icon
 
 /**
@@ -38,12 +37,12 @@ internal class OCamlDuneTemplate : ProjectTemplate, TemplateBuildInstructions {
         val version = OCamlSdkProvidersManager.getDuneVersion(sdkHomePath)
 
         // OCaml Source Files
-        OCamlFileUtils.createFile(sourceFolder, "hello_world.mli", "val hello_world : unit -> unit")
-        OCamlFileUtils.createFile(sourceFolder, "hello_world.ml", "let hello_world () = Format.printf \"Hello, World!@.\"")
-        OCamlFileUtils.createFile(sourceFolder, "test_hello_world.ml", "open Hello_world\n\nlet _ = hello_world ()")
+        OCamlFileSystemUtils.createFile(sourceFolder, "hello_world.mli", "val hello_world : unit -> unit")
+        OCamlFileSystemUtils.createFile(sourceFolder, "hello_world.ml", "let hello_world () = Format.printf \"Hello, World!@.\"")
+        OCamlFileSystemUtils.createFile(sourceFolder, "test_hello_world.ml", "open Hello_world\n\nlet _ = hello_world ()")
 
         // Dune Source Files
-        OCamlFileUtils.createFile(sourceFolder, "dune", "(executable\n (name test_hello_world))")
-        OCamlFileUtils.createFile(rootFolder, "dune-project", "(lang dune $version)")
+        OCamlFileSystemUtils.createFile(sourceFolder, "dune", "(executable\n (name test_hello_world))")
+        OCamlFileSystemUtils.createFile(rootFolder, "dune-project", "(lang dune $version)")
     }
 }

@@ -37,7 +37,7 @@ class OCamlDocumentationURLsForm {
 
     val isModified: Boolean
         get() {
-            return true
+            return false
         }
 
     @Throws(ConfigurationException::class)

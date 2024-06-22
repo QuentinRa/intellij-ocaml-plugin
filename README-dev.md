@@ -9,20 +9,9 @@ The project is complex, so here are some notes for you.
 
 **Roadmap**
 
-* [ ] Create Wizard
-  * [x] Can set the basic common settings
-  * [x] Can use an existing SDK
-  * [x] Can load a detected SDK
-  * [ ] Can add a SDK from an arbitrary path (I removed the code...)
-  * [ ] Can add a "SimpleSDK" (non-opam) | Add Removed Code
-  * [x] Can generate project from a template
-* [x] Add WSL tests
-* [x] Can create a new module
+* [ ] Can add a SDK from an arbitrary path (I removed the code...)
+* [ ] Can add a "SimpleSDK" (non-opam) | Add Removed Code
 * [ ] Can build project
-* [x] Project Structure Module Configuration
-  * [x] We can't manually set the SDK additional data anymore as I can't manage to make it work
-* [x] Add developer documentation for SDK
-* [x] Add developer documentation for Module Builder
 * Check references
   * Handle Include and Open
     * Line Markers?
@@ -71,8 +60,6 @@ FilenameIndex.getVirtualFilesByName(
   * Do not show empty lists
   * Do not show values (strings, atoms)
 * Can create files
-* Add SDK
-* Handle SDK
 * Add REPL
 * Handle Module Creation
 * Handle Run Configurations
@@ -227,17 +214,42 @@ Additional problems
   * [x] Show a nice presentation
   * [x] Works with pattern variables (ex: "a,b,c")
 
+## SDK
+
+The OCaml SDK need to be loaded within the IDE to allow the user to navigate to OCaml sources or consult the documentation.
+
+* [x] Can set the basic common settings
+* [x] Can use an existing SDK
+* [x] Can load a detected SDK
+* Support the followings SDKs providers
+  * [x] WSL
+  * [ ] Cygwin
+  * [ ] OCaml64
+  * [ ] Linux
+* Test the support of the following SDKs providers
+  * [x] WSL
+  * [ ] Cygwin
+  * [ ] OCaml64
+  * [ ] Linux
+* Support the following SDK types
+  * [x] Opam
+  * [ ] Non-opam
+* [x] We can't manually set the SDK additional data anymore as I can't manage to make it work. The user cannot edit the OCaml manual/API URLs.
+* [x] We suggest the user to set the SDK if not set
+
 ## Menus
 
-#### New Project Wizard
+#### Project Wizard
 
 * [x] Can create a new project
-* [ ] Can set the SDK
-* [ ] Can use a template (Refer to [this](https://github.com/intellij-rust/intellij-rust/blob/master/src/main/kotlin/org/rust/ide/newProject/RsProjectGeneratorPeer.kt))
+* [x] Can set the SDK
+* [x] Can use a template
+* [ ] Generate buildConfigurations
 
-#### New Module Wizard
+#### Module Wizard
 
-* [ ] Can create a new module
+* [x] Can create a new module
+* [x] Can edit the module configuration in project structure
 
 #### Settings
 

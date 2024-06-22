@@ -97,7 +97,7 @@ class OCamlLineMarkerProvider : RelatedItemLineMarkerProvider() {
                 scope,
                 result
             )
-        } else {
+        } else if (element.qualifiedName !== null) {
             val qualifiedNames = expandLetBindingStructuredName(element.qualifiedName!!)
             element.computeValueNames().forEachIndexed { index, it ->
                 processQualifiedName<OCamlValueDescription>(

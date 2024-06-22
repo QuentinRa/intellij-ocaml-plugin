@@ -7,7 +7,7 @@ import java.io.IOException
 import java.nio.file.Files
 import java.util.*
 
-object OCamlFileUtils {
+object OCamlFileSystemUtils {
     /**
      * Load a file stored in resources.
      * The path must starts with a /.
@@ -16,7 +16,7 @@ object OCamlFileUtils {
     fun loadFileContent(filePath: String, logger: Logger? = null): String {
         try {
             val url =
-                OCamlFileUtils::class.java.classLoader.getResource(filePath.replaceFirst("/".toRegex(), ""))
+                OCamlFileSystemUtils::class.java.classLoader.getResource(filePath.replaceFirst("/".toRegex(), ""))
                     ?: throw IOException("Couldn't get URL for $filePath")
             val virtualFile = VfsUtil.findFileByURL(url) ?: throw IOException("Couldn't find file by URL for $filePath")
             val text = VfsUtil.loadText(virtualFile)

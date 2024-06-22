@@ -7,7 +7,7 @@ import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.platform.ProjectTemplate
 import com.ocaml.OCamlBundle.message
 import com.ocaml.icons.OCamlIcons
-import com.ocaml.utils.OCamlFileUtils
+import com.ocaml.utils.OCamlFileSystemUtils
 import javax.swing.Icon
 
 /**
@@ -30,10 +30,10 @@ internal class OCamlMakefileTemplate : ProjectTemplate, TemplateBuildInstruction
 
     override fun createFiles(sourceRoot: VirtualFile?) {
         val sourceFolder = VfsUtilCore.virtualToIoFile(sourceRoot!!)
-        val makefileContent: String = OCamlFileUtils.loadFileContent("/templates/Makefile/Makefile")
-        OCamlFileUtils.createFile(sourceFolder, "hello_world.mli", "val hello_world : unit -> unit")
-        OCamlFileUtils.createFile(sourceFolder, "hello_world.ml", "let hello_world () = Format.printf \"Hello, World!@.\"")
-        OCamlFileUtils.createFile(sourceFolder, "test_hello_world.ml", "open Hello_world\n\nlet _ = hello_world ()")
-        OCamlFileUtils.createFile(sourceFolder.parentFile, "Makefile", makefileContent)
+        val makefileContent: String = OCamlFileSystemUtils.loadFileContent("/templates/Makefile/Makefile")
+        OCamlFileSystemUtils.createFile(sourceFolder, "hello_world.mli", "val hello_world : unit -> unit")
+        OCamlFileSystemUtils.createFile(sourceFolder, "hello_world.ml", "let hello_world () = Format.printf \"Hello, World!@.\"")
+        OCamlFileSystemUtils.createFile(sourceFolder, "test_hello_world.ml", "open Hello_world\n\nlet _ = hello_world ()")
+        OCamlFileSystemUtils.createFile(sourceFolder.parentFile, "Makefile", makefileContent)
     }
 }

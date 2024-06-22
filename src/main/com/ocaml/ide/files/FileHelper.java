@@ -11,17 +11,6 @@ import org.jetbrains.annotations.Nullable;
 
 public final class FileHelper {
 
-    private FileHelper() {
-    }
-
-    public static boolean isOCaml(@Nullable FileType fileType) {
-        return fileType instanceof OCamlFileType || fileType instanceof OCamlInterfaceFileType;
-    }
-
-    public static boolean isOCaml(@NotNull VirtualFile file) {
-        return isOCaml(file.getFileType());
-    }
-
     public static boolean isOCamlContext(@NotNull DataContext context) {
         var editor = context.getData(CommonDataKeys.EDITOR);
         if (editor == null) return false;
