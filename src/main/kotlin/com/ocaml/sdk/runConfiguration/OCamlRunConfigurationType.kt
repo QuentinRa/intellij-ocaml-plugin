@@ -22,19 +22,16 @@ class OCamlRunConfigurationType : ConfigurationType {
     override fun isDumbAware(): Boolean = true
 
     companion object {
-        fun getInstance(): OCamlRunConfigurationType {
-            return findConfigurationType(OCamlRunConfigurationType::class.java)
-        }
+        val instance: OCamlRunConfigurationType
+            get() = findConfigurationType(OCamlRunConfigurationType::class.java)
     }
 }
 
 // ApplicationConfigurationType.java | Anonymous class
 private class OCamlConfigurationFactory(type: ConfigurationType) : ConfigurationFactory(type) {
     override fun getId(): String = OCAML_RUN_CONFIGURATION_ID
-    override fun getOptionsClass(): Class<out BaseState> = OCamlRunConfigurationOptions::class.java
-    override fun createTemplateConfiguration(project: Project): RunConfiguration = OCamlRunConfiguration("", project, type)
+    override fun getOptionsClass(): Class<out BaseState> = JvmMainMethodRunConfigurationOptions::class.java
+    override fun createTemplateConfiguration(project: Project): RunConfiguration =
+        OCamlRunConfiguration("", JavaRunConfigurationModule(project, true), this)
     override fun isEditableInDumbMode(): Boolean = true
 }
-
-// JvmMainMethodRunConfigurationOptions
-internal class OCamlRunConfigurationOptions : JvmMainMethodRunConfigurationOptions()
