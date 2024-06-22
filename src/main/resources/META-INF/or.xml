@@ -1,4 +1,9 @@
 <idea-plugin>
+    <!-- Java only or.xml -->
+    <extensions defaultExtensionNs="com.intellij">
+        <lang.elementManipulator forClass="com.or.lang.core.psi.PsiLiteralExpression" implementationClass="com.or.lang.core.LiteralStringManipulator"/>
+    </extensions>
+
     <!--
     ALL of this is coming from the ReasonML plugin
     https://github.com/giraud/reasonml-idea-plugin

@@ -23,6 +23,14 @@
     <depends>com.intellij.modules.platform</depends>
     <depends optional="true" config-file="deps/java-deps.xml">com.intellij.modules.java</depends>
 
+    <actions>
+        <!-- Add your actions here -->
+        <!-- Create file -->
+        <action id="NewOCamlFile" class="com.ocaml.ide.files.actions.OCamlCreateFileAction">
+            <add-to-group group-id="NewGroup" anchor="before" relative-to-action="NewFile"/>
+        </action>
+    </actions>
+
     <!-- Extension points defined by the plugin.
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html -->
     <extensions defaultExtensionNs="com.intellij">
@@ -31,6 +39,8 @@
                   fieldName="INSTANCE" implementationClass="com.ocaml.ide.files.OCamlFileType"/>
         <fileType extensions="mli" hashBangs="mli" name="OCaml Interface File" language="OCamli"
                   fieldName="INSTANCE" implementationClass="com.ocaml.ide.files.OCamlInterfaceFileType"/>
+        <internalFileTemplate name="OCaml File"/>
+        <internalFileTemplate name="OCaml Interface"/>
 
         <!-- PARSER -->
         <lang.parserDefinition language="OCaml" implementationClass="com.ocaml.language.parser.OCamlParserDefinition"/>

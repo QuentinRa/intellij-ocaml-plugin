@@ -19,23 +19,6 @@ import org.jetbrains.annotations.NotNull;
 @ApiStatus.Internal
 public final class OCamlSdkCommandsManager {
 
-    // find an SDK that can be used to start the REPL
-    public static @NotNull Sdk getSdk(Project project) {
-        Sdk sdk = ProjectRootManager.getInstance(project).getProjectSdk();
-        if (sdk == null || !(sdk.getSdkType() instanceof OCamlSdkType)) {
-            for (Module module : ModuleManager.getInstance(project).getModules()) {
-                Sdk sdkCandidate = ModuleRootManager.getInstance(module).getSdk();
-                if (sdkCandidate == null || !(sdkCandidate.getSdkType() instanceof OCamlSdkType))
-                    continue;
-                sdk = sdkCandidate;
-                break;
-            }
-        }
-        if (sdk == null || !(sdk.getSdkType() instanceof OCamlSdkType))
-            throw new IllegalStateException(OCamlBundle.message("repl.no.sdk"));
-        return sdk;
-    }
-
     // returns the command to start the REPL
     public static @NotNull GeneralCommandLine getREPLCommand(@NotNull Project project) {
         Sdk sdk = getSdk(project);

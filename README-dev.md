@@ -59,7 +59,6 @@ FilenameIndex.getVirtualFilesByName(
 * Test Dune Structure View
   * Do not show empty lists
   * Do not show values (strings, atoms)
-* Can create files
 * Add REPL
 * Handle Module Creation
 * Handle Run Configurations
@@ -169,6 +168,13 @@ Additional problems
 * [ ] The named element should be "x" and not "let x = ..."
 
 ## User Features
+
+#### Basic
+
+* [x] Can create files
+  * [x] ML
+  * [x] MLI
+  * [x] Both at the same time
 
 #### Highlighter
 
