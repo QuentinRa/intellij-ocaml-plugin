@@ -38,28 +38,17 @@ class OCamlRunConfigurationEditor(private val project: Project) : SettingsEditor
 
     private var commonProgramParameters: CommonJavaParametersPanel? = null
     private var moduleChooser: LabeledComponent<ModuleDescriptionsComboBox>? = null
-    private var jrePathEditor: JrePathEditor? = null
-    private var shortenClasspathModeCombo: LabeledComponent<ShortenCommandLineModeCombo>? = null
 
     private var anchor: JComponent
 
     private val moduleSelector = ConfigurationModuleSelector(project, moduleChooser!!.component)
 
     init {
-        jrePathEditor!!.setDefaultJreSelector(
-            DefaultJreSelector.fromModuleDependencies(
-                moduleChooser!!.component,
-                false
-            )
-        )
         commonProgramParameters!!.setModuleContext(moduleSelector.module)
         moduleChooser!!.component.addActionListener { commonProgramParameters!!.setModuleContext(moduleSelector.module) }
         anchor = UIUtil.mergeComponentsWithAnchor(
-            mainClass, commonProgramParameters, jrePathEditor, jrePathEditor, moduleChooser,
-            shortenClasspathModeCombo
+            mainClass, commonProgramParameters, moduleChooser
         )!!
-        shortenClasspathModeCombo!!.component =
-            ShortenCommandLineModeCombo(project, jrePathEditor, moduleChooser!!.component)
     }
 
     override fun applyEditorTo(configuration: OCamlRunConfiguration) {
@@ -67,9 +56,6 @@ class OCamlRunConfigurationEditor(private val project: Project) : SettingsEditor
         moduleSelector.applyTo(configuration)
 
         configuration.runClass = mainClass!!.component.className
-        configuration.alternativeJrePath = jrePathEditor!!.jrePathOrName
-        configuration.isAlternativeJrePathEnabled = jrePathEditor!!.isAlternativeJreSelected
-        configuration.shortenCommandLine = shortenClasspathModeCombo!!.component.selectedItem
     }
 
     override fun resetEditorFrom(configuration: OCamlRunConfiguration) {
@@ -77,8 +63,6 @@ class OCamlRunConfigurationEditor(private val project: Project) : SettingsEditor
         moduleSelector.reset(configuration)
         val runClass = configuration.runClass
         mainClass!!.component.text = runClass?.replace("\\$".toRegex(), "\\.") ?: ""
-        jrePathEditor!!.setPathOrName(configuration.alternativeJrePath, configuration.isAlternativeJrePathEnabled)
-        shortenClasspathModeCombo!!.component.selectedItem = configuration.shortenCommandLine
     }
 
     override fun createEditor(): JComponent {
@@ -106,9 +90,7 @@ class OCamlRunConfigurationEditor(private val project: Project) : SettingsEditor
         this.anchor = anchor!!
         mainClass!!.anchor = anchor
         commonProgramParameters!!.anchor = anchor
-        jrePathEditor!!.anchor = anchor
         moduleChooser!!.anchor = anchor
-        shortenClasspathModeCombo!!.anchor = anchor
     }
 
     companion object {
