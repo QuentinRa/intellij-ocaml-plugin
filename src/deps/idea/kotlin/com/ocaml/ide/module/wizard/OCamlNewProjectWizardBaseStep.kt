@@ -5,9 +5,15 @@ import com.intellij.ide.projectWizard.generators.AssetsJavaNewProjectWizardStep
 import com.intellij.ide.projectWizard.generators.IntelliJNewProjectWizardStep
 import com.intellij.ide.starters.local.StandardAssetsProvider
 import com.intellij.openapi.application.ApplicationManager
+import com.intellij.openapi.progress.ProgressIndicator
+import com.intellij.openapi.progress.Task
+import com.intellij.openapi.progress.runBlockingCancellable
+import com.intellij.openapi.progress.runBlockingMaybeCancellable
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.io.FileUtil
 import com.intellij.openapi.vfs.LocalFileSystem
+import com.intellij.platform.ide.progress.runWithModalProgressBlocking
+import com.intellij.platform.ide.progress.withBackgroundProgress
 import com.intellij.ui.dsl.builder.BottomGap
 import com.intellij.ui.dsl.builder.COLUMNS_LARGE
 import com.intellij.ui.dsl.builder.Panel
@@ -72,11 +78,11 @@ open class OCamlNewProjectWizardAssetStep(private val parent: OCamlNewProjectWiz
         }
 
         if (parent.addSampleCode) {
-            withOCamlSampleCodeAsset()
+            withOCamlSampleCodeAsset(project)
         }
     }
 
-    private fun withOCamlSampleCodeAsset() {
+    private fun withOCamlSampleCodeAsset(project: Project) {
         val template = when (parent.parent.buildSystem) {
             OCamlDuneBuildSystemWizard.NAME -> OCamlDuneTemplate()
             OCamlMakefileBuildSystemWizard.NAME -> OCamlMakefileTemplate()
@@ -94,12 +100,10 @@ open class OCamlNewProjectWizardAssetStep(private val parent: OCamlNewProjectWiz
         sourceRoot?.let {
             val sdk = parent.sdk
             instructions.createFiles(sourceRoot, sdk?.homePath)
-            ApplicationManager.getApplication().runWriteAction {
-                sourceRoot.refresh(
-                    true,
-                    true
-                )
-            }
+            sourceRoot.refresh(
+                true,
+                true
+            )
         }
     }
 

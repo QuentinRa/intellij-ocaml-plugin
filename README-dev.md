@@ -253,6 +253,10 @@ The OCaml SDK need to be loaded within the IDE to allow the user to navigate to 
 * [x] Can use a template
 * [ ] Generate buildConfigurations
 
+Fix
+
+* [ ] Error when creating Dune project: `This method is forbidden on EDT because it does not pump the event queue. Switch to a BGT, or use com.intellij.openapi.progress.TasksKt.runWithModalProgressBlocking.`
+
 #### Module Wizard
 
 * [x] Can create a new module
