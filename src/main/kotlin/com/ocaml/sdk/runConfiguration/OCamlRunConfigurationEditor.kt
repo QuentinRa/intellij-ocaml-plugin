@@ -4,8 +4,10 @@ package com.ocaml.sdk.runConfiguration
 import com.intellij.application.options.ModuleDescriptionsComboBox
 import com.intellij.execution.ExecutionBundle
 import com.intellij.execution.application.ClassEditorField
-import com.intellij.execution.ui.*
+import com.intellij.execution.ui.ClassBrowser
 import com.intellij.execution.ui.ClassBrowser.MainClassBrowser
+import com.intellij.execution.ui.CommonJavaParametersPanel
+import com.intellij.execution.ui.ConfigurationModuleSelector
 import com.intellij.ide.projectView.impl.nodes.ClassTreeNode
 import com.intellij.ide.util.ClassFilter
 import com.intellij.ide.util.ClassFilter.ClassFilterWithScope
@@ -65,26 +67,21 @@ class OCamlRunConfigurationEditor(private val project: Project) : SettingsEditor
         mainClass!!.component.text = runClass?.replace("\\$".toRegex(), "\\.") ?: ""
     }
 
-    override fun createEditor(): JComponent {
-        return mainPanel!!
-    }
+    override fun createEditor(): JComponent = mainPanel!!
 
     private fun createUIComponents() {
         mainClass = LabeledComponent()
         mainClass!!.setComponent(ClassEditorField.createClassField(
             project,
             { moduleSelector.module },
-            { declaration: PsiElement?, place: PsiElement? -> JavaCodeFragment.VisibilityChecker.Visibility.NOT_VISIBLE },
+            { _: PsiElement?, _: PsiElement? -> JavaCodeFragment.VisibilityChecker.Visibility.NOT_VISIBLE },
             createApplicationClassBrowser(
                 project, { moduleSelector.module }, moduleChooser
             )
-        )
-        )
+        ))
     }
 
-    override fun getAnchor(): JComponent {
-        return anchor
-    }
+    override fun getAnchor(): JComponent = anchor
 
     override fun setAnchor(anchor: JComponent?) {
         this.anchor = anchor!!
@@ -114,6 +111,13 @@ class OCamlRunConfigurationEditor(private val project: Project) : SettingsEditor
                 moduleSelector,
                 ExecutionBundle.message("choose.main.class.dialog.title")
             ) {
+                override fun findClass(className: String?): PsiClass? {
+//                    val configurationModule = OCamlRunConfigurationModule(getProject(), false)
+//                    configurationModule.module = moduleSelector.get()
+//                    return configurationModule.findClass(className)
+                    return null
+                }
+
                 override fun createFilter(module: Module?): ClassFilter? {
                     return applicationClass
                 }
