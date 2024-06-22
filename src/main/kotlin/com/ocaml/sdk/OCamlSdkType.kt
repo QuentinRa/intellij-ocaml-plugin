@@ -37,7 +37,7 @@ class OCamlSdkType : SdkType(OCAML_SDK), SdkDownload {
     override fun getPresentableName(): String = "OCaml"
     override fun getIcon(): Icon = OCamlIcons.Nodes.OCAML_SDK
     override fun getDefaultDocumentationUrl(sdk: Sdk): String = OCamlSdkWebsiteUtils.getManualURL(sdk.versionString!!)
-    fun getDefaultAPIUrl(sdk: Sdk): String = OCamlSdkWebsiteUtils.getApiURL(sdk.versionString!!)
+    private fun getDefaultAPIUrl(sdk: Sdk): String = OCamlSdkWebsiteUtils.getApiURL(sdk.versionString!!)
 
     // SDK Folders
     override fun suggestHomePaths(): Collection<String> = OCamlSdkHomeUtils.suggestHomePaths()
@@ -61,7 +61,8 @@ class OCamlSdkType : SdkType(OCAML_SDK), SdkDownload {
     //
     // Data
     //
-    override fun createAdditionalDataConfigurable(sdkModel: SdkModel, sdkModificator: SdkModificator) = OCamlSdkAdditionalDataConfigurable()
+    override fun createAdditionalDataConfigurable(sdkModel: SdkModel, sdkModificator: SdkModificator) =
+        OCamlSdkAdditionalDataConfigurable()
 
     override fun loadAdditionalData(currentSdk: Sdk, additional: Element): SdkAdditionalData {
         val sdkAdditionalData = OCamlSdkAdditionalData()
@@ -91,7 +92,7 @@ class OCamlSdkType : SdkType(OCAML_SDK), SdkDownload {
         sdkModificator.addSources(File(homePath))
         // 0.0.6 - added by default
         sdkModificator.addRoot(getDefaultDocumentationUrl(sdk), OrderRootType.DOCUMENTATION)
-        sdkModificator.addRoot(OCamlSdkWebsiteUtils.getApiURL(sdk.versionString!!), OrderRootType.DOCUMENTATION)
+        sdkModificator.addRoot(getDefaultAPIUrl(sdk), OrderRootType.DOCUMENTATION)
         // 0.4.0 - Write access is allowed inside write-action only
         ApplicationManager.getApplication().invokeAndWait {
             ApplicationManager.getApplication().runWriteAction { sdkModificator.commitChanges() }

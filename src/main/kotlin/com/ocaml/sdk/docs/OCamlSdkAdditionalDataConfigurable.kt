@@ -1,10 +1,8 @@
 package com.ocaml.sdk.docs
 
-import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.options.ConfigurationException
 import com.intellij.openapi.projectRoots.AdditionalDataConfigurable
 import com.intellij.openapi.projectRoots.Sdk
-import com.ocaml.sdk.OCamlSdkType
 import javax.swing.JComponent
 
 /**
