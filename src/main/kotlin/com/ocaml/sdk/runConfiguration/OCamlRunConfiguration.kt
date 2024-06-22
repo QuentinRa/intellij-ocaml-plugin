@@ -1,39 +1,33 @@
 // Copyright 2000-2022 JetBrains s.r.o. and contributors. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.ocaml.sdk.runConfiguration
 
-import com.intellij.codeInsight.daemon.impl.analysis.JavaModuleGraphUtil
 import com.intellij.diagnostic.logging.LogConfigurationPanel
 import com.intellij.execution.*
-import com.intellij.execution.application.BaseJavaApplicationCommandLineState
 import com.intellij.execution.application.JvmMainMethodRunConfigurationOptions
 import com.intellij.execution.configurations.*
+import com.intellij.execution.process.ProcessHandler
 import com.intellij.execution.runners.ExecutionEnvironment
 import com.intellij.execution.target.LanguageRuntimeType
 import com.intellij.execution.target.TargetEnvironmentAwareRunProfile
 import com.intellij.execution.target.TargetEnvironmentConfiguration
 import com.intellij.execution.target.java.JavaLanguageRuntimeConfiguration
 import com.intellij.execution.target.java.JavaLanguageRuntimeType
-import com.intellij.execution.util.JavaParametersUtil
-import com.intellij.openapi.application.runReadAction
 import com.intellij.openapi.module.Module
 import com.intellij.openapi.module.ModuleManager
 import com.intellij.openapi.options.SettingsEditor
 import com.intellij.openapi.options.SettingsEditorGroup
-import com.intellij.openapi.project.DumbService
-import com.intellij.openapi.projectRoots.JavaSdkVersion
-import com.intellij.openapi.projectRoots.ex.JavaSdkUtil
 import com.intellij.openapi.util.WriteExternalException
 import com.intellij.openapi.util.io.FileUtilRt
 import com.intellij.openapi.util.text.StringUtil
 import com.intellij.openapi.vfs.VirtualFileManager
-import com.intellij.psi.*
 import com.intellij.psi.search.ExecutionSearchScopes
 import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.util.PathUtil
 import org.jdom.Element
 
+// JavaRunConfigurationBase
 open class OCamlRunConfiguration(name: String?, runConfigurationModule: JavaRunConfigurationModule, factory: ConfigurationFactory?) :
-    JavaRunConfigurationBase(name, runConfigurationModule, factory!!),
+    ModuleBasedConfiguration<JavaRunConfigurationModule, Element>(name, runConfigurationModule, factory!!),
     CommonJavaRunConfigurationParameters, TargetEnvironmentAwareRunProfile {
 
     init {
@@ -120,7 +114,7 @@ open class OCamlRunConfiguration(name: String?, runConfigurationModule: JavaRunC
 
     @Throws(ExecutionException::class)
     override fun getState(executor: Executor, executionEnvironment: ExecutionEnvironment): RunProfileState? {
-        return MyJavaCommandLineState(this, executionEnvironment)
+        return OCamlRunConfigurationCommandLineState(this, executionEnvironment)
     }
 
     override fun suggestedName(): String? {
@@ -143,53 +137,17 @@ open class OCamlRunConfiguration(name: String?, runConfigurationModule: JavaRunC
         options.remoteTarget = targetName
     }
 
+    // fixme: ............
+    protected fun runsUnderWslJdk() = true
+
     override fun needPrepareTarget() = super.needPrepareTarget() || runsUnderWslJdk()
 
-    override fun getShortenCommandLine() = options.shortenClasspath
-    override fun setShortenCommandLine(mode: ShortenCommandLine?) {
-        options.shortenClasspath = mode
-    }
+    // todo: refer to JavaCommandLineState
+    private class OCamlRunConfigurationCommandLineState(private val configuration: OCamlRunConfiguration,
+                                                        environment: ExecutionEnvironment?) : CommandLineState(environment) {
 
-    private class MyJavaCommandLineState(configuration: OCamlRunConfiguration, environment: ExecutionEnvironment?) :
-        BaseJavaApplicationCommandLineState<OCamlRunConfiguration?>(environment, configuration) {
-        @Throws(ExecutionException::class)
-        override fun createJavaParameters(): JavaParameters {
-            val params = JavaParameters()
-            val module = myConfiguration.configurationModule
-            val classPathType = runReadAction {
-                DumbService.getInstance(module!!.project).computeWithAlternativeResolveEnabled<Int, Exception> {
-                    getClasspathType()
-                }
-            }
-            val jreHome = if (myConfiguration.isAlternativeJrePathEnabled) myConfiguration.alternativeJrePath else null
-            JavaParametersUtil.configureConfiguration(params, myConfiguration)
-            runReadAction { JavaParametersUtil.configureModule(module, params, classPathType, jreHome) }
-            setupJavaParameters(params)
-            params.setShortenCommandLine(myConfiguration.shortenCommandLine, module.project)
-            params.mainClass = myConfiguration.runClass
-            runReadAction { setupModulePath(params, module) }
-            return params
-        }
-
-        override fun isReadActionRequired(): Boolean {
-            return false
-        }
-
-        private fun getClasspathType(): Int {
-            return JavaParameters.JDK_AND_CLASSES
-        }
-
-        companion object {
-            private fun setupModulePath(params: JavaParameters, module: JavaRunConfigurationModule?) {
-                if (JavaSdkUtil.isJdkAtLeast(params.jdk, JavaSdkVersion.JDK_1_9)) {
-                    DumbService.getInstance(module!!.project).computeWithAlternativeResolveEnabled<PsiJavaModule?, Exception> {
-                        JavaModuleGraphUtil.findDescriptorByElement(module.findClass(params.mainClass))
-                    }?.let { mainModule ->
-                        params.moduleName = mainModule.name
-                        JavaParametersUtil.putDependenciesOnModulePath(params, mainModule, false)
-                    }
-                }
-            }
+        override fun startProcess(): ProcessHandler {
+            TODO("Not yet implemented")
         }
     }
 }

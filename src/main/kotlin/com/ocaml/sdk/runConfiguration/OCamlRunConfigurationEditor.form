@@ -16,7 +16,7 @@
         </constraints>
         <properties>
           <labelLocation value="West"/>
-          <text resource-bundle="messages/ExecutionBundle" key="application.configuration.main.class.label"/>
+          <text resource-bundle="messages/OCamlBundle" key="ocaml.runConfigurationType.main.module.label"/>
         </properties>
       </component>
       <component id="d9fac" class="com.intellij.execution.ui.CommonJavaParametersPanel" binding="commonProgramParameters">
