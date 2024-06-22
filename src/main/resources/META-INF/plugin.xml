@@ -76,6 +76,8 @@
         <!-- SDK -->
         <sdkType implementation="com.ocaml.sdk.OCamlSdkType"/>
         <sdkDownload implementation="com.ocaml.sdk.OCamlSdkType"/>
+        <projectViewNodeDecorator implementation="com.ocaml.sdk.nodes.OCamlLibraryRootsNodeDecorator"/>
+        <treeStructureProvider implementation="com.ocaml.sdk.nodes.OCamlLibraryRootsTreeStructureProvider"/>
         <projectSdkSetupValidator implementation="com.ocaml.sdk.validator.OCamlSDKValidator"/>
 
         <!-- BUILD/RUN -->

@@ -236,6 +236,7 @@ The OCaml SDK need to be loaded within the IDE to allow the user to navigate to 
   * [ ] Non-opam
 * [x] We can't manually set the SDK additional data anymore as I can't manage to make it work. The user cannot edit the OCaml manual/API URLs.
 * [x] We suggest the user to set the SDK if not set
+* [x] The SDK files are shown nicely in the Library
 
 ## Menus
 

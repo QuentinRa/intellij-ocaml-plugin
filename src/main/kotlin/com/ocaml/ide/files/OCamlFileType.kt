@@ -10,7 +10,7 @@ import javax.swing.Icon
 object OCamlFileType : LanguageFileType(OCamlLanguage) {
     // Extension-Related Constants
     internal const val DEFAULT_EXTENSION = "ml"
-    private const val DOT_DEFAULT_EXTENSION = ".$DEFAULT_EXTENSION"
+    internal const val DOT_DEFAULT_EXTENSION = ".$DEFAULT_EXTENSION"
 
     // LanguageFileType implementation
     override fun getName(): String  = "OCaml File"
