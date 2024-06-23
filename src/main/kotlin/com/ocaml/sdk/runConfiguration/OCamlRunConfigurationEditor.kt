@@ -13,7 +13,7 @@ import com.intellij.util.ui.UIUtil
 import javax.swing.JComponent
 import javax.swing.JPanel
 
-class OCamlRunConfigurationEditor(private val project: Project) : SettingsEditor<OCamlRunConfiguration>(), PanelWithAnchor {
+internal class OCamlRunConfigurationEditor(project: Project) : SettingsEditor<OCamlRunConfiguration>(), PanelWithAnchor {
     private var mainPanel: JPanel? = null
     private var mainClass: LabeledComponent<OCamlModuleEditorField>? = null
 

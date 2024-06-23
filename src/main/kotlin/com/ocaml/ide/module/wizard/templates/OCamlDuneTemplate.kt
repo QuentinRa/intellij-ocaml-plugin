@@ -34,7 +34,6 @@ internal class OCamlDuneTemplate : ProjectTemplate, TemplateBuildInstructions {
     override fun createFiles(sourceRoot: VirtualFile?, sdkHomePath: String?) {
         val sourceFolder = VfsUtilCore.virtualToIoFile(sourceRoot!!)
         val rootFolder = sourceFolder.parentFile
-        val version = OCamlSdkProvidersManager.getDuneVersion(sdkHomePath)
 
         // OCaml Source Files
         OCamlFileSystemUtils.createFile(sourceFolder, "hello_world.mli", "val hello_world : unit -> unit")
@@ -43,6 +42,6 @@ internal class OCamlDuneTemplate : ProjectTemplate, TemplateBuildInstructions {
 
         // Dune Source Files
         OCamlFileSystemUtils.createFile(sourceFolder, "dune", "(executable\n (name test_hello_world))")
-        OCamlFileSystemUtils.createFile(rootFolder, "dune-project", "(lang dune $version)")
+        OCamlFileSystemUtils.createFile(rootFolder, "dune-project", "(lang dune 2.9)")
     }
 }

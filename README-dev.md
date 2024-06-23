@@ -9,6 +9,9 @@ The project is complex, so here are some notes for you.
 
 **Roadmap**
 
+* [ ] Can build project using BuildConfiguration and semi-arbitrary data using Dune
+  * [ ] Can build without semi-arbitrary data 
+  * [ ] Can generate build configuration from Dune 
 * [ ] Can add a SDK from an arbitrary path (I removed the code...)
 * [ ] Can add a "SimpleSDK" (non-opam) | Add Removed Code
 * [ ] Can build project
@@ -251,11 +254,20 @@ The OCaml SDK need to be loaded within the IDE to allow the user to navigate to 
 * [x] Can create a new project
 * [x] Can set the SDK
 * [x] Can use a template
+  * [ ] Set "dune-project" to "2.9" or "3.0"
+  * [ ] Check if dune is present?
 * [ ] Generate buildConfigurations
 
-Fix
+#### Build
 
-* [ ] Error when creating Dune project: `This method is forbidden on EDT because it does not pump the event queue. Switch to a BGT, or use com.intellij.openapi.progress.TasksKt.runWithModalProgressBlocking.`
+* [ ] Create buildConfigurations
+  * [x] Basic Settings
+  * [ ] Control/Limit the "mainClass" (like in JAVA)
+  * [ ] Verify options
+* [ ] Can build project
+  * [ ] IntelliJ
+  * [ ] Dune
+  * [ ] Makefile
 
 #### Module Wizard
 

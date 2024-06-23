@@ -26,8 +26,8 @@ import com.intellij.util.PathUtil
 import org.jdom.Element
 
 // JavaRunConfigurationBase
-open class OCamlRunConfiguration(name: String?, runConfigurationModule: JavaRunConfigurationModule, factory: ConfigurationFactory?) :
-    ModuleBasedConfiguration<JavaRunConfigurationModule, Element>(name, runConfigurationModule, factory!!),
+internal open class OCamlRunConfiguration(name: String?, runConfigurationModule: OCamlRunConfigurationModule, factory: ConfigurationFactory?) :
+    ModuleBasedConfiguration<OCamlRunConfigurationModule, Element>(name, runConfigurationModule, factory!!),
     CommonJavaRunConfigurationParameters, TargetEnvironmentAwareRunProfile {
 
     init {
@@ -126,6 +126,7 @@ open class OCamlRunConfiguration(name: String?, runConfigurationModule: JavaRunC
         } else parts[parts.size - 1]
     }
 
+    // todo: ...
     override fun canRunOn(target: TargetEnvironmentConfiguration): Boolean =
         target.runtimes.findByType(JavaLanguageRuntimeConfiguration::class.java) != null
 

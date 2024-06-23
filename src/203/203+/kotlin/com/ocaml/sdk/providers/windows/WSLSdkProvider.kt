@@ -52,11 +52,11 @@ class WSLSdkProvider : UnixOCamlSdkProvider() {
         sdkFolder += "/$version$sdkModifier"
 
         val distribution = path.distribution
-        ocaml = distribution.getWslPath(ocaml)
+        ocaml = distribution.getWslPath(Path.of(ocaml))
         if (ocaml == null) return null
-        compiler = distribution.getWslPath(compiler!!)
+        compiler = distribution.getWslPath(Path.of(compiler!!))
         if (compiler == null) return null
-        sources = distribution.getWslPath(sources!!)
+        sources = distribution.getWslPath(Path.of(sources!!))
         if (sources == null) return null
 
         // the order will be reversed, so we need to put the last commands first
@@ -106,7 +106,7 @@ class WSLSdkProvider : UnixOCamlSdkProvider() {
         LOG.debug("Detected WSL " + path.distribution + " for " + ocamlBinary)
         val distribution = path.distribution
         // get path to ocamlc
-        val ocamlc = distribution.getWslPath(ocamlBinary + "c")
+        val ocamlc = distribution.getWslPath(Path.of(ocamlBinary + "c"))
         if (ocamlc == null) {
             LOG.debug("ocamlc not found for $ocamlBinary")
             return null
@@ -178,9 +178,9 @@ class WSLSdkProvider : UnixOCamlSdkProvider() {
         val path = WslPath.parseWindowsUncPath((sdkHomePath)!!) ?: return null
         try {
             val distribution = path.distribution
-            val wslOutputDirectory = distribution.getWslPath((outputDirectory)!!)
+            val wslOutputDirectory = distribution.getWslPath(Path.of(outputDirectory!!))
                 ?: throw ExecutionException("Could not parse output directory:$outputDirectory")
-            val wslFile = distribution.getWslPath((file)!!)
+            val wslFile = distribution.getWslPath(Path.of(file!!))
                 ?: throw ExecutionException("Could not parse file:$file")
 
             // create cli
@@ -190,7 +190,7 @@ class WSLSdkProvider : UnixOCamlSdkProvider() {
                 wslOutputDirectory, outputDirectory /* use OS working directory */
             )
             cli = distribution.patchCommandLine(cli, null, WSLCommandLineOptions())
-            val wslRootFolderForTempering = distribution.getWslPath((rootFolderForTempering)!!)
+            val wslRootFolderForTempering = distribution.getWslPath(Path.of(rootFolderForTempering!!))
                 ?: throw ExecutionException("Could not parse rootFolder:$rootFolderForTempering")
             return CompileWithCmtInfo(cli, wslRootFolderForTempering)
         } catch (e: ExecutionException) {
@@ -222,15 +222,15 @@ class WSLSdkProvider : UnixOCamlSdkProvider() {
         // other paths that were allowed in other places, are not directly
         // used with SDK, they will be renamed, etc., so that they match
         // the SDK expected file structure
-        var ocaml = homePath.resolve("bin/ocaml").toFile().absolutePath
-        var compiler = homePath.resolve("bin/ocamlc").toFile().absolutePath
-        var sources = homePath.resolve("lib/ocaml/").toFile().absolutePath
+        var ocaml : String? = homePath.resolve("bin/ocaml").toFile().absolutePath
+        var compiler : String? = homePath.resolve("bin/ocamlc").toFile().absolutePath
+        var sources : String? = homePath.resolve("lib/ocaml/").toFile().absolutePath
 
-        ocaml = distribution.getWslPath(ocaml)
+        ocaml = distribution.getWslPath(Path.of(ocaml!!))
         if (ocaml == null) return null
-        compiler = distribution.getWslPath(compiler)
+        compiler = distribution.getWslPath(Path.of(compiler!!))
         if (compiler == null) return null
-        sources = distribution.getWslPath(sources)
+        sources = distribution.getWslPath(Path.of(sources!!))
         if (sources == null) return null
 
         var cli = GeneralCommandLine("true")

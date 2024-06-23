@@ -27,11 +27,13 @@ class OCamlRunConfigurationType : ConfigurationType {
     }
 }
 
+internal class OCamlRunConfigurationModule(project: Project) : RunConfigurationModule(project) {}
+
 // ApplicationConfigurationType.java | Anonymous class
-private class OCamlConfigurationFactory(type: ConfigurationType) : ConfigurationFactory(type) {
+internal class OCamlConfigurationFactory(type: ConfigurationType) : ConfigurationFactory(type) {
     override fun getId(): String = OCAML_RUN_CONFIGURATION_ID
     override fun getOptionsClass(): Class<out BaseState> = JvmMainMethodRunConfigurationOptions::class.java
     override fun createTemplateConfiguration(project: Project): RunConfiguration =
-        OCamlRunConfiguration("", JavaRunConfigurationModule(project, true), this)
+        OCamlRunConfiguration("", OCamlRunConfigurationModule(project), this)
     override fun isEditableInDumbMode(): Boolean = true
 }
