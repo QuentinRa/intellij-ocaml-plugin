@@ -10,8 +10,8 @@ import com.intellij.execution.runners.ExecutionEnvironment
 import com.intellij.execution.target.LanguageRuntimeType
 import com.intellij.execution.target.TargetEnvironmentAwareRunProfile
 import com.intellij.execution.target.TargetEnvironmentConfiguration
-import com.intellij.execution.target.java.JavaLanguageRuntimeConfiguration
-import com.intellij.execution.target.java.JavaLanguageRuntimeType
+import com.intellij.execution.util.ProgramParametersUtil
+import com.intellij.execution.util.checkEnvFiles
 import com.intellij.openapi.module.Module
 import com.intellij.openapi.module.ModuleManager
 import com.intellij.openapi.options.SettingsEditor
@@ -23,6 +23,7 @@ import com.intellij.openapi.vfs.VirtualFileManager
 import com.intellij.psi.search.ExecutionSearchScopes
 import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.util.PathUtil
+import com.ocaml.OCamlBundle
 import org.jdom.Element
 
 // JavaRunConfigurationBase
@@ -109,7 +110,12 @@ internal open class OCamlRunConfiguration(name: String?, runConfigurationModule:
 
     @Throws(RuntimeConfigurationException::class)
     override fun checkConfiguration() {
-        // fixme: no checks for now
+        val configurationModule = configurationModule
+        ProgramParametersUtil.checkWorkingDirectoryExist(this, project, configurationModule.module)
+        checkEnvFiles(this)
+        if (configurationModule.module == null) {
+            throw RuntimeConfigurationException(OCamlBundle.message("ocaml.runConfigurationType.module.not.found"))
+        }
     }
 
     @Throws(ExecutionException::class)
@@ -126,28 +132,27 @@ internal open class OCamlRunConfiguration(name: String?, runConfigurationModule:
         } else parts[parts.size - 1]
     }
 
-    // todo: ...
-    override fun canRunOn(target: TargetEnvironmentConfiguration): Boolean =
-        target.runtimes.findByType(JavaLanguageRuntimeConfiguration::class.java) != null
-
-    override fun getDefaultLanguageRuntimeType(): LanguageRuntimeType<*>? =
-        LanguageRuntimeType.EXTENSION_NAME.findExtension(JavaLanguageRuntimeType::class.java)
+    // override fun needPrepareTarget() = super.needPrepareTarget()
+    override fun canRunOn(target: TargetEnvironmentConfiguration): Boolean = false
+    override fun getDefaultLanguageRuntimeType(): LanguageRuntimeType<*>? = null
 
     override fun getDefaultTargetName(): String? = options.remoteTarget
     override fun setDefaultTargetName(targetName: String?) {
         options.remoteTarget = targetName
     }
 
-    // fixme: ............
-    protected fun runsUnderWslJdk() = true
-
-    override fun needPrepareTarget() = super.needPrepareTarget() || runsUnderWslJdk()
-
     // todo: refer to JavaCommandLineState
     private class OCamlRunConfigurationCommandLineState(private val configuration: OCamlRunConfiguration,
                                                         environment: ExecutionEnvironment?) : CommandLineState(environment) {
 
         override fun startProcess(): ProcessHandler {
+            println(configuration.name)
+            println(configuration.envs)
+            println(configuration.programParameters)
+            println(configuration.runClass)
+            println(configuration.workingDirectory)
+            println(configuration.configurationModule.module)
+            println(configuration.configurationModule.moduleName)
             TODO("Not yet implemented")
         }
     }

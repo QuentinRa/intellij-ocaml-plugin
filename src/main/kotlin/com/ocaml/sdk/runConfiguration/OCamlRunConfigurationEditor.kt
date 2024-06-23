@@ -22,6 +22,7 @@ internal class OCamlRunConfigurationEditor(project: Project) : SettingsEditor<OC
 
     private var anchor: JComponent
 
+    // Need for the target module type to have "classpath=true" in the XML
     private val moduleSelector = ConfigurationModuleSelector(project, moduleChooser!!.component)
 
     init {

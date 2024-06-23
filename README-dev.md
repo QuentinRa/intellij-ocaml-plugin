@@ -268,6 +268,7 @@ The OCaml SDK need to be loaded within the IDE to allow the user to navigate to 
   * [ ] IntelliJ
   * [ ] Dune
   * [ ] Makefile
+* [ ] Can build project on remote target. I tested setting a JAVA WSL SDK, the target was still as "Local" and not "WSL".
 
 #### Module Wizard
 
