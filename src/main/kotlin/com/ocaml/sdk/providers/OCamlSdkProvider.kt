@@ -114,38 +114,31 @@ interface OCamlCustomSdkProvider {
 }
 
 interface OCamlSdkProviderAnnot {
-    /**
-     * @param sdkHomePath            path to the SDK home
-     * @param rootFolderForTempering Most of the time, the root is returned unchanged.
-     * If the paths used are tempered, then this path too, should be tempered
-     * (ex: WSL).
-     * @param file                   the file we are compiling
-     * @param outputDirectory        the output directory
-     * @param executableName         the name of the generated executable
-     * @return the command line with the root for tempering paths, or null
-     */
-    fun getCompileCommandWithCmt(
-        sdkHomePath: String?,
-        rootFolderForTempering: String?,
-        file: String?,
-        outputDirectory: String?,
-        executableName: String?
-    ): CompileWithCmtInfo?
+//    /**
+//     * @param sdkHomePath            path to the SDK home
+//     * @param rootFolderForTempering Most of the time, the root is returned unchanged.
+//     * If the paths used are tempered, then this path too, should be tempered
+//     * (ex: WSL).
+//     * @param file                   the file we are compiling
+//     * @param outputDirectory        the output directory
+//     * @param executableName         the name of the generated executable
+//     * @return the command line with the root for tempering paths, or null
+//     */
+//    fun getCompileCommandWithCmt(
+//        sdkHomePath: String?,
+//        rootFolderForTempering: String?,
+//        file: String?,
+//        outputDirectory: String?,
+//        executableName: String?
+//    ): CompileWithCmtInfo?
 }
 
 interface OCamlSdkProviderREPL {
-    /**
-     * @param sdkHomePath path to the SDK home
-     * @return "ocaml -no-version"
-     */
-    fun getREPLCommand(sdkHomePath: String?): GeneralCommandLine?
-
-    /**
-     * @param sdkHomePath path to the SDK home
-     * @param duneFilePath path to the Dune file
-     * @param duneTargetName name of the target
-     */
-    fun getDuneExecCommand(sdkHomePath: String, duneFilePath: String, duneTargetName: String): GeneralCommandLine?
+//    /**
+//     * @param sdkHomePath path to the SDK home
+//     * @return "ocaml -no-version"
+//     */
+//    fun getREPLCommand(sdkHomePath: String?): GeneralCommandLine?
 }
 
 interface OCamlSdkProviderDune {
@@ -154,6 +147,13 @@ interface OCamlSdkProviderDune {
      * @return Version of dune
      */
     fun getDuneVersion(sdkHomePath: String?): String?
+
+    /**
+     * @param sdkHomePath path to the SDK home
+     * @param duneFilePath path to the Dune file
+     * @param duneTargetName name of the target
+     */
+    fun getDuneExecCommand(sdkHomePath: String, duneFilePath: String, duneTargetName: String): GeneralCommandLine?
 }
 
 interface OCamlSdkProviderOpam {

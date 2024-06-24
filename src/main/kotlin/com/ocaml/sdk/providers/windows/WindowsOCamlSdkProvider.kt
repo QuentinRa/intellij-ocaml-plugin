@@ -23,15 +23,15 @@ open class WindowsOCamlSdkProvider : UnixOCamlSdkProvider() {
     override val oCamlTopLevelCommands: Set<String> get() = setOf()
     override val installationFolders: Set<String> get() = setOf()
     override val nestedProviders: List<OCamlSdkProvider>
-        // but, we can install these
+        // but, we can install WSL, Cygwin, etc.
         get() {
             val nestedProviders: MutableList<OCamlSdkProvider> = mutableListOf()
-            nestedProviders.addAll(super.nestedProviders)
             nestedProviders.addAll(myProviders)
             return nestedProviders
         }
 
-    // We are the ones
+    // fixme: handle suggestHomePaths() nicely, e.g. who is providing paths?
+    // WSL is operating like Unix for now
     override fun suggestHomePaths(): Set<String> {
         val fsRoots = FileSystems.getDefault().rootDirectories
             ?: return emptySet()

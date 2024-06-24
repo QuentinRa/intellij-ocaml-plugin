@@ -35,6 +35,65 @@ class WSLSdkProvider : UnixOCamlSdkProvider() {
             return homePaths
         }
 
+    override fun canUseProviderForHome(homePath: Path): Boolean {
+        if (!WSLUtil.isSystemCompatible()) return false
+        val windowsUncPath = homePath.toFile().absolutePath
+        var path = FileUtil.toSystemDependentName(windowsUncPath)
+        if (path.startsWith(WslConstants.UNC_PREFIX)) path = StringUtil.trimStart(path, WslConstants.UNC_PREFIX)
+        else if (path.startsWith(ALTERNATIVE_WSL_PREFIX)) path = StringUtil.trimStart(path, ALTERNATIVE_WSL_PREFIX)
+        else return false
+        val index = path.indexOf('\\')
+        return index > 0
+    }
+
+    override fun handleSymlinkHomePath(homePath: Path): InvalidHomeError? {
+        val path = WslPath.parseWindowsUncPath(homePath.toFile().absolutePath) ?: return null
+        val distribution = path.distribution
+
+        // they are the ONLY path allowed in an SDK, by definition
+        // other paths that were allowed in other places, are not directly
+        // used with SDK, they will be renamed, etc., so that they match
+        // the SDK expected file structure
+        var ocaml : String? = homePath.resolve("bin/ocaml").toFile().absolutePath
+        var compiler : String? = homePath.resolve("bin/ocamlc").toFile().absolutePath
+        var sources : String? = homePath.resolve("lib/ocaml/").toFile().absolutePath
+
+        ocaml = distribution.getWslPath(Path.of(ocaml!!))
+        if (ocaml == null) return null
+        compiler = distribution.getWslPath(Path.of(compiler!!))
+        if (compiler == null) return null
+        sources = distribution.getWslPath(Path.of(sources!!))
+        if (sources == null) return null
+
+        var cli = GeneralCommandLine("true")
+        val wslCommandLineOptions = WSLCommandLineOptions()
+        // -L -> symlink
+        wslCommandLineOptions.addInitCommand(
+            "(if [ -L " + ocaml + " ]; then" +
+                    " if [ -L " + compiler + " ]; then" +
+                    " if [ -L " + sources + " ]; then echo 0; else echo -3; fi;" +
+                    " else echo -2; fi;" +
+                    " else echo -1; fi;)"
+        )
+        try {
+            cli = distribution.patchCommandLine(cli, null, wslCommandLineOptions)
+            LOG.debug("The CLI was: " + cli.commandLineString)
+            val process = cli.createProcess()
+            process.waitFor()
+            val exitCode = String(process.inputStream.readAllBytes()).replace("\n", "").toInt()
+            LOG.debug("code:$exitCode")
+            return if (exitCode == 0) InvalidHomeError.NONE else InvalidHomeError.GENERIC
+        } catch (e: ExecutionException) {
+            return null
+        } catch (e: InterruptedException) {
+            return null
+        } catch (e: IOException) {
+            return null
+        } catch (e: NumberFormatException) {
+            return null
+        }
+    }
+
 //    override fun createSdkFromBinaries(
 //        ocaml: String, compiler: String,
 //        version: String, sources: String,
@@ -147,109 +206,50 @@ class WSLSdkProvider : UnixOCamlSdkProvider() {
 //        return null
 //    }
 
-    override fun getREPLCommand(sdkHomePath: String?): GeneralCommandLine? {
-        // is wsl
-        val path = WslPath.parseWindowsUncPath((sdkHomePath)!!) ?: return null
-        try {
-            val ocaml = path.linuxPath + "/bin/ocaml"
-            val cli = GeneralCommandLine(ocaml, "-no-version")
-            return path.distribution.patchCommandLine(cli, null, WSLCommandLineOptions())
-        } catch (e: ExecutionException) {
-            LOG.error("Error creating REPL command", e)
-            return null
-        }
-    }
+//    override fun getREPLCommand(sdkHomePath: String?): GeneralCommandLine? {
+//        // is wsl
+//        val path = WslPath.parseWindowsUncPath((sdkHomePath)!!) ?: return null
+//        try {
+//            val ocaml = path.linuxPath + "/bin/ocaml"
+//            val cli = GeneralCommandLine(ocaml, "-no-version")
+//            return path.distribution.patchCommandLine(cli, null, WSLCommandLineOptions())
+//        } catch (e: ExecutionException) {
+//            LOG.error("Error creating REPL command", e)
+//            return null
+//        }
+//    }
 
-    override fun getCompileCommandWithCmt(
-        sdkHomePath: String?,
-        rootFolderForTempering: String?,
-        file: String?,
-        outputDirectory: String?,
-        executableName: String?
-    ): CompileWithCmtInfo? {
-        // is wsl
-        val path = WslPath.parseWindowsUncPath((sdkHomePath)!!) ?: return null
-        try {
-            val distribution = path.distribution
-            val wslOutputDirectory = distribution.getWslPath(Path.of(outputDirectory!!))
-                ?: throw ExecutionException("Could not parse output directory:$outputDirectory")
-            val wslFile = distribution.getWslPath(Path.of(file!!))
-                ?: throw ExecutionException("Could not parse file:$file")
-
-            // create cli
-            var cli: GeneralCommandLine = CompileWithCmtInfo.createAnnotatorCommand(
-                path.linuxPath + "/bin/ocamlc",
-                wslFile, "$wslOutputDirectory/$executableName",
-                wslOutputDirectory, outputDirectory /* use OS working directory */
-            )
-            cli = distribution.patchCommandLine(cli, null, WSLCommandLineOptions())
-            val wslRootFolderForTempering = distribution.getWslPath(Path.of(rootFolderForTempering!!))
-                ?: throw ExecutionException("Could not parse rootFolder:$rootFolderForTempering")
-            return CompileWithCmtInfo(cli, wslRootFolderForTempering)
-        } catch (e: ExecutionException) {
-            LOG.error("Error creating Compiler command", e)
-            return null
-        }
-    }
-
-    override fun canUseProviderForHome(homePath: Path): Boolean {
-        if (!WSLUtil.isSystemCompatible()) return false
-        val windowsUncPath = homePath.toFile().absolutePath
-        var path = FileUtil.toSystemDependentName(windowsUncPath)
-        if (path.startsWith(WslConstants.UNC_PREFIX)) path = StringUtil.trimStart(path, WslConstants.UNC_PREFIX)
-        else if (path.startsWith(ALTERNATIVE_WSL_PREFIX)) path = StringUtil.trimStart(path, ALTERNATIVE_WSL_PREFIX)
-        else return false
-        val index = path.indexOf('\\')
-        return index > 0
-    }
-
-    override fun handleSymlinkHomePath(homePath: Path): InvalidHomeError? {
-        val path = WslPath.parseWindowsUncPath(homePath.toFile().absolutePath) ?: return null
-        val distribution = path.distribution
-
-        // they are the ONLY path allowed in an SDK, by definition
-        // other paths that were allowed in other places, are not directly
-        // used with SDK, they will be renamed, etc., so that they match
-        // the SDK expected file structure
-        var ocaml : String? = homePath.resolve("bin/ocaml").toFile().absolutePath
-        var compiler : String? = homePath.resolve("bin/ocamlc").toFile().absolutePath
-        var sources : String? = homePath.resolve("lib/ocaml/").toFile().absolutePath
-
-        ocaml = distribution.getWslPath(Path.of(ocaml!!))
-        if (ocaml == null) return null
-        compiler = distribution.getWslPath(Path.of(compiler!!))
-        if (compiler == null) return null
-        sources = distribution.getWslPath(Path.of(sources!!))
-        if (sources == null) return null
-
-        var cli = GeneralCommandLine("true")
-        val wslCommandLineOptions = WSLCommandLineOptions()
-        // -L -> symlink
-        wslCommandLineOptions.addInitCommand(
-            "(if [ -L " + ocaml + " ]; then" +
-                    " if [ -L " + compiler + " ]; then" +
-                    " if [ -L " + sources + " ]; then echo 0; else echo -3; fi;" +
-                    " else echo -2; fi;" +
-                    " else echo -1; fi;)"
-        )
-        try {
-            cli = distribution.patchCommandLine(cli, null, wslCommandLineOptions)
-            LOG.debug("The CLI was: " + cli.commandLineString)
-            val process = cli.createProcess()
-            process.waitFor()
-            val exitCode = String(process.inputStream.readAllBytes()).replace("\n", "").toInt()
-            LOG.debug("code:$exitCode")
-            return if (exitCode == 0) InvalidHomeError.NONE else InvalidHomeError.GENERIC
-        } catch (e: ExecutionException) {
-            return null
-        } catch (e: InterruptedException) {
-            return null
-        } catch (e: IOException) {
-            return null
-        } catch (e: NumberFormatException) {
-            return null
-        }
-    }
+//    override fun getCompileCommandWithCmt(
+//        sdkHomePath: String?,
+//        rootFolderForTempering: String?,
+//        file: String?,
+//        outputDirectory: String?,
+//        executableName: String?
+//    ): CompileWithCmtInfo? {
+//        // is wsl
+//        val path = WslPath.parseWindowsUncPath((sdkHomePath)!!) ?: return null
+//        try {
+//            val distribution = path.distribution
+//            val wslOutputDirectory = distribution.getWslPath(Path.of(outputDirectory!!))
+//                ?: throw ExecutionException("Could not parse output directory:$outputDirectory")
+//            val wslFile = distribution.getWslPath(Path.of(file!!))
+//                ?: throw ExecutionException("Could not parse file:$file")
+//
+//            // create cli
+//            var cli: GeneralCommandLine = CompileWithCmtInfo.createAnnotatorCommand(
+//                path.linuxPath + "/bin/ocamlc",
+//                wslFile, "$wslOutputDirectory/$executableName",
+//                wslOutputDirectory, outputDirectory /* use OS working directory */
+//            )
+//            cli = distribution.patchCommandLine(cli, null, WSLCommandLineOptions())
+//            val wslRootFolderForTempering = distribution.getWslPath(Path.of(rootFolderForTempering!!))
+//                ?: throw ExecutionException("Could not parse rootFolder:$rootFolderForTempering")
+//            return CompileWithCmtInfo(cli, wslRootFolderForTempering)
+//        } catch (e: ExecutionException) {
+//            LOG.error("Error creating Compiler command", e)
+//            return null
+//        }
+//    }
 
     override fun getDuneVersion(sdkHomePath: String?): String? {
         val path = WslPath.parseWindowsUncPath((sdkHomePath)!!) ?: return null

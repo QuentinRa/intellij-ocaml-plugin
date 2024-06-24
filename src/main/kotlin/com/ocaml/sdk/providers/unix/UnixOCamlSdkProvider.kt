@@ -29,6 +29,122 @@ open class UnixOCamlSdkProvider : OCamlSdkProvider {
     override val oCamlCompilerCommands: List<String> get() = listOf("ocamlc")
     override val oCamlSourcesFolders: List<String>
         get() = listOf("lib/ocaml", "usr/lib/ocaml", "usr/local/lib/ocaml")
+    override val installationFolders: Set<String>
+        // commands
+        get() {
+            val installationFolders: MutableSet<String> = HashSet()
+            // we know that we may find opam
+            installationFolders.add(SystemProperties.getUserHome() + "/.opam")
+            // we may have created simple SDKs
+            //fixme: installationFolders.add(FileUtil.expandUserHome(SimpleSdkData.SDK_FOLDER))
+            // is there any other places in which we may find ocaml SDKs?
+            // ...
+            return installationFolders
+        }
+
+    override fun getAssociatedSourcesFolders(sdkHome: String): Set<String> {
+        return setOf(
+            "lib",
+            ".opam-switch/sources/" // we may have this one in opam SDKs
+        )
+    }
+
+    override fun suggestHomePaths(): Set<String?> {
+        val roots: MutableSet<Path> = HashSet()
+        for (folder in installationFolders) {
+            roots.add(Path.of(folder))
+        }
+        return OCamlSdkScanner.scanAll(roots, true)
+    }
+
+    override fun isHomePathValid(homePath: Path): Boolean? {
+        if (!canUseProviderForHome(homePath)) return null
+        return isHomePathValidErrorMessage(homePath) == InvalidHomeError.NONE
+    }
+
+    override fun isHomePathValidErrorMessage(homePath: Path): InvalidHomeError? {
+        // version
+        val ok: Boolean = OCamlSdkVersionUtils.isValid(homePath.toFile().name)
+        if (!ok) {
+            LOG.debug("Not a valid home name: $homePath")
+            return InvalidHomeError.INVALID_HOME_PATH
+        }
+        // interactive toplevel
+        var hasTopLevel = false
+        for (exeName in oCamlTopLevelCommands) {
+            hasTopLevel = Files.exists(homePath.resolve("bin/$exeName"))
+            if (hasTopLevel) break
+        }
+        if (!hasTopLevel) {
+            var link = handleSymlinkHomePath(homePath)
+            if (link == null) {
+                LOG.debug("Not top level found for $homePath")
+                link = InvalidHomeError.NO_TOP_LEVEL
+            }
+            return link
+        }
+        // compiler
+        var hasCompiler = false
+        for (compilerName in oCamlCompilerCommands) {
+            hasCompiler = Files.exists(homePath.resolve("bin/$compilerName"))
+            if (hasCompiler) break
+        }
+        if (!hasCompiler) {
+            LOG.debug("Not compiler found for $homePath")
+            return InvalidHomeError.NO_COMPILER
+        }
+        // sources
+        var hasSources = false
+        var sourcesMissing = false
+        var e = InvalidHomeError.NONE
+        for (sourceFolder in oCamlSourcesFolders) {
+            val path = homePath.resolve(sourceFolder)
+            hasSources = Files.exists(path)
+            if (!hasSources) continue
+            // ensure that the directory is not empty
+            val list = path.toFile().list()
+            sourcesMissing = list == null || list.size == 0
+            //            System.out.println("check "+path+" isn't empty?"+sourcesMissing);
+            break
+        }
+        if (!hasSources) {
+            LOG.debug("Not sources found for $homePath")
+            e = InvalidHomeError.NO_SOURCES
+        }
+        if (sourcesMissing) {
+            LOG.warn("Sources are missing for $homePath")
+        }
+        return e
+    }
+
+    protected open fun handleSymlinkHomePath(homePath: Path): InvalidHomeError? = null
+
+//    private fun getCompilerVersionCLI(ocamlcCompilerPath: String?): GeneralCommandLine? =
+//        GeneralCommandLine(ocamlcCompilerPath, "-version")
+
+//    override fun getREPLCommand(sdkHomePath: String?): GeneralCommandLine? {
+//        if (!canUseProviderForHome(sdkHomePath!!)) return null
+//        return GeneralCommandLine("$sdkHomePath/bin/ocaml", "-no-version")
+//    }
+
+//    override fun getCompileCommandWithCmt(
+//        sdkHomePath: String?,
+//        rootFolderForTempering: String?,
+//        file: String?,
+//        outputDirectory: String?,
+//        executableName: String?
+//    ): CompileWithCmtInfo? {
+//        if (!canUseProviderForHome(sdkHomePath!!)) return null
+//        return CompileWithCmtInfo(
+//            CompileWithCmtInfo.createAnnotatorCommand(
+//                "$sdkHomePath/bin/ocamlc", file!!,
+//                "$outputDirectory/$executableName",
+//                outputDirectory, outputDirectory
+//            ),  // nothing to change
+//            rootFolderForTempering!!
+//        )
+//    }
+
 
     // compiler
 //    override fun isOpamBinary(ocamlBinary: String): Boolean? = ocamlBinary.contains(".opam")
@@ -121,123 +237,8 @@ open class UnixOCamlSdkProvider : OCamlSdkProvider {
 //        return null
 //    }
 
-    override fun getAssociatedSourcesFolders(sdkHome: String): Set<String> {
-        return setOf(
-            "lib",
-            ".opam-switch/sources/" // we may have this one in opam SDKs
-        )
-    }
-
-    override val installationFolders: Set<String>
-        // commands
-        get() {
-            val installationFolders: MutableSet<String> = HashSet()
-            // we know that we may find opam
-            installationFolders.add(SystemProperties.getUserHome() + "/.opam")
-            // we may have created simple SDKs
-            //fixme: installationFolders.add(FileUtil.expandUserHome(SimpleSdkData.SDK_FOLDER))
-            // is there any other places in which we may find ocaml SDKs?
-            // ...
-            return installationFolders
-        }
-
-    override fun suggestHomePaths(): Set<String?> {
-        val roots: MutableSet<Path> = HashSet()
-        for (folder in installationFolders) {
-            roots.add(Path.of(folder))
-        }
-        return OCamlSdkScanner.scanAll(roots, true)
-    }
-
-    override fun isHomePathValid(homePath: Path): Boolean? {
-        if (!canUseProviderForHome(homePath)) return null
-        return isHomePathValidErrorMessage(homePath) == InvalidHomeError.NONE
-    }
-
-    override fun isHomePathValidErrorMessage(homePath: Path): InvalidHomeError? {
-        // version
-        val ok: Boolean = OCamlSdkVersionUtils.isValid(homePath.toFile().name)
-        if (!ok) {
-            LOG.debug("Not a valid home name: $homePath")
-            return InvalidHomeError.INVALID_HOME_PATH
-        }
-        // interactive toplevel
-        var hasTopLevel = false
-        for (exeName in oCamlTopLevelCommands) {
-            hasTopLevel = Files.exists(homePath.resolve("bin/$exeName"))
-            if (hasTopLevel) break
-        }
-        if (!hasTopLevel) {
-            var link = handleSymlinkHomePath(homePath)
-            if (link == null) {
-                LOG.debug("Not top level found for $homePath")
-                link = InvalidHomeError.NO_TOP_LEVEL
-            }
-            return link
-        }
-        // compiler
-        var hasCompiler = false
-        for (compilerName in oCamlCompilerCommands) {
-            hasCompiler = Files.exists(homePath.resolve("bin/$compilerName"))
-            if (hasCompiler) break
-        }
-        if (!hasCompiler) {
-            LOG.debug("Not compiler found for $homePath")
-            return InvalidHomeError.NO_COMPILER
-        }
-        // sources
-        var hasSources = false
-        var sourcesMissing = false
-        var e = InvalidHomeError.NONE
-        for (sourceFolder in oCamlSourcesFolders) {
-            val path = homePath.resolve(sourceFolder)
-            hasSources = Files.exists(path)
-            if (!hasSources) continue
-            // ensure that the directory is not empty
-            val list = path.toFile().list()
-            sourcesMissing = list == null || list.size == 0
-            //            System.out.println("check "+path+" isn't empty?"+sourcesMissing);
-            break
-        }
-        if (!hasSources) {
-            LOG.debug("Not sources found for $homePath")
-            e = InvalidHomeError.NO_SOURCES
-        }
-        if (sourcesMissing) {
-            LOG.warn("Sources are missing for $homePath")
-        }
-        return e
-    }
-
-    protected open fun handleSymlinkHomePath(homePath: Path): InvalidHomeError? = null
-
-    // sdk
-    private fun getCompilerVersionCLI(ocamlcCompilerPath: String?): GeneralCommandLine? =
-        GeneralCommandLine(ocamlcCompilerPath, "-version")
-
-    override fun getREPLCommand(sdkHomePath: String?): GeneralCommandLine? {
-        if (!canUseProviderForHome(sdkHomePath!!)) return null
-        return GeneralCommandLine("$sdkHomePath/bin/ocaml", "-no-version")
-    }
-
-    override fun getCompileCommandWithCmt(
-        sdkHomePath: String?,
-        rootFolderForTempering: String?,
-        file: String?,
-        outputDirectory: String?,
-        executableName: String?
-    ): CompileWithCmtInfo? {
-        if (!canUseProviderForHome(sdkHomePath!!)) return null
-        return CompileWithCmtInfo(
-            CompileWithCmtInfo.createAnnotatorCommand(
-                "$sdkHomePath/bin/ocamlc", file!!,
-                "$outputDirectory/$executableName",
-                outputDirectory, outputDirectory
-            ),  // nothing to change
-            rootFolderForTempering!!
-        )
-    }
-
+    // Dune
+    protected fun getDuneExecutable(sdkHomePath: String?): String = "$sdkHomePath/bin/dune"
     override fun getDuneVersion(sdkHomePath: String?): String? {
         if (!canUseProviderForHome(sdkHomePath!!)) return null
         try {
@@ -257,15 +258,9 @@ open class UnixOCamlSdkProvider : OCamlSdkProvider {
         }
     }
 
-    override fun getDuneExecCommand(
-        sdkHomePath: String,
-        duneFilePath: String,
-        duneTargetName: String
-    ): GeneralCommandLine? {
+    override fun getDuneExecCommand(sdkHomePath: String, duneFilePath: String, duneTargetName: String): GeneralCommandLine? {
         return null
     }
-
-    protected fun getDuneExecutable(sdkHomePath: String?): String = "$sdkHomePath/bin/dune"
 
     companion object {
         @JvmStatic

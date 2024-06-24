@@ -15,26 +15,20 @@ object OCamlSdkProvidersManager : OCamlSdkProvider {
     private val myProviders = ArrayList<OCamlSdkProvider>()
 
     init {
-        if (SystemInfo.isWindows) {
-            addProvider(WindowsOCamlSdkProvider())
-        } else {
-            addProvider(UnixOCamlSdkProvider())
-        }
-    }
-
-    // providers
-    private fun addProvider(provider: OCamlSdkProvider) {
+        val provider =
+            if (SystemInfo.isWindows)
+                WindowsOCamlSdkProvider()
+            else
+                UnixOCamlSdkProvider()
         myProviders.add(provider)
-        val nestedProviders = provider.nestedProviders
-        myProviders.addAll(nestedProviders)
+        myProviders.addAll(provider.nestedProviders)
     }
 
-    override val nestedProviders: List<OCamlSdkProvider>
-        get() = myProviders
-
+    override val nestedProviders: List<OCamlSdkProvider> get() = myProviders
     override val oCamlTopLevelCommands: Set<String?> get() = callProvidersValuesSet { it.oCamlTopLevelCommands }
     override val oCamlCompilerCommands: List<String?> get() = callProvidersValuesList { it.oCamlCompilerCommands }
     override val oCamlSourcesFolders: List<String?> get() = callProvidersValuesList { it.oCamlSourcesFolders }
+    override val installationFolders: Set<String> get() = callProvidersValuesSet(OCamlSdkProvider::installationFolders)
 
 //    override fun isOpamBinary(ocamlBinary: String): Boolean? =
 //        callProvidersValue { provider -> provider.isOpamBinary(ocamlBinary) }
@@ -48,32 +42,22 @@ object OCamlSdkProvidersManager : OCamlSdkProvider {
 //    override fun getAssociatedBinaries(ocamlBinary: String): AssociatedBinaries? =
 //        callProvidersValue { provider -> provider.getAssociatedBinaries(ocamlBinary) }
 
-    override fun getAssociatedSourcesFolders(sdkHome: String): Set<String> =
-        callProvidersValue { provider -> provider.getAssociatedSourcesFolders(sdkHome) } ?: emptySet()
+//    override fun getREPLCommand(sdkHomePath: String?): GeneralCommandLine? =
+//        callProvidersValue { provider -> provider.getREPLCommand(sdkHomePath) }
 
-    override fun getREPLCommand(sdkHomePath: String?): GeneralCommandLine? =
-        callProvidersValue { provider -> provider.getREPLCommand(sdkHomePath) }
+//    override fun getCompileCommandWithCmt(
+//        sdkHomePath: String?,
+//        rootFolderForTempering: String?,
+//        file: String?,
+//        outputDirectory: String?,
+//        executableName: String?
+//    ): CompileWithCmtInfo? = callProvidersValue { provider ->
+//        provider.getCompileCommandWithCmt(sdkHomePath, rootFolderForTempering, file, outputDirectory, executableName)
+//    }
 
-    override fun getDuneExecCommand(sdkHomePath: String, duneFilePath: String, duneTargetName: String) =
-        callProvidersValue { provider -> provider.getDuneExecCommand(sdkHomePath, duneFilePath, duneTargetName) }
-
-    override fun getCompileCommandWithCmt(
-        sdkHomePath: String?,
-        rootFolderForTempering: String?,
-        file: String?,
-        outputDirectory: String?,
-        executableName: String?
-    ): CompileWithCmtInfo? = callProvidersValue { provider ->
-        provider.getCompileCommandWithCmt(sdkHomePath, rootFolderForTempering, file, outputDirectory, executableName)
-    }
-
-    override val installationFolders: Set<String>
-        get() = callProvidersValuesSet(OCamlSdkProvider::installationFolders)
-
+    // --------------- OCamlSdkProvider
     override fun suggestHomePaths(): Set<String?> = callProvidersValue { obj ->
-        return@callProvidersValue obj.suggestHomePaths().ifEmpty {
-            null
-        }
+        return@callProvidersValue obj.suggestHomePaths().ifEmpty { null }
     } ?: emptySet()
 
     override fun isHomePathValid(homePath: Path): Boolean? =
@@ -81,6 +65,13 @@ object OCamlSdkProvidersManager : OCamlSdkProvider {
 
     override fun isHomePathValidErrorMessage(homePath: Path): InvalidHomeError? =
         callProvidersValue { provider -> provider.isHomePathValidErrorMessage(homePath) }
+
+    override fun getAssociatedSourcesFolders(sdkHome: String): Set<String> =
+        callProvidersValue { provider -> provider.getAssociatedSourcesFolders(sdkHome) } ?: emptySet()
+
+    // OCamlSdkProviderDune
+    override fun getDuneExecCommand(sdkHomePath: String, duneFilePath: String, duneTargetName: String) =
+        callProvidersValue { provider -> provider.getDuneExecCommand(sdkHomePath, duneFilePath, duneTargetName) }
 
     override fun getDuneVersion(sdkHomePath: String?): String  {
         var result : String? = null
