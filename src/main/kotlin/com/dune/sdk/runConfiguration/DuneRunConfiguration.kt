@@ -1,8 +1,9 @@
 // Copyright 2000-2024 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 package com.dune.sdk.runConfiguration
 
-import com.dune.DuneBundle.message
+import com.dune.DuneBundle
 import com.dune.icons.DuneIcons
+import com.dune.ide.files.DuneFileType
 import com.intellij.execution.ExecutionException
 import com.intellij.execution.Executor
 import com.intellij.execution.configuration.EnvironmentVariablesData
@@ -29,11 +30,15 @@ import java.nio.file.Paths
 import com.intellij.execution.configuration.EnvironmentVariablesComponent
 import com.intellij.icons.AllIcons
 import com.intellij.openapi.application.PathMacros
+import com.intellij.openapi.fileChooser.FileChooserDescriptor
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory
+import com.intellij.openapi.fileChooser.FileElement
+import com.intellij.openapi.fileTypes.FileTypeRegistry
 import com.intellij.openapi.options.SettingsEditor
 import com.intellij.openapi.ui.*
 import com.intellij.openapi.ui.popup.JBPopupFactory
 import com.intellij.openapi.vfs.LocalFileSystem
+import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiManager
 import com.intellij.ui.*
 import com.intellij.ui.components.fields.ExpandableTextField
@@ -334,8 +339,8 @@ class DuneRunConfigurationFactory(private val runConfigurationType: DuneRunConfi
 }
 
 class DuneRunConfigurationType : ConfigurationType {
-    override fun getDisplayName(): String = message("run.configuration.name")
-    override fun getConfigurationTypeDescription(): String = message("run.configuration.description")
+    override fun getDisplayName(): String = DuneBundle.message("run.configuration.name")
+    override fun getConfigurationTypeDescription(): String = DuneBundle.message("run.configuration.description")
     override fun getIcon() = DuneIcons.Nodes.DUNE
     override fun getId() = "DUNE_TARGET_RUN_CONFIGURATION"
     override fun getConfigurationFactories() = arrayOf(DuneRunConfigurationFactory(this))
@@ -360,20 +365,20 @@ class DuneRunConfigurationEditor(private val project: Project) : SettingsEditor<
             .setAlignLabelOnRight(false)
             .setHorizontalGap(UIUtil.DEFAULT_HGAP)
             .setVerticalGap(UIUtil.DEFAULT_VGAP)
-            .addLabeledComponent(MakefileLangBundle.message("run.configuration.editor.filename.label"), filenameField)
-            .addLabeledComponent(MakefileLangBundle.message("run.configuration.editor.target.label"), targetField)
-            .addComponent(LabeledComponent.create(argumentsField, MakefileLangBundle.message("run.configuration.editor.arguments.label")))
-            .addLabeledComponent(MakefileLangBundle.message("run.configuration.editor.working.directory.label"), createComponentWithMacroBrowse(workingDirectoryField))
+            .addLabeledComponent(DuneBundle.message("run.configuration.editor.filename.label"), filenameField)
+            .addLabeledComponent(DuneBundle.message("run.configuration.editor.target.label"), targetField)
+            .addComponent(LabeledComponent.create(argumentsField, DuneBundle.message("run.configuration.editor.arguments.label")))
+            .addLabeledComponent(DuneBundle.message("run.configuration.editor.working.directory.label"), createComponentWithMacroBrowse(workingDirectoryField))
             .addComponent(environmentVarsComponent)
             .panel
     }
 
     init {
         filenameField.addBrowseFolderListener(
-            MakefileLangBundle.message("file.chooser.title"),
-            MakefileLangBundle.message("file.chooser.description"),
+            DuneBundle.message("file.chooser.title"),
+            DuneBundle.message("file.chooser.description"),
             project,
-            MakefileFileChooserDescriptor()
+            DuneFileChooserDescriptor()
         )
         filenameField.textField.document.addDocumentListener(object : DocumentAdapter() {
             override fun textChanged(event: DocumentEvent) {
@@ -381,8 +386,8 @@ class DuneRunConfigurationEditor(private val project: Project) : SettingsEditor<
             }
         })
         workingDirectoryField.addBrowseFolderListener(
-            MakefileLangBundle.message("working.directory.file.chooser"),
-            MakefileLangBundle.message("working.directory.file.chooser.description"),
+            DuneBundle.message("working.directory.file.chooser"),
+            DuneBundle.message("working.directory.file.chooser.description"),
             project,
             FileChooserDescriptorFactory.createSingleFolderDescriptor())
     }
@@ -435,4 +440,19 @@ class DuneRunConfigurationEditor(private val project: Project) : SettingsEditor<
             add(button, BorderLayout.EAST)
         }
     }
+}
+
+class DuneFileChooserDescriptor : FileChooserDescriptor(true, false, false, false, false, false) {
+    init {
+        title = DuneBundle.message("file.chooser.title")
+    }
+
+    override fun isFileVisible(file: VirtualFile, showHiddenFiles: Boolean) = when {
+        !showHiddenFiles && FileElement.isFileHidden(file) -> false
+        file.isDirectory -> true
+        else -> FileTypeRegistry.getInstance().isFileOfType(file, DuneFileType)
+    }
+
+    override fun isFileSelectable(file: VirtualFile?) =
+        file != null && !file.isDirectory && isFileVisible(file, true)
 }
