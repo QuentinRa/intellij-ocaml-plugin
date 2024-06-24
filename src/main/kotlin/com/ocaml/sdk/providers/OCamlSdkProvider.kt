@@ -151,4 +151,11 @@ interface OCamlSdkProviderREPL {
      * @return "ocaml -no-version"
      */
     fun getREPLCommand(sdkHomePath: String?): GeneralCommandLine?
+
+    /**
+     * @param sdkHomePath path to the SDK home
+     * @param duneFilePath path to the Dune file
+     * @param duneTargetName name of the target
+     */
+    fun getDuneExecCommand(sdkHomePath: String, duneFilePath: String, duneTargetName: String): GeneralCommandLine?
 }

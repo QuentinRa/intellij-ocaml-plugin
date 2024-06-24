@@ -100,7 +100,7 @@ class DuneRunConfiguration(project: Project, factory: DuneRunConfigurationFactor
                     ?: error("Error: Module SDK for '$moduleName' was not found.")
 
                 // Compile arguments
-                val cmd = OCamlSdkProvidersManager.getDuneRunCommand(sdk.homePath, duneFolder, target) ?: error("Your SDK is not supported (${sdk.homePath}).")
+                val cmd = OCamlSdkProvidersManager.getDuneExecCommand(sdk.homePath!!, duneFolder, target) ?: error("Your SDK is not supported (${sdk.homePath}).")
                 val processHandler = ColoredProcessHandler(cmd)
                 processHandler.setShouldKillProcessSoftly(true)
                 ProcessTerminatedListener.attach(processHandler)

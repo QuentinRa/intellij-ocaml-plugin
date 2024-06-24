@@ -66,16 +66,3 @@ open class WindowsOCamlSdkProvider : UnixOCamlSdkProvider() {
         return OCamlSdkScanner.scanAll(roots, true)
     }
 }
-
-abstract class AbstractWindowsBaseProvider : UnixOCamlSdkProvider() {
-    /**
-     * On Windows, the WindowsSDKProvider will be the one that will call
-     * this method.
-     *
-     * @return an empty set
-     * @see WindowsOCamlSdkProvider
-     */
-    override fun suggestHomePaths(): Set<String> {
-        return setOf()
-    }
-}

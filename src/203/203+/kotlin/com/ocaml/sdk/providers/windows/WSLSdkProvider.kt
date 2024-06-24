@@ -281,6 +281,14 @@ class WSLSdkProvider : UnixOCamlSdkProvider() {
         }
     }
 
+    override fun getDuneExecCommand(
+        sdkHomePath: String,
+        duneFilePath: String,
+        duneTargetName: String
+    ): GeneralCommandLine? {
+        return null
+    }
+
     companion object {
         // move to another class?
         fun expandUserHome(distro: WSLDistribution, folder: String): String {

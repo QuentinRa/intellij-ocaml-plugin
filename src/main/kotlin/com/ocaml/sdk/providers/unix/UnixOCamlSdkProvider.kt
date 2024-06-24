@@ -257,6 +257,14 @@ open class UnixOCamlSdkProvider : OCamlSdkProvider {
         }
     }
 
+    override fun getDuneExecCommand(
+        sdkHomePath: String,
+        duneFilePath: String,
+        duneTargetName: String
+    ): GeneralCommandLine? {
+        return null
+    }
+
     protected fun getDuneExecutable(sdkHomePath: String?): String = "$sdkHomePath/bin/dune"
 
     companion object {

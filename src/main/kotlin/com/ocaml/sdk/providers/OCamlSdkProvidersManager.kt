@@ -54,6 +54,9 @@ object OCamlSdkProvidersManager : OCamlSdkProvider {
     override fun getREPLCommand(sdkHomePath: String?): GeneralCommandLine? =
         callProvidersValue { provider -> provider.getREPLCommand(sdkHomePath) }
 
+    override fun getDuneExecCommand(sdkHomePath: String, duneFilePath: String, duneTargetName: String) =
+        callProvidersValue { provider -> provider.getDuneExecCommand(sdkHomePath, duneFilePath, duneTargetName) }
+
     override fun getCompileCommandWithCmt(
         sdkHomePath: String?,
         rootFolderForTempering: String?,

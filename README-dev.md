@@ -11,6 +11,7 @@ The project is complex, so here are some notes for you.
 
 * [x] Add line marker on "name" for dune
   * [ ] Fix: line marker must be applied to leaf
+  * [ ] Should only prompt line marker for `executables`
 * [x] Generate configuration from dune instruction
   * [x] Fix the editor
   * [ ] Can set the module from the editor
