@@ -36,17 +36,17 @@ object OCamlSdkProvidersManager : OCamlSdkProvider {
     override val oCamlCompilerCommands: List<String?> get() = callProvidersValuesList { it.oCamlCompilerCommands }
     override val oCamlSourcesFolders: List<String?> get() = callProvidersValuesList { it.oCamlSourcesFolders }
 
-    override fun isOpamBinary(ocamlBinary: String): Boolean? =
-        callProvidersValue { provider -> provider.isOpamBinary(ocamlBinary) }
+//    override fun isOpamBinary(ocamlBinary: String): Boolean? =
+//        callProvidersValue { provider -> provider.isOpamBinary(ocamlBinary) }
 
-    override fun createSdkFromBinaries(ocaml: String, compiler: String, version: String,
-                                       sources: String, sdkFolder: String, sdkModifier: String): String? =
-        callProvidersValue { provider ->
-            provider.createSdkFromBinaries(ocaml, compiler, version, sources, sdkFolder, sdkModifier)
-        }
-
-    override fun getAssociatedBinaries(ocamlBinary: String): AssociatedBinaries? =
-        callProvidersValue { provider -> provider.getAssociatedBinaries(ocamlBinary) }
+//    override fun createSdkFromBinaries(ocaml: String, compiler: String, version: String,
+//                                       sources: String, sdkFolder: String, sdkModifier: String): String? =
+//        callProvidersValue { provider ->
+//            provider.createSdkFromBinaries(ocaml, compiler, version, sources, sdkFolder, sdkModifier)
+//        }
+//
+//    override fun getAssociatedBinaries(ocamlBinary: String): AssociatedBinaries? =
+//        callProvidersValue { provider -> provider.getAssociatedBinaries(ocamlBinary) }
 
     override fun getAssociatedSourcesFolders(sdkHome: String): Set<String> =
         callProvidersValue { provider -> provider.getAssociatedSourcesFolders(sdkHome) } ?: emptySet()

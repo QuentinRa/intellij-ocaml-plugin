@@ -54,6 +54,7 @@ FilenameIndex.getVirtualFilesByName(
   GlobalSearchScope.projectScope(element.project)
 )
 ```
+* [ ] Most of API stuff was removed, add it back as needed
 * Add reference/include tests
 * Add template tests
 * Extract StructureView#getChildren and test it

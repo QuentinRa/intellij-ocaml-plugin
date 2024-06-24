@@ -3,8 +3,8 @@ package com.ocaml.sdk.providers
 import com.intellij.execution.configurations.GeneralCommandLine
 import java.nio.file.Path
 
-interface OCamlSdkProvider : OCamlSdkProviderUtils, OCamlSdkProviderAnnot,
-    OCamlSdkProviderREPL, OCamlSdkProviderDune {
+interface OCamlSdkProvider : OCamlCustomSdkProvider, OCamlSdkProviderUtils,
+    OCamlSdkProviderAnnot, OCamlSdkProviderREPL, OCamlSdkProviderDune, OCamlSdkProviderOpam {
     /**
      * If a provider is made of multiples providers, you shall
      * return them using this method.
@@ -36,36 +36,6 @@ interface OCamlSdkProvider : OCamlSdkProviderUtils, OCamlSdkProviderAnnot,
      * valid value. The path is relative to the SDK root folder.
      */
     val oCamlSourcesFolders: List<String?>
-
-    /**
-     * @param ocamlBinary a possible path to an opam SDK
-     * @return true if this ocamlBinary is an opam binary
-     */
-    fun isOpamBinary(ocamlBinary: String): Boolean?
-
-    /**
-     * Create an SDK using binaries. They should be linked, not copied.
-     *
-     * @param ocaml       location to the ocaml binary
-     * @param compiler    location of the compiler
-     * @param version     version of the compiler
-     * @param sources     location of the sources folder
-     * @param sdkFolder   the folder, that may not exist, in which the SDK should be stored.
-     * @param sdkModifier the name of the SDK should be sdkFolder/version followed by sdkModifier
-     * @return a path to the created SDK, or null
-     */
-    fun createSdkFromBinaries(
-        ocaml: String, compiler: String, version: String,
-        sources: String, sdkFolder: String, sdkModifier: String
-    ): String?
-
-    /**
-     * The provider will try to return the associated compiler, if possible.
-     *
-     * @param ocamlBinary the path to the ocaml binary, may be invalid
-     * @return null of the path to the ocamlc binary
-     */
-    fun getAssociatedBinaries(ocamlBinary: String): AssociatedBinaries?
 
     /**
      * @param sdkHome a valid sdk home
@@ -115,14 +85,32 @@ interface OCamlSdkProviderUtils {
 //     * or null if this provider cannot generate a command for this compiler
 //     */
 //    fun getCompilerVersionCLI(ocamlcCompilerPath: String?): GeneralCommandLine?
+
+//    /**
+//     * The provider will try to return the associated compiler, if possible.
+//     *
+//     * @param ocamlBinary the path to the ocaml binary, may be invalid
+//     * @return null of the path to the ocamlc binary
+//     */
+//    fun getAssociatedBinaries(ocamlBinary: String): AssociatedBinaries?
 }
 
-interface OCamlSdkProviderDune {
-    /**
-     * @param sdkHomePath path to the sdkHome
-     * @return Version of dune
-     */
-    fun getDuneVersion(sdkHomePath: String?): String?
+interface OCamlCustomSdkProvider {
+//    /**
+//     * Create an SDK using binaries. They should be linked, not copied.
+//     *
+//     * @param ocaml       location to the ocaml binary
+//     * @param compiler    location of the compiler
+//     * @param version     version of the compiler
+//     * @param sources     location of the sources folder
+//     * @param sdkFolder   the folder, that may not exist, in which the SDK should be stored.
+//     * @param sdkModifier the name of the SDK should be sdkFolder/version followed by sdkModifier
+//     * @return a path to the created SDK, or null
+//     */
+//    fun createSdkFromBinaries(
+//        ocaml: String, compiler: String, version: String,
+//        sources: String, sdkFolder: String, sdkModifier: String
+//    ): String?
 }
 
 interface OCamlSdkProviderAnnot {
@@ -158,4 +146,20 @@ interface OCamlSdkProviderREPL {
      * @param duneTargetName name of the target
      */
     fun getDuneExecCommand(sdkHomePath: String, duneFilePath: String, duneTargetName: String): GeneralCommandLine?
+}
+
+interface OCamlSdkProviderDune {
+    /**
+     * @param sdkHomePath path to the sdkHome
+     * @return Version of dune
+     */
+    fun getDuneVersion(sdkHomePath: String?): String?
+}
+
+interface OCamlSdkProviderOpam {
+//    /**
+//     * @param ocamlBinary a possible path to an opam SDK
+//     * @return true if this ocamlBinary is an opam binary
+//     */
+//    fun isOpamBinary(ocamlBinary: String): Boolean?
 }

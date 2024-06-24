@@ -31,95 +31,95 @@ open class UnixOCamlSdkProvider : OCamlSdkProvider {
         get() = listOf("lib/ocaml", "usr/lib/ocaml", "usr/local/lib/ocaml")
 
     // compiler
-    override fun isOpamBinary(ocamlBinary: String): Boolean? = ocamlBinary.contains(".opam")
-    override fun createSdkFromBinaries(
-        ocaml: String, compiler: String, version: String,
-        sources: String, sdkFolder: String, sdkModifier: String
-    ): String? {
-        if (!canUseProviderForOCamlBinary(ocaml)) return null
-        val sdkFolderFile = File(FileUtil.expandUserHome(sdkFolder))
-        val sdkHome = FileUtil.findSequentNonexistentFile(sdkFolderFile, version + sdkModifier, "")
-        var ok = sdkHome.mkdirs()
-        ok = ok && File(sdkHome, "bin").mkdir()
-        if (!ok) LOG.debug("create 'bin' failed")
-        ok = ok && File(sdkHome, "lib").mkdir()
-        if (!ok) LOG.debug("create 'lib' failed")
-        ok = ok && OCamlPathUtils.createSymbolicLink(ocaml, sdkHome.path, LOG, "bin", "ocaml")
-        ok = ok && OCamlPathUtils.createSymbolicLink(compiler, sdkHome.path, LOG, "bin", "ocamlc")
-        ok = ok && OCamlPathUtils.createSymbolicLink(sources, sdkHome.path, LOG, "lib", "ocaml")
-        return if (ok) sdkHome.absolutePath else null
-    }
+//    override fun isOpamBinary(ocamlBinary: String): Boolean? = ocamlBinary.contains(".opam")
+//    override fun createSdkFromBinaries(
+//        ocaml: String, compiler: String, version: String,
+//        sources: String, sdkFolder: String, sdkModifier: String
+//    ): String? {
+//        if (!canUseProviderForOCamlBinary(ocaml)) return null
+//        val sdkFolderFile = File(FileUtil.expandUserHome(sdkFolder))
+//        val sdkHome = FileUtil.findSequentNonexistentFile(sdkFolderFile, version + sdkModifier, "")
+//        var ok = sdkHome.mkdirs()
+//        ok = ok && File(sdkHome, "bin").mkdir()
+//        if (!ok) LOG.debug("create 'bin' failed")
+//        ok = ok && File(sdkHome, "lib").mkdir()
+//        if (!ok) LOG.debug("create 'lib' failed")
+//        ok = ok && OCamlPathUtils.createSymbolicLink(ocaml, sdkHome.path, LOG, "bin", "ocaml")
+//        ok = ok && OCamlPathUtils.createSymbolicLink(compiler, sdkHome.path, LOG, "bin", "ocamlc")
+//        ok = ok && OCamlPathUtils.createSymbolicLink(sources, sdkHome.path, LOG, "lib", "ocaml")
+//        return if (ok) sdkHome.absolutePath else null
+//    }
 
-    override fun getAssociatedBinaries(ocamlBinary: String): AssociatedBinaries? {
-        if (!canUseProviderForOCamlBinary(ocamlBinary)) return null
-        // check files exists
-        val ocamlBinPath = Path.of(ocamlBinary)
-        if (!Files.exists(ocamlBinPath)) {
-            LOG.debug("binary not found: $ocamlBinary")
-            return null
-        }
-        val binPath = ocamlBinPath.parent
-        if (!Files.exists(binPath)) { // useless?
-            LOG.debug("bin folder not found for $ocamlBinary")
-            return null
-        }
-        val root = binPath.parent
-        if (!Files.exists(root)) {  // useless?
-            LOG.debug("root folder not found for $ocamlBinary")
-            return null
-        }
-        var sourceFolder: String? = null
-
-        // find a valid source folder
-        for (source in oCamlSourcesFolders) {
-            val sourcePath = root.resolve(source)
-            if (!Files.exists(sourcePath)) continue
-            sourceFolder = sourcePath.toFile().absolutePath
-            break
-        }
-        if (sourceFolder == null) {
-            LOG.debug("Sources' folder not found for $ocamlBinary")
-            return null
-        }
-
-        // testing compilers
-        for (compilerName in oCamlCompilerCommands) {
-            LOG.trace("testing $compilerName")
-            val compilerPath = binPath.resolve(compilerName)
-            if (!Files.exists(binPath)) continue
-            val compiler = compilerPath.toFile().absolutePath
-
-            var version: String
-
-            // try to find the version using the compiler
-            val cli = getCompilerVersionCLI(compiler)
-            if (cli == null) {
-                LOG.debug("No cli for $compiler")
-                continue
-            }
-            LOG.debug("CLI for " + compiler + " is " + cli.commandLineString)
-            try {
-                val process = cli.createProcess()
-                val inputStream = process.inputStream
-                version = String(inputStream.readAllBytes()).trim { it <= ' ' }
-                LOG.info("Version of $compiler is '$version'.")
-                // if we got something better
-                val alt: String = OCamlSdkVersionUtils.parse(ocamlBinary)
-                if (!OCamlSdkVersionUtils.isUnknownVersion(alt)) version = alt
-            } catch (e: ExecutionException) {
-                LOG.debug("Command failed:" + e.message)
-                continue
-            } catch (e: IOException) {
-                LOG.debug("Command failed:" + e.message)
-                continue
-            }
-
-            return AssociatedBinaries(ocamlBinary, compiler, sourceFolder, version)
-        }
-
-        LOG.warn("No compiler found for $ocamlBinary")
-        return null
-    }
+//    override fun getAssociatedBinaries(ocamlBinary: String): AssociatedBinaries? {
+//        if (!canUseProviderForOCamlBinary(ocamlBinary)) return null
+//        // check files exists
+//        val ocamlBinPath = Path.of(ocamlBinary)
+//        if (!Files.exists(ocamlBinPath)) {
+//            LOG.debug("binary not found: $ocamlBinary")
+//            return null
+//        }
+//        val binPath = ocamlBinPath.parent
+//        if (!Files.exists(binPath)) { // useless?
+//            LOG.debug("bin folder not found for $ocamlBinary")
+//            return null
+//        }
+//        val root = binPath.parent
+//        if (!Files.exists(root)) {  // useless?
+//            LOG.debug("root folder not found for $ocamlBinary")
+//            return null
+//        }
+//        var sourceFolder: String? = null
+//
+//        // find a valid source folder
+//        for (source in oCamlSourcesFolders) {
+//            val sourcePath = root.resolve(source)
+//            if (!Files.exists(sourcePath)) continue
+//            sourceFolder = sourcePath.toFile().absolutePath
+//            break
+//        }
+//        if (sourceFolder == null) {
+//            LOG.debug("Sources' folder not found for $ocamlBinary")
+//            return null
+//        }
+//
+//        // testing compilers
+//        for (compilerName in oCamlCompilerCommands) {
+//            LOG.trace("testing $compilerName")
+//            val compilerPath = binPath.resolve(compilerName)
+//            if (!Files.exists(binPath)) continue
+//            val compiler = compilerPath.toFile().absolutePath
+//
+//            var version: String
+//
+//            // try to find the version using the compiler
+//            val cli = getCompilerVersionCLI(compiler)
+//            if (cli == null) {
+//                LOG.debug("No cli for $compiler")
+//                continue
+//            }
+//            LOG.debug("CLI for " + compiler + " is " + cli.commandLineString)
+//            try {
+//                val process = cli.createProcess()
+//                val inputStream = process.inputStream
+//                version = String(inputStream.readAllBytes()).trim { it <= ' ' }
+//                LOG.info("Version of $compiler is '$version'.")
+//                // if we got something better
+//                val alt: String = OCamlSdkVersionUtils.parse(ocamlBinary)
+//                if (!OCamlSdkVersionUtils.isUnknownVersion(alt)) version = alt
+//            } catch (e: ExecutionException) {
+//                LOG.debug("Command failed:" + e.message)
+//                continue
+//            } catch (e: IOException) {
+//                LOG.debug("Command failed:" + e.message)
+//                continue
+//            }
+//
+//            return AssociatedBinaries(ocamlBinary, compiler, sourceFolder, version)
+//        }
+//
+//        LOG.warn("No compiler found for $ocamlBinary")
+//        return null
+//    }
 
     override fun getAssociatedSourcesFolders(sdkHome: String): Set<String> {
         return setOf(
