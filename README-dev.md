@@ -12,7 +12,9 @@ The project is complex, so here are some notes for you.
 * [x] Add line marker on "name" for dune
   * [ ] Fix: line marker must be applied to leaf
 * [x] Generate configuration from dune instruction
-  * [ ] Fix the editor
+  * [x] Fix the editor
+  * [ ] Can set the module from the editor
+  * [ ] Verify the configuration
   * [ ] Can execute dune with the provided target
 * [ ] Remove "makefile" files including GEN+RES
 * [ ] Can add a SDK from an arbitrary path (I removed the code...)
@@ -299,6 +301,12 @@ dune exec src/test_hello_world.exe # build+run
 * [x] Structure View
 * [x] Braces matching
 * [x] Commenter
+* [x] RunConfiguration
+  * [x] Run icon shown next to the target
+  * [ ] Verify the configuration
+  * [ ] Autocompletion of the target
+  * [ ] Replace with project variable when selecting a dune path
+  * [ ] Trigger "dune exec"
 * [ ] Add references for paths/files
 * [ ] Add folding for variables
 * [ ] Live Templates

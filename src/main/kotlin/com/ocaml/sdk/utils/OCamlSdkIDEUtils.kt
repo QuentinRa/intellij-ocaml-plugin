@@ -1,6 +1,7 @@
 package com.ocaml.sdk.utils
 
 import com.intellij.openapi.compiler.CompilerManager
+import com.intellij.openapi.module.Module
 import com.intellij.openapi.module.ModuleManager
 import com.intellij.openapi.module.ModuleUtilCore
 import com.intellij.openapi.project.Project
@@ -32,14 +33,17 @@ object OCamlSdkIDEUtils {
         return sdk
     }
 
-    /** Get the SDK for the module which contains this file  */
-    fun getModuleSdkForFile(project: Project, file: VirtualFile): Sdk? {
-        val module = ModuleUtilCore.findModuleForFile(file, project)
+    fun getModuleSdk(module: Module?): Sdk? {
         if (module != null && !module.isDisposed) {
             val sdk = ModuleRootManager.getInstance(module).sdk
             if (sdk != null && sdk.sdkType is OCamlSdkType) return sdk
         }
         return null
+    }
+
+    /** Get the SDK for the module which contains this file  */
+    fun getModuleSdkForFile(project: Project, file: VirtualFile): Sdk? {
+        return getModuleSdk(ModuleUtilCore.findModuleForFile(file, project))
     }
 
     fun isInProject(project: Project, file: VirtualFile): Boolean {

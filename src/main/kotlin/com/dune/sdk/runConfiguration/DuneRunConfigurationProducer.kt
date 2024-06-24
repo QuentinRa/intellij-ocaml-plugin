@@ -6,6 +6,7 @@ import com.intellij.execution.actions.ConfigurationContext
 import com.intellij.execution.actions.LazyRunConfigurationProducer
 import com.intellij.execution.configurations.ConfigurationFactory
 import com.intellij.openapi.components.PathMacroManager
+import com.intellij.openapi.module.ModuleUtilCore
 import com.intellij.openapi.util.Ref
 import com.intellij.psi.PsiElement
 import java.io.File
@@ -17,6 +18,7 @@ class DuneRunConfigurationProducer : LazyRunConfigurationProducer<DuneRunConfigu
         val path = context.location?.virtualFile?.path
         configuration.filename = macroManager.collapsePath(path) ?: ""
         configuration.target = findTarget(context)?.text ?: "" // fixme: ...
+        configuration.moduleName = ModuleUtilCore.findModuleForFile(context.location?.virtualFile!!, context.project)?.name ?: ""
 
         if (configuration.target.isNotEmpty()) {
             configuration.name = configuration.target
