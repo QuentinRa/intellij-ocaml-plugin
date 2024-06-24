@@ -18,7 +18,7 @@ class DuneRunConfigurationProducer : LazyRunConfigurationProducer<DuneRunConfigu
         if (context.psiLocation?.containingFile !is DuneFile) return false
         val macroManager = PathMacroManager.getInstance(context.project)
         val path = context.location?.virtualFile?.path
-        configuration.filename = macroManager.collapsePath(path) ?: ""
+        configuration.duneFile = macroManager.collapsePath(path) ?: ""
         configuration.target = context.psiLocation?.text ?: ""
         configuration.moduleName = ModuleUtilCore.findModuleForFile(context.location?.virtualFile!!, context.project)?.name ?: ""
 
@@ -33,7 +33,7 @@ class DuneRunConfigurationProducer : LazyRunConfigurationProducer<DuneRunConfigu
 
     override fun isConfigurationFromContext(configuration: DuneRunConfiguration, context: ConfigurationContext): Boolean {
         val macroManager = PathMacroManager.getInstance(context.project)
-        return macroManager.expandPath(configuration.filename) == context.location?.virtualFile?.path &&
+        return macroManager.expandPath(configuration.duneFile) == context.location?.virtualFile?.path &&
                 configuration.target == context.psiLocation?.text
     }
 

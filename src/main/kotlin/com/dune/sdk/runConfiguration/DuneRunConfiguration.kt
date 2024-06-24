@@ -4,6 +4,7 @@ package com.dune.sdk.runConfiguration
 import com.dune.DuneBundle
 import com.dune.icons.DuneIcons
 import com.dune.ide.files.DuneFileType
+import com.intellij.execution.ExecutionBundle
 import com.intellij.execution.Executor
 import com.intellij.execution.configuration.EnvironmentVariablesComponent
 import com.intellij.execution.configuration.EnvironmentVariablesData
@@ -33,21 +34,27 @@ import com.intellij.ui.components.fields.ExpandableTextField
 import com.intellij.util.EnvironmentUtil
 import com.intellij.util.ui.FormBuilder
 import com.intellij.util.ui.UIUtil
+import com.ocaml.OCamlBundle
 import com.ocaml.sdk.providers.OCamlSdkProvidersManager
 import com.ocaml.sdk.utils.OCamlSdkIDEUtils
 import org.jdom.Element
 import java.awt.BorderLayout
 import java.io.File
+import java.nio.file.Files
+import java.nio.file.InvalidPathException
+import java.nio.file.Paths
 import javax.swing.JComponent
 import javax.swing.JPanel
 
 class DuneRunConfiguration(project: Project, factory: DuneRunConfigurationFactory, name: String) : LocatableConfigurationBase<RunProfileState>(project, factory, name) {
-    var filename: String = ""
+    var duneFile: String = ""
     var target: String = ""
     var moduleName: String = ""
-    var workingDirectory: String = ""
+    var workingDirectory: String = defaultWorkingDirectory()
     var environmentVariables: EnvironmentVariablesData = EnvironmentVariablesData.DEFAULT
     var arguments: String = ""
+
+    private fun defaultWorkingDirectory() : String = project.basePath.toString()
 
     private companion object {
         const val DUNE_KEY = "dune"
@@ -55,10 +62,40 @@ class DuneRunConfiguration(project: Project, factory: DuneRunConfigurationFactor
         const val TARGET = "target"
         const val WORKING_DIRECTORY = "workingDirectory"
         const val ARGUMENTS = "arguments"
+        const val MODULE_NAME = "module"
     }
 
     override fun checkConfiguration() {
-        // todo: ...
+        // Check that the dune file exists
+        val pathMacroManager = PathMacroManager.getInstance(project)
+        val duneFilePath = pathMacroManager.expandPath(duneFile)
+        var exists = try {
+            Files.exists(Paths.get(duneFilePath))
+        } catch (e: InvalidPathException) {
+            false
+        }
+        if (!exists) {
+            throw RuntimeConfigurationWarning(DuneBundle.message("dialog.message.dune.file.doesn.t.exist", duneFilePath))
+        }
+
+        // Check working directory | ProgramParametersConfigurator
+        val workingDir = pathMacroManager.expandPath(workingDirectory)
+        exists = try {
+            Files.exists(Paths.get(workingDir))
+        } catch (e: InvalidPathException) {
+            false
+        }
+        if (!exists) {
+            throw RuntimeConfigurationWarning(ExecutionBundle.message("dialog.message.working.directory.doesn.t.exist", workingDir))
+        }
+
+        // Check Module and SDK
+        val module = ModuleManager.getInstance(project).findModuleByName(moduleName)
+        if (module == null) {
+            throw RuntimeConfigurationException(OCamlBundle.message("ocaml.runConfigurationType.module.not.found"))
+        } else if (OCamlSdkIDEUtils.getModuleSdk(module) == null) {
+            throw RuntimeConfigurationException(OCamlBundle.message("ocaml.runConfigurationType.module.sdk.not.set"))
+        }
     }
 
     override fun getConfigurationEditor() = DuneRunConfigurationEditor(project)
@@ -66,10 +103,11 @@ class DuneRunConfiguration(project: Project, factory: DuneRunConfigurationFactor
     override fun writeExternal(element: Element) {
         super.writeExternal(element)
         val child = element.getOrCreateChild(DUNE_KEY)
-        child.setAttribute(FILENAME, filename)
+        child.setAttribute(FILENAME, duneFile)
         child.setAttribute(TARGET, target)
         child.setAttribute(WORKING_DIRECTORY, workingDirectory)
         child.setAttribute(ARGUMENTS, arguments)
+        child.setAttribute(MODULE_NAME, moduleName)
         environmentVariables.writeExternal(child)
     }
 
@@ -77,10 +115,11 @@ class DuneRunConfiguration(project: Project, factory: DuneRunConfigurationFactor
         super.readExternal(element)
         val child = element.getChild(DUNE_KEY)
         if (child != null) {
-            filename = child.getAttributeValue(FILENAME) ?: ""
+            duneFile = child.getAttributeValue(FILENAME) ?: ""
             target = child.getAttributeValue(TARGET) ?: ""
             workingDirectory = child.getAttributeValue(WORKING_DIRECTORY) ?: ""
             arguments = child.getAttributeValue(ARGUMENTS) ?: ""
+            moduleName = child.getAttributeValue(MODULE_NAME) ?: ""
             environmentVariables = EnvironmentVariablesData.readExternal(child)
         }
     }
@@ -89,11 +128,10 @@ class DuneRunConfiguration(project: Project, factory: DuneRunConfigurationFactor
         return object : CommandLineState(executionEnvironment) {
             override fun startProcess(): ProcessHandler {
                 // Locate the dune file
-                val duneFilePath = PathMacroManager.getInstance(project).expandPath(filename)
+                val duneFilePath = PathMacroManager.getInstance(project).expandPath(duneFile)
                 val duneFolder = File(duneFilePath).parentFile.toPath().toAbsolutePath().toString()
 
                 // Locate the module and the sdk
-                moduleName = "untitled" // fixme: ...
                 val module = ModuleManager.getInstance(project).findModuleByName(moduleName)
                     ?: error("Error: Module '$moduleName' was not found.")
                 val sdk = OCamlSdkIDEUtils.getModuleSdk(module)
@@ -131,6 +169,7 @@ class DuneRunConfigurationType : ConfigurationType {
     override fun getId() = "DUNE_TARGET_RUN_CONFIGURATION"
     override fun getConfigurationFactories() = arrayOf(DuneRunConfigurationFactory(this))
 
+    @Suppress("CompanionObjectInExtension")
     companion object {
         @JvmStatic
         val instance: DuneRunConfigurationType
@@ -172,10 +211,10 @@ class DuneRunConfigurationEditor(project: Project) : SettingsEditor<DuneRunConfi
             FileChooserDescriptorFactory.createSingleFolderDescriptor())
     }
 
-    override fun createEditor() = panel
+    override fun createEditor(): JPanel = panel
 
     override fun applyEditorTo(configuration: DuneRunConfiguration) {
-        configuration.filename = filenameField.text
+        configuration.duneFile = filenameField.text
         configuration.target = targetField.text
         configuration.workingDirectory = workingDirectoryField.text
         configuration.environmentVariables = environmentVarsComponent.envData
@@ -183,7 +222,7 @@ class DuneRunConfigurationEditor(project: Project) : SettingsEditor<DuneRunConfi
     }
 
     override fun resetEditorFrom(configuration: DuneRunConfiguration) {
-        filenameField.text = configuration.filename
+        filenameField.text = configuration.duneFile
         targetField.text = configuration.target
         workingDirectoryField.text = configuration.workingDirectory
         environmentVarsComponent.envData = configuration.environmentVariables

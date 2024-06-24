@@ -293,14 +293,11 @@ dune build src/my_executable.exe
 * [x] Braces matching
 * [x] Commenter
 * [x] RunConfiguration
-  * [x] Run icon shown next to the target
-  * [ ] Run icon only shown for executables
-  * [ ] Verify the configuration
+  * [x] Run icon shown next to the executables name
+  * [x] Verify the configuration
   * [ ] Autocompletion of the target
   * [ ] Replace with project variable when selecting a dune path
   * [ ] Build in "out/"
-  * [ ] Use the provided working directory... LoL
-  * [ ] Add support for "(names ...)" (Dune 2.9-)
   * [x] Trigger "dune exec"
 * [ ] Add references for paths/files
 * [ ] Add folding for variables
