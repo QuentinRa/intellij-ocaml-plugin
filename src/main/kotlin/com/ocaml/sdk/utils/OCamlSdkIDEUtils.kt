@@ -72,12 +72,17 @@ object OCamlSdkIDEUtils {
         return isJavaAvailable!!
     }
 
-    fun findOutputFolder(moduleRootManager: ModuleRootManager, project: Project): String {
+    fun findOutputFolder(module: Module, project: Project): String {
+        return findOutputFolder(ModuleRootManager.getInstance(module), project)
+    }
+
+    private fun findOutputFolder(moduleRootManager: ModuleRootManager, project: Project): String {
         return findOutputFolder(moduleRootManager, project) { project.basePath }
     }
 
     private fun findOutputFolder(
-        moduleRootManager: ModuleRootManager, project: Project,
+        moduleRootManager: ModuleRootManager,
+        project: Project,
         rootFolder: Supplier<String?>
     ): String {
         if (isJavaPluginAvailable()) {

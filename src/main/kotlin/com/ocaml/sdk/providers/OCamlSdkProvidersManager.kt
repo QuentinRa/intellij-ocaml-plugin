@@ -70,8 +70,8 @@ object OCamlSdkProvidersManager : OCamlSdkProvider {
         callProvidersValue { provider -> provider.getAssociatedSourcesFolders(sdkHome) } ?: emptySet()
 
     // OCamlSdkProviderDune
-    override fun getDuneExecCommand(sdkHomePath: String, duneFolderPath: String, duneTargetName: String, workingDirectory: String, env: MutableMap<String, String>) =
-        callProvidersValue { provider -> provider.getDuneExecCommand(sdkHomePath, duneFolderPath, duneTargetName, workingDirectory, env) }
+    override fun getDuneExecCommand(sdkHomePath: String, duneFolderPath: String, duneTargetName: String, workingDirectory: String, outputDirectory: String, env: MutableMap<String, String>) =
+        callProvidersValue { provider -> provider.getDuneExecCommand(sdkHomePath, duneFolderPath, duneTargetName, workingDirectory, outputDirectory, env) }
 
     override fun getDuneVersion(sdkHomePath: String?): String  {
         var result : String? = null

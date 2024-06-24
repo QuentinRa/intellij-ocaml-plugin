@@ -5,6 +5,7 @@ import com.intellij.execution.configurations.GeneralCommandLine
 import com.intellij.execution.wsl.*
 import com.intellij.openapi.vfs.encoding.EncodingManager
 import com.ocaml.sdk.providers.InvalidHomeError
+import com.ocaml.sdk.providers.OCamlSdkProviderDune
 import com.ocaml.sdk.providers.unix.UnixOCamlSdkProvider
 import java.io.IOException
 import java.nio.file.Path
@@ -268,11 +269,15 @@ class WSLSdkProvider : UnixOCamlSdkProvider() {
         }
     }
 
-    override fun getDuneExecCommand(sdkHomePath: String, duneFolderPath: String, duneTargetName: String, workingDirectory: String, env: MutableMap<String, String>): GeneralCommandLine? {
+    override fun getDuneExecCommand(sdkHomePath: String, duneFolderPath: String, duneTargetName: String, workingDirectory: String, outputDirectory: String, env: MutableMap<String, String>): GeneralCommandLine? {
         val wslSdkHome = WslPath.parseWindowsUncPath(windowsUncPath = sdkHomePath) ?: return null
         val wslDistribution = wslSdkHome.distribution
         val wslDuneFolder = wslDistribution.getWslPath(Path.of(duneFolderPath)) ?: return null
         val wslWorkingDirectory = wslDistribution.getWslPath(Path.of(workingDirectory)) ?: return null
+        val wslOutputDirectory = wslDistribution.getWslPath(Path.of(outputDirectory)) ?: return null
+
+        // must be a WSL path
+        env += OCamlSdkProviderDune.DUNE_BUILD_DIR to wslOutputDirectory
 
         val cli = GeneralCommandLine().apply {
             withExePath(getDuneExecutable(wslSdkHome.linuxPath))

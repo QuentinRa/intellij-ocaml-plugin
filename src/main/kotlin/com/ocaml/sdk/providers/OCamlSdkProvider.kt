@@ -142,6 +142,10 @@ interface OCamlSdkProviderREPL {
 }
 
 interface OCamlSdkProviderDune {
+    companion object {
+        const val DUNE_BUILD_DIR = "DUNE_BUILD_DIR"
+    }
+
     /**
      * @param sdkHomePath path to the sdkHome
      * @return Version of dune
@@ -155,10 +159,11 @@ interface OCamlSdkProviderDune {
      * @param duneFolderPath path to the folder with the Dune file
      * @param duneTargetName name of the target
      * @param workingDirectory the working directory
+     * @param outputDirectory the output directory
      * @param env environment variables
      */
     fun getDuneExecCommand(sdkHomePath: String, duneFolderPath: String, duneTargetName: String,
-                           workingDirectory: String, env: MutableMap<String, String>): GeneralCommandLine?
+                           workingDirectory: String, outputDirectory: String, env: MutableMap<String, String>): GeneralCommandLine?
 }
 
 interface OCamlSdkProviderOpam {

@@ -259,6 +259,8 @@ The OCaml SDK need to be loaded within the IDE to allow the user to navigate to 
 
 #### Build
 
+**Note**: it's "runConfiguration" and it doesn't necessarily build the project. Dune was implemented, try to integrate the build then copy it for use with OCaml. Also, what about passing args? build options?
+
 * [ ] Create buildConfigurations
   * [x] Basic Settings
   * [ ] Control/Limit the "mainClass" (like in JAVA)
@@ -281,12 +283,6 @@ The OCaml SDK need to be loaded within the IDE to allow the user to navigate to 
 
 ## Dune
 
-```text!
-opam install dune
-DUNE_BUILD_DIR=./out/production/untitled dune build
-dune build src/my_executable.exe
-```
-
 * [x] Highlight
 * [x] Annotator Highlight
 * [x] Structure View
@@ -296,15 +292,9 @@ dune build src/my_executable.exe
   * [x] Run icon shown next to the executables name
   * [x] Verify the configuration
   * [ ] Autocompletion of the target
-  * [ ] Replace with project variable when selecting a dune path
-  * [ ] Build in "out/"
+  * [x] Build in the module output folder
   * [x] Trigger "dune exec"
+  * [ ] Use variables (e.g. Project dir, etc.)
 * [ ] Add references for paths/files
 * [ ] Add folding for variables
 * [ ] Live Templates
-
-In progress:
-
-* [ ] Fix: line marker must be applied to leaf
-* [ ] Can set the module from the editor
-* [ ] Verify the configuration
