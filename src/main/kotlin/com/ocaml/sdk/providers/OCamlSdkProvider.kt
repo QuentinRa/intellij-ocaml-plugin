@@ -3,8 +3,8 @@ package com.ocaml.sdk.providers
 import com.intellij.execution.configurations.GeneralCommandLine
 import java.nio.file.Path
 
-
-interface OCamlSdkProvider {
+interface OCamlSdkProvider : OCamlSdkProviderUtils, OCamlSdkProviderAnnot,
+    OCamlSdkProviderREPL, OCamlSdkProviderDune {
     /**
      * If a provider is made of multiples providers, you shall
      * return them using this method.
@@ -13,9 +13,6 @@ interface OCamlSdkProvider {
      */
     val nestedProviders: List<OCamlSdkProvider>
 
-    //
-    // PATH
-    //
     /**
      * @return A list of commands that are starting the
      * ocaml interactive toplevel (ex: "ocaml")
@@ -93,11 +90,11 @@ interface OCamlSdkProvider {
     /**
      * Check if an homePath is valid, the method should be fast
      * if possible, or avoid heavy operations. You should ensure that
-     * an SDK is stored inside a folder with a version ([com.ocaml.sdk.utils.OCamlSdkVersionManager.parse])
+     * an SDK is stored inside a folder with a version ([com.ocaml.sdk.utils.OCamlSdkVersionUtils.parse])
      *
      * @param homePath an homePath
      * @return true if the homePath is valid for at least one provider
-     * @see com.ocaml.sdk.utils.OCamlSdkVersionManager.parse
+     * @see com.ocaml.sdk.utils.OCamlSdkVersionUtils.parse
      */
     fun isHomePathValid(homePath: Path): Boolean?
 
@@ -106,26 +103,29 @@ interface OCamlSdkProvider {
      * @return why this home path is invalid or null if no provider
      */
     fun isHomePathValidErrorMessage(homePath: Path): InvalidHomeError?
+}
 
-    //
-    // Commands
-    //
+interface OCamlSdkProviderUtils {
+//    /**
+//     * Return a command line that can be used to get the version
+//     * of the compiler
+//     *
+//     * @param ocamlcCompilerPath path to the ocaml compiler
+//     * @return "ocamlc -version"
+//     * or null if this provider cannot generate a command for this compiler
+//     */
+//    fun getCompilerVersionCLI(ocamlcCompilerPath: String?): GeneralCommandLine?
+}
+
+interface OCamlSdkProviderDune {
     /**
-     * Return a command line that can be used to get the version
-     * of the compiler
-     *
-     * @param ocamlcCompilerPath path to the ocaml compiler
-     * @return "ocamlc -version"
-     * or null if this provider cannot generate a command for this compiler
+     * @param sdkHomePath path to the sdkHome
+     * @return Version of dune
      */
-    fun getCompilerVersionCLI(ocamlcCompilerPath: String?): GeneralCommandLine?
+    fun getDuneVersion(sdkHomePath: String?): String?
+}
 
-    /**
-     * @param sdkHomePath path to the SDK home
-     * @return "ocaml -no-version"
-     */
-    fun getREPLCommand(sdkHomePath: String?): GeneralCommandLine?
-
+interface OCamlSdkProviderAnnot {
     /**
      * @param sdkHomePath            path to the SDK home
      * @param rootFolderForTempering Most of the time, the root is returned unchanged.
@@ -143,112 +143,12 @@ interface OCamlSdkProvider {
         outputDirectory: String?,
         executableName: String?
     ): CompileWithCmtInfo?
-
-    //
-    // DUNE
-    //
-    /**
-     * @param sdkHomePath path to the sdkHome
-     * @return Version of dune
-     */
-    fun getDuneVersion(sdkHomePath: String?): String?
 }
 
-enum class InvalidHomeError {
-    NONE,
-    GENERIC,
-    INVALID_HOME_PATH,
-    NO_TOP_LEVEL,
-    NO_COMPILER,
-    NO_SOURCES,
-}
-
-class AssociatedBinaries(
-    val ocamlBin: String, val compilerPath: String,
-    val sourcesPath: String, val compilerVersion: String
-) {
-    override fun toString(): String {
-        return "AssociatedBinaries{" +
-                "ocamlBin='" + ocamlBin + '\'' +
-                ", compilerPath='" + compilerPath + '\'' +
-                ", sourcesPath='" + sourcesPath + '\'' +
-                ", compilerVersion='" + compilerVersion + '\'' +
-                '}'
-    }
-}
-
-// -annot is deprecated since 4.13. An alternative is to use
-// ./ocamlcmt -annot file.cmt. You can generate a .cmt with -bin-annot.
-// As this still available in 4.14, I won't update :D.
-class CompileWithCmtInfo(
-    cli: GeneralCommandLine,
-    baseRootFolderForTempering: String
-) {
-    private val cli: GeneralCommandLine
-
+interface OCamlSdkProviderREPL {
     /**
-     * This root is consumed by [OCamlMessageAdaptor.temperPaths]
-     * to provide an OS-independent path in the messages.
+     * @param sdkHomePath path to the SDK home
+     * @return "ocaml -no-version"
      */
-    private val rootFolderForTempering: String
-
-    init {
-        var rootFolderForTempering = baseRootFolderForTempering
-        this.cli = cli
-
-        // must ends with a trailing slash
-        if (!rootFolderForTempering.endsWith("/") && !rootFolderForTempering.endsWith("\\"))
-            rootFolderForTempering += if (rootFolderForTempering.contains("/")) "/" else "\\"
-
-        this.rootFolderForTempering = rootFolderForTempering
-    }
-
-    /**
-     * @return the extension of the annotation file, without the dot (".").
-     */
-    val annotationFileExtension: String
-        get() = "annot"
-
-    override fun toString(): String {
-        return "CompileWithCmtInfo{" +
-                "cli=" + cli.commandLineString +
-                ", rootFolderForTempering='" + rootFolderForTempering + '\'' +
-                '}'
-    }
-
-    companion object {
-        private const val OUTPUT_EXTENSION: String = ".out"
-
-        /**
-         * ocamlc
-         * -c $file
-         * -o $outputDirectory/$executableName+OUTPUT_EXTENSION
-         * -I $outputDirectory
-         * -w +A
-         * -color=never
-         * -annot
-         */
-        fun createAnnotatorCommand(
-            compiler: String?, file: String, outputFile: String,
-            outputDirectory: String?, workingDirectory: String?
-        ): GeneralCommandLine {
-            val cli = GeneralCommandLine(compiler)
-            if (file.endsWith(".mli")) cli.addParameter("-c")
-            // compile everything else
-            // fix #71: adding extension
-            cli.addParameters(
-                file, "-o", outputFile + OUTPUT_EXTENSION,
-                "-I", outputDirectory,
-                "-w", "+A", "-color=never", "-annot"
-            )
-            // fix issue -I is adding, so the current directory
-            // is included, and this may lead to problems later (ex: a file.cmi may be
-            // used instead of the one in the output directory, because we found one in the
-            // current directory)
-            cli.setWorkDirectory(workingDirectory)
-            // Merge stderr with stdout
-            cli.isRedirectErrorStream = true
-            return cli
-        }
-    }
+    fun getREPLCommand(sdkHomePath: String?): GeneralCommandLine?
 }

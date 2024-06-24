@@ -51,9 +51,6 @@ object OCamlSdkProvidersManager : OCamlSdkProvider {
     override fun getAssociatedSourcesFolders(sdkHome: String): Set<String> =
         callProvidersValue { provider -> provider.getAssociatedSourcesFolders(sdkHome) } ?: emptySet()
 
-    override fun getCompilerVersionCLI(ocamlcCompilerPath: String?): GeneralCommandLine? =
-        callProvidersValue { provider -> provider.getCompilerVersionCLI(ocamlcCompilerPath) }
-
     override fun getREPLCommand(sdkHomePath: String?): GeneralCommandLine? =
         callProvidersValue { provider -> provider.getREPLCommand(sdkHomePath) }
 

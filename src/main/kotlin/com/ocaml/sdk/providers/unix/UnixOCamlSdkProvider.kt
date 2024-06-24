@@ -92,7 +92,7 @@ open class UnixOCamlSdkProvider : OCamlSdkProvider {
             var version: String
 
             // try to find the version using the compiler
-            val cli = OCamlSdkProvidersManager.getCompilerVersionCLI(compiler)
+            val cli = getCompilerVersionCLI(compiler)
             if (cli == null) {
                 LOG.debug("No cli for $compiler")
                 continue
@@ -212,7 +212,7 @@ open class UnixOCamlSdkProvider : OCamlSdkProvider {
     protected open fun handleSymlinkHomePath(homePath: Path): InvalidHomeError? = null
 
     // sdk
-    override fun getCompilerVersionCLI(ocamlcCompilerPath: String?): GeneralCommandLine? =
+    private fun getCompilerVersionCLI(ocamlcCompilerPath: String?): GeneralCommandLine? =
         GeneralCommandLine(ocamlcCompilerPath, "-version")
 
     override fun getREPLCommand(sdkHomePath: String?): GeneralCommandLine? {

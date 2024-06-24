@@ -150,10 +150,6 @@ class WSLSdkProvider : UnixOCamlSdkProvider() {
         return null
     }
 
-    override fun getCompilerVersionCLI(ocamlcCompilerPath: String?): GeneralCommandLine? {
-        return null
-    }
-
     override fun getREPLCommand(sdkHomePath: String?): GeneralCommandLine? {
         // is wsl
         val path = WslPath.parseWindowsUncPath((sdkHomePath)!!) ?: return null
