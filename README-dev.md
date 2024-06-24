@@ -9,9 +9,11 @@ The project is complex, so here are some notes for you.
 
 **Roadmap**
 
-* [ ] Add line marker on "name" for dune
-* [ ] Generate configuration from dune instruction
-* [ ] Can execute dune with the provided target
+* [x] Add line marker on "name" for dune
+  * [ ] Fix: line marker must be applied to leaf
+* [x] Generate configuration from dune instruction
+  * [ ] Fix the editor
+  * [ ] Can execute dune with the provided target
 * [ ] Remove "makefile" files including GEN+RES
 * [ ] Can add a SDK from an arbitrary path (I removed the code...)
 * [ ] Can add a "SimpleSDK" (non-opam) | Add Removed Code

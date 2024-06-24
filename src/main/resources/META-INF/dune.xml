@@ -23,5 +23,6 @@
 
         <!-- BUILD -->
         <runLineMarkerContributor language="Dune" implementationClass="com.dune.sdk.runConfiguration.DuneTargetRunLineMarkerContributor"/>
+        <configurationType implementation="com.dune.sdk.runConfiguration.DuneRunConfigurationType"/>
     </extensions>
 </idea-plugin>
