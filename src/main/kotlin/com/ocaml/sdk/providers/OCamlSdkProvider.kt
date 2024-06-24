@@ -149,6 +149,8 @@ interface OCamlSdkProviderDune {
     fun getDuneVersion(sdkHomePath: String?): String?
 
     /**
+     * "dune exec ./test_hello_world.exe" (build+run)
+     *
      * @param sdkHomePath path to the SDK home
      * @param duneFolderPath path to the folder with the Dune file
      * @param duneTargetName name of the target

@@ -11,19 +11,21 @@ import com.intellij.openapi.util.Ref
 import com.intellij.psi.PsiElement
 import java.io.File
 
+// Generate a configuration based on the PSI element
+// that triggered the generation
 class DuneRunConfigurationProducer : LazyRunConfigurationProducer<DuneRunConfiguration>() {
     override fun setupConfigurationFromContext(configuration: DuneRunConfiguration, context: ConfigurationContext, sourceElement: Ref<PsiElement>): Boolean {
         if (context.psiLocation?.containingFile !is DuneFile) return false
         val macroManager = PathMacroManager.getInstance(context.project)
         val path = context.location?.virtualFile?.path
         configuration.filename = macroManager.collapsePath(path) ?: ""
-        configuration.target = findTarget(context)?.text ?: "" // fixme: ...
+        configuration.target = context.psiLocation?.text ?: ""
         configuration.moduleName = ModuleUtilCore.findModuleForFile(context.location?.virtualFile!!, context.project)?.name ?: ""
 
         if (configuration.target.isNotEmpty()) {
             configuration.name = configuration.target
         } else {
-            configuration.name = File(path).name
+            configuration.name = File(path!!).name
         }
 
         return true
@@ -32,15 +34,9 @@ class DuneRunConfigurationProducer : LazyRunConfigurationProducer<DuneRunConfigu
     override fun isConfigurationFromContext(configuration: DuneRunConfiguration, context: ConfigurationContext): Boolean {
         val macroManager = PathMacroManager.getInstance(context.project)
         return macroManager.expandPath(configuration.filename) == context.location?.virtualFile?.path &&
-                configuration.target == findTarget(context)?.text // fixme: ...
+                configuration.target == context.psiLocation?.text
     }
 
-    private fun findTarget(context: ConfigurationContext): PsiElement? {
-        var element = context.psiLocation
-        // fixme: ...
-        return element
-    }
-
-    override fun getConfigurationFactory(): ConfigurationFactory = DuneRunConfigurationFactory(
-        DuneRunConfigurationType.instance)
+    override fun getConfigurationFactory(): ConfigurationFactory =
+        DuneRunConfigurationFactory(DuneRunConfigurationType.instance)
 }

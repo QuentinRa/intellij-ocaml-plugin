@@ -3,8 +3,9 @@ package com.dune.sdk.runConfiguration
 import com.dune.DuneBundle
 import com.dune.language.parser.DuneKeywords
 import com.dune.language.psi.DuneArgument
+import com.dune.language.psi.DuneAtom
+import com.dune.language.psi.DuneList
 import com.dune.language.psi.DuneTypes
-import com.dune.language.psi.DuneValue
 import com.intellij.execution.Executor
 import com.intellij.execution.Location
 import com.intellij.execution.PsiLocation
@@ -17,30 +18,28 @@ import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.impl.SimpleDataContext
 import com.intellij.psi.PsiElement
-import com.intellij.psi.util.PsiTreeUtil
 
 private val ACTION_ICON = AllIcons.RunConfigurations.TestState.Run
 
 class DuneTargetRunLineMarkerContributor : RunLineMarkerContributor() {
     override fun getInfo(element: PsiElement): Info? {
-        // "NAME"/"NAMES" is a VALUE | "xxx"/"yyy" are arguments
-        // (name xxx)
-        // (names xxx yyy)
-        if (element.node.elementType === DuneTypes.VALUE) {
-            val nameElement = element as DuneValue
-            val targetList : List<PsiElement> = when (nameElement.atom?.namedAtom?.name) {
-                DuneKeywords.NAME, DuneKeywords.NAMES -> {
-                    val x = PsiTreeUtil.getChildrenOfTypeAsList(element.parent, DuneArgument::class.java).mapNotNull {
-                        it.stringValue ?: it.atom?.namedAtom
-                    }
-                    x
-                }
-                else -> null
-            } ?: return null
-            if (targetList.isEmpty()) return null
-            return Info(ACTION_ICON, { "" }, *targetList.map(::DuneRunTargetAction).toTypedArray())
-        }
-        return null
+        // Extract "xxx" from dune file to generate the run configuration
+        // Dune file: "(executable (name xxx))"
+        val elementType = element.node.elementType
+        val base : PsiElement = when (elementType) {
+            // <leaf> - namedAtom - atom
+            DuneTypes.ATOM_VALUE_ID -> element.parent?.parent as? DuneAtom
+            DuneTypes.STRING_VALUE -> element
+            else -> null
+        } ?: return null
+        //  argument - list   <--->    (name ...)
+        val name = (base.parent as? DuneArgument)?.parent as? DuneList ?: return null
+        if (name.value?.text != DuneKeywords.NAME) return null
+        // argument - list    <--->   (executable ...)
+        val root = name.parent?.parent as? DuneList ?: return null
+        if (root.value?.text != DuneKeywords.EXECUTABLE) return null
+
+        return Info(ACTION_ICON, { "" }, DuneRunTargetAction(element))
     }
 }
 

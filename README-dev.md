@@ -9,14 +9,6 @@ The project is complex, so here are some notes for you.
 
 **Roadmap**
 
-* [x] Add line marker on "name" for dune
-  * [ ] Fix: line marker must be applied to leaf
-  * [ ] Should only prompt line marker for `executables`
-* [x] Generate configuration from dune instruction
-  * [x] Fix the editor
-  * [ ] Can set the module from the editor
-  * [ ] Verify the configuration
-  * [ ] Can execute dune with the provided target
 * [ ] Remove "makefile" files including GEN+RES
 * [ ] Can add a SDK from an arbitrary path (I removed the code...)
 * [ ] Can add a "SimpleSDK" (non-opam) | Add Removed Code
@@ -292,10 +284,7 @@ The OCaml SDK need to be loaded within the IDE to allow the user to navigate to 
 ```text!
 opam install dune
 DUNE_BUILD_DIR=./out/production/untitled dune build
-// name executable
-// names executable_one executable_two
 dune build src/my_executable.exe
-dune exec src/test_hello_world.exe # build+run
 ```
 
 * [x] Highlight
@@ -305,10 +294,20 @@ dune exec src/test_hello_world.exe # build+run
 * [x] Commenter
 * [x] RunConfiguration
   * [x] Run icon shown next to the target
+  * [ ] Run icon only shown for executables
   * [ ] Verify the configuration
   * [ ] Autocompletion of the target
   * [ ] Replace with project variable when selecting a dune path
-  * [ ] Trigger "dune exec"
+  * [ ] Build in "out/"
+  * [ ] Use the provided working directory... LoL
+  * [ ] Add support for "(names ...)" (Dune 2.9-)
+  * [x] Trigger "dune exec"
 * [ ] Add references for paths/files
 * [ ] Add folding for variables
 * [ ] Live Templates
+
+In progress:
+
+* [ ] Fix: line marker must be applied to leaf
+* [ ] Can set the module from the editor
+* [ ] Verify the configuration

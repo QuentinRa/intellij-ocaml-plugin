@@ -88,8 +88,6 @@ class DuneRunConfiguration(project: Project, factory: DuneRunConfigurationFactor
     override fun getState(executor: Executor, executionEnvironment: ExecutionEnvironment): RunProfileState {//
         return object : CommandLineState(executionEnvironment) {
             override fun startProcess(): ProcessHandler {
-                println("Hello, world!")
-
                 // Locate the dune file
                 val duneFilePath = PathMacroManager.getInstance(project).expandPath(filename)
                 val duneFolder = File(duneFilePath).parentFile.toPath().toAbsolutePath().toString()
