@@ -30,6 +30,7 @@ import com.intellij.openapi.ui.popup.JBPopupFactory
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.ui.EditorTextField
 import com.intellij.ui.components.fields.ExpandableTextField
+import com.intellij.util.EnvironmentUtil
 import com.intellij.util.ui.FormBuilder
 import com.intellij.util.ui.UIUtil
 import com.ocaml.sdk.providers.OCamlSdkProvidersManager
@@ -94,13 +95,21 @@ class DuneRunConfiguration(project: Project, factory: DuneRunConfigurationFactor
                 val duneFolder = File(duneFilePath).parentFile.toPath().toAbsolutePath().toString()
 
                 // Locate the module and the sdk
+                moduleName = "untitled" // fixme: ...
                 val module = ModuleManager.getInstance(project).findModuleByName(moduleName)
                     ?: error("Error: Module '$moduleName' was not found.")
                 val sdk = OCamlSdkIDEUtils.getModuleSdk(module)
                     ?: error("Error: Module SDK for '$moduleName' was not found.")
 
                 // Compile arguments
-                val cmd = OCamlSdkProvidersManager.getDuneExecCommand(sdk.homePath!!, duneFolder, target) ?: error("Your SDK is not supported (${sdk.homePath}).")
+                val parentEnvironment = when {
+                    environmentVariables.isPassParentEnvs -> EnvironmentUtil.getEnvironmentMap()
+                    else -> emptyMap()
+                }
+                val env = (parentEnvironment + environmentVariables.envs).toMutableMap()
+
+                // Invoke command
+                val cmd = OCamlSdkProvidersManager.getDuneExecCommand(sdk.homePath!!, duneFolder, target, env) ?: error("Your SDK is not supported (${sdk.homePath}).")
                 val processHandler = ColoredProcessHandler(cmd)
                 processHandler.setShouldKillProcessSoftly(true)
                 ProcessTerminatedListener.attach(processHandler)

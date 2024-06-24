@@ -3,10 +3,7 @@ package com.ocaml.sdk.providers.windows
 import com.intellij.execution.ExecutionException
 import com.intellij.execution.configurations.GeneralCommandLine
 import com.intellij.execution.wsl.*
-import com.intellij.openapi.util.io.FileUtil
-import com.intellij.openapi.util.text.StringUtil
-import com.intellij.openapi.vfs.impl.wsl.WslConstants
-import com.ocaml.sdk.providers.CompileWithCmtInfo
+import com.intellij.openapi.vfs.encoding.EncodingManager
 import com.ocaml.sdk.providers.InvalidHomeError
 import com.ocaml.sdk.providers.unix.UnixOCamlSdkProvider
 import java.io.IOException
@@ -35,16 +32,8 @@ class WSLSdkProvider : UnixOCamlSdkProvider() {
             return homePaths
         }
 
-    override fun canUseProviderForHome(homePath: Path): Boolean {
-        if (!WSLUtil.isSystemCompatible()) return false
-        val windowsUncPath = homePath.toFile().absolutePath
-        var path = FileUtil.toSystemDependentName(windowsUncPath)
-        if (path.startsWith(WslConstants.UNC_PREFIX)) path = StringUtil.trimStart(path, WslConstants.UNC_PREFIX)
-        else if (path.startsWith(ALTERNATIVE_WSL_PREFIX)) path = StringUtil.trimStart(path, ALTERNATIVE_WSL_PREFIX)
-        else return false
-        val index = path.indexOf('\\')
-        return index > 0
-    }
+    override fun canUseProviderForHome(homePath: Path): Boolean =
+        WslPath.parseWindowsUncPath(windowsUncPath = homePath.toString()) != null
 
     override fun handleSymlinkHomePath(homePath: Path): InvalidHomeError? {
         val path = WslPath.parseWindowsUncPath(homePath.toFile().absolutePath) ?: return null
@@ -256,7 +245,7 @@ class WSLSdkProvider : UnixOCamlSdkProvider() {
         val distribution = path.distribution
         try {
             // create command
-            val cli = GeneralCommandLine(path.linuxPath + "/bin/dune", "--version")
+            val cli = GeneralCommandLine(getDuneExecutable(path.linuxPath), "--version")
             // same code as for the base provider ><
             val s = String(
                 distribution.patchCommandLine(cli, null, WSLCommandLineOptions())
@@ -274,8 +263,27 @@ class WSLSdkProvider : UnixOCamlSdkProvider() {
         }
     }
 
-    override fun getDuneExecCommand(sdkHomePath: String, duneFilePath: String, duneTargetName: String): GeneralCommandLine? {
-        return null
+    override fun getDuneExecCommand(sdkHomePath: String, duneFolderPath: String, duneTargetName: String, env: MutableMap<String, String>): GeneralCommandLine? {
+        val wslSdkHome = WslPath.parseWindowsUncPath(windowsUncPath = sdkHomePath) ?: return null
+        val wslDistribution = wslSdkHome.distribution
+        val wslDuneFolder = wslDistribution.getWslPath(Path.of(duneFolderPath)) ?: return null
+
+        val cli = GeneralCommandLine().apply {
+            withExePath(getDuneExecutable(wslSdkHome.linuxPath))
+            withWorkDirectory(duneFolderPath)
+            withEnvironment(env)
+            withParentEnvironmentType(GeneralCommandLine.ParentEnvironmentType.NONE)
+            withParameters("exec", "./$duneTargetName.exe")
+            withCharset(EncodingManager.getInstance().defaultConsoleEncoding)
+        }
+
+        val wslOptions = WSLCommandLineOptions()
+            .setLaunchWithWslExe(true)
+            .setExecuteCommandInShell(false)
+            .setRemoteWorkingDirectory(wslDuneFolder)
+            .setPassEnvVarsUsingInterop(true)
+
+        return wslDistribution.patchCommandLine(cli, null, wslOptions)
     }
 
     companion object {

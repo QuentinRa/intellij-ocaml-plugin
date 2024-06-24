@@ -150,10 +150,11 @@ interface OCamlSdkProviderDune {
 
     /**
      * @param sdkHomePath path to the SDK home
-     * @param duneFilePath path to the Dune file
+     * @param duneFolderPath path to the folder with the Dune file
      * @param duneTargetName name of the target
+     * @param env environment variables
      */
-    fun getDuneExecCommand(sdkHomePath: String, duneFilePath: String, duneTargetName: String): GeneralCommandLine?
+    fun getDuneExecCommand(sdkHomePath: String, duneFolderPath: String, duneTargetName: String, env: MutableMap<String, String>): GeneralCommandLine?
 }
 
 interface OCamlSdkProviderOpam {
