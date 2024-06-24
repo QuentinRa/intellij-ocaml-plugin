@@ -4,6 +4,7 @@ package com.dune.sdk.runConfiguration
 import com.dune.DuneBundle
 import com.dune.icons.DuneIcons
 import com.dune.ide.files.DuneFileType
+import com.intellij.application.options.ModuleDescriptionsComboBox
 import com.intellij.execution.ExecutionBundle
 import com.intellij.execution.Executor
 import com.intellij.execution.configuration.EnvironmentVariablesComponent
@@ -14,6 +15,7 @@ import com.intellij.execution.process.ColoredProcessHandler
 import com.intellij.execution.process.ProcessHandler
 import com.intellij.execution.process.ProcessTerminatedListener
 import com.intellij.execution.runners.ExecutionEnvironment
+import com.intellij.execution.ui.ConfigurationModuleSelector
 import com.intellij.icons.AllIcons
 import com.intellij.openapi.application.PathMacros
 import com.intellij.openapi.components.PathMacroManager
@@ -184,11 +186,15 @@ class DuneRunConfigurationEditor(project: Project) : SettingsEditor<DuneRunConfi
     private val workingDirectoryField = TextFieldWithBrowseButton()
     private val environmentVarsComponent = EnvironmentVariablesComponent()
 
+    private var moduleChooser: ModuleDescriptionsComboBox = ModuleDescriptionsComboBox()
+    private val moduleSelector = ConfigurationModuleSelector(project, moduleChooser)
+
     private val panel by lazy {
         FormBuilder.createFormBuilder()
             .setAlignLabelOnRight(false)
             .setHorizontalGap(UIUtil.DEFAULT_HGAP)
             .setVerticalGap(UIUtil.DEFAULT_VGAP)
+            .addLabeledComponent(OCamlBundle.message("ocaml.runConfigurationType.use.sdk.of.module.label"), moduleChooser)
             .addLabeledComponent(DuneBundle.message("run.configuration.editor.filename.label"), filenameField)
             .addLabeledComponent(DuneBundle.message("run.configuration.editor.target.label"), targetField)
             .addComponent(LabeledComponent.create(argumentsField, DuneBundle.message("run.configuration.editor.arguments.label")))
@@ -219,6 +225,7 @@ class DuneRunConfigurationEditor(project: Project) : SettingsEditor<DuneRunConfi
         configuration.workingDirectory = workingDirectoryField.text
         configuration.environmentVariables = environmentVarsComponent.envData
         configuration.arguments = argumentsField.text
+        configuration.moduleName = moduleSelector.module.name
     }
 
     override fun resetEditorFrom(configuration: DuneRunConfiguration) {
@@ -227,6 +234,8 @@ class DuneRunConfigurationEditor(project: Project) : SettingsEditor<DuneRunConfi
         workingDirectoryField.text = configuration.workingDirectory
         environmentVarsComponent.envData = configuration.environmentVariables
         argumentsField.text = configuration.arguments
+        moduleSelector.reset()
+        moduleChooser.setSelectedModule(configuration.project, configuration.moduleName)
     }
 
 

@@ -18,6 +18,11 @@ import java.nio.file.Path
 class WSLSdkProvider : UnixOCamlSdkProvider() {
     override fun canUseProviderForOCamlBinary(path: String): Boolean = false
 
+    // We don't want to use "ocamlc.opt" but some Windows fails to detect "ocamlc"
+    // when we don't use "WslPath" (which is slower but more accurate)
+    override val oCamlCompilerCommands: List<String>
+        get() = listOf("ocamlc", "ocamlc.opt")
+
     override val installationFolders: Set<String>
         get() {
             val homePaths: MutableSet<String> = HashSet()
