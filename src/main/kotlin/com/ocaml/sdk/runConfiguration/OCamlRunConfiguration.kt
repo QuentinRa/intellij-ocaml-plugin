@@ -146,14 +146,16 @@ internal open class OCamlRunConfiguration(name: String?, runConfigurationModule:
                                                         environment: ExecutionEnvironment?) : CommandLineState(environment) {
 
         override fun startProcess(): ProcessHandler {
+            println("Build with:")
             println(configuration.name)
             println(configuration.envs)
             println(configuration.programParameters)
             println(configuration.runClass)
             println(configuration.workingDirectory)
             println(configuration.configurationModule.module)
-            println(configuration.configurationModule.moduleName)
-            TODO("Not yet implemented")
+            TODO("Not implemented yet...")
+//            val module = configuration.configurationModule.module
+//            val moduleSdk = ModuleRootManager.getInstance(module!!).sdk;
         }
     }
 }

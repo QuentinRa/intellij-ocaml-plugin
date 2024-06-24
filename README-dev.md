@@ -9,9 +9,10 @@ The project is complex, so here are some notes for you.
 
 **Roadmap**
 
-* [ ] Can build project using BuildConfiguration and semi-arbitrary data using Dune
-  * [ ] Can build without semi-arbitrary data 
-  * [ ] Can generate build configuration from Dune 
+* [ ] Add line marker on "name" for dune
+* [ ] Generate configuration from dune instruction
+* [ ] Can execute dune with the provided target
+* [ ] Remove "makefile" files including GEN+RES
 * [ ] Can add a SDK from an arbitrary path (I removed the code...)
 * [ ] Can add a "SimpleSDK" (non-opam) | Add Removed Code
 * [ ] Can build project
@@ -281,6 +282,15 @@ The OCaml SDK need to be loaded within the IDE to allow the user to navigate to 
 * [x] Add Highlighter Annotator to Color Settings Page
 
 ## Dune
+
+```text!
+opam install dune
+DUNE_BUILD_DIR=./out/production/untitled dune build
+// name executable
+// names executable_one executable_two
+dune build src/my_executable.exe
+dune exec src/test_hello_world.exe # build+run
+```
 
 * [x] Highlight
 * [x] Annotator Highlight

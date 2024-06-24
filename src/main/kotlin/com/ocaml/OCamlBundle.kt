@@ -10,4 +10,7 @@ object OCamlBundle : DynamicBundle(BUNDLE) {
                 vararg params: Any): String {
         return getMessage(key, *params)
     }
+
+    fun messagePointer(@PropertyKey(resourceBundle = BUNDLE) key: String, vararg params: Any) =
+        getLazyMessage(key, *params)
 }

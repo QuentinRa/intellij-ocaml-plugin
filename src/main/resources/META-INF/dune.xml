@@ -20,5 +20,8 @@
 
         <!-- TYPING -->
         <lang.braceMatcher language="Dune" implementationClass="com.dune.ide.typing.DuneBraceMatcher"/>
+
+        <!-- BUILD -->
+        <runLineMarkerContributor language="Dune" implementationClass="com.dune.sdk.runConfiguration.DuneTargetRunLineMarkerContributor"/>
     </extensions>
 </idea-plugin>
