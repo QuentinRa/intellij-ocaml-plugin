@@ -147,7 +147,11 @@ class DuneRunConfiguration(project: Project, factory: DuneRunConfigurationFactor
                 val env = (parentEnvironment + environmentVariables.envs).toMutableMap()
 
                 // Invoke command
-                val cmd = OCamlSdkProvidersManager.getDuneExecCommand(sdk.homePath!!, duneFolder, target, env) ?: error("Your SDK is not supported (${sdk.homePath}).")
+                val cmd = OCamlSdkProvidersManager.getDuneExecCommand(
+                    sdk.homePath!!,
+                    duneFolder, target,
+                    workingDirectory, env
+                ) ?: error("Your SDK is not supported (${sdk.homePath}).")
                 val processHandler = ColoredProcessHandler(cmd)
                 processHandler.setShouldKillProcessSoftly(true)
                 ProcessTerminatedListener.attach(processHandler)

@@ -268,24 +268,25 @@ class WSLSdkProvider : UnixOCamlSdkProvider() {
         }
     }
 
-    override fun getDuneExecCommand(sdkHomePath: String, duneFolderPath: String, duneTargetName: String, env: MutableMap<String, String>): GeneralCommandLine? {
+    override fun getDuneExecCommand(sdkHomePath: String, duneFolderPath: String, duneTargetName: String, workingDirectory: String, env: MutableMap<String, String>): GeneralCommandLine? {
         val wslSdkHome = WslPath.parseWindowsUncPath(windowsUncPath = sdkHomePath) ?: return null
         val wslDistribution = wslSdkHome.distribution
         val wslDuneFolder = wslDistribution.getWslPath(Path.of(duneFolderPath)) ?: return null
+        val wslWorkingDirectory = wslDistribution.getWslPath(Path.of(workingDirectory)) ?: return null
 
         val cli = GeneralCommandLine().apply {
             withExePath(getDuneExecutable(wslSdkHome.linuxPath))
-            withWorkDirectory(duneFolderPath)
+            withWorkDirectory(workingDirectory)
             withEnvironment(env)
             withParentEnvironmentType(GeneralCommandLine.ParentEnvironmentType.NONE)
-            withParameters("exec", "./$duneTargetName.exe")
+            withParameters("exec", "./${wslDuneFolder.replace(wslWorkingDirectory, "")}/$duneTargetName.exe")
             withCharset(EncodingManager.getInstance().defaultConsoleEncoding)
         }
 
         val wslOptions = WSLCommandLineOptions()
             .setLaunchWithWslExe(true)
             .setExecuteCommandInShell(false)
-            .setRemoteWorkingDirectory(wslDuneFolder)
+            .setRemoteWorkingDirectory(wslWorkingDirectory)
             .setPassEnvVarsUsingInterop(true)
 
         return wslDistribution.patchCommandLine(cli, null, wslOptions)

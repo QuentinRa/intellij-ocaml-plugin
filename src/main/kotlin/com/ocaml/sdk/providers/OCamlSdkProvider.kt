@@ -149,14 +149,16 @@ interface OCamlSdkProviderDune {
     fun getDuneVersion(sdkHomePath: String?): String?
 
     /**
-     * "dune exec ./test_hello_world.exe" (build+run)
+     * "dune exec ${duneFolderPath}/test_hello_world.exe" (build+run)
      *
      * @param sdkHomePath path to the SDK home
      * @param duneFolderPath path to the folder with the Dune file
      * @param duneTargetName name of the target
+     * @param workingDirectory the working directory
      * @param env environment variables
      */
-    fun getDuneExecCommand(sdkHomePath: String, duneFolderPath: String, duneTargetName: String, env: MutableMap<String, String>): GeneralCommandLine?
+    fun getDuneExecCommand(sdkHomePath: String, duneFolderPath: String, duneTargetName: String,
+                           workingDirectory: String, env: MutableMap<String, String>): GeneralCommandLine?
 }
 
 interface OCamlSdkProviderOpam {

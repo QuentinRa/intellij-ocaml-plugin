@@ -258,7 +258,7 @@ open class UnixOCamlSdkProvider : OCamlSdkProvider {
         }
     }
 
-    override fun getDuneExecCommand(sdkHomePath: String, duneFolderPath: String, duneTargetName: String, env: MutableMap<String, String>): GeneralCommandLine? {
+    override fun getDuneExecCommand(sdkHomePath: String, duneFolderPath: String, duneTargetName: String, workingDirectory: String, env: MutableMap<String, String>): GeneralCommandLine? {
         return null
     }
 
