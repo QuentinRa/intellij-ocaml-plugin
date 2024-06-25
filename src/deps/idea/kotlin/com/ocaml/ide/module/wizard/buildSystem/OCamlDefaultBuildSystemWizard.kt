@@ -15,6 +15,6 @@ open class OCamlDefaultBuildSystemWizard : BuildSystemOCamlNewProjectWizard {
     private class Step(parent: OCamlNewProjectWizard.OCamlNewProjectWizardStep) : OCamlNewProjectWizardBaseStep(parent)
 
     companion object {
-        val NAME = message("project.wizard.build.system.none")
+        val NAME = message("project.wizard.build.system.intellij")
     }
 }

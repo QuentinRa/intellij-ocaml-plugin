@@ -25,29 +25,31 @@ The goal is to have a plugin similar to VSCode with OCaml LSP server, but withou
 
 **Base features** (✅ = YES, ❌ = No/Not yet, 🆗 = Must compile first)
 
-|                           | OCaml | ReasonML | VSCode        | VSCode LSP |
-|---------------------------|-------|----------|---------------|------------|
-| Highlighter               | ✅     | ✅        | ✅             | ✅          |
-| Find Usages               | ❌     | ✅        | ❌             | ✅          |
-| Type inference (codelens) | ❌     | ❌        | ❌             | ✅          |
-| Type checking             | ❌     | ❌        | ❌             | ✅          |
-| Autocompletion            | ❌     | ✅        | ✅<sup>1</sup> | ✅          |
-| Live Templates/Snippets   | ✅     | ✅        | ✅             | ✅          |
-| Debugging                 | ❌     | ?        | ?             | ?          |
-| Navigation <sup>2</sup>   | ❌     | ✅        | ❌             | ✅          |
-| Warnings                  | ❌     | ❌        | ❌             | ✅          |
-| Error                     | ❌     | ❌        | ❌             | ✅          |
+|                           | OCaml         | ReasonML | VSCode        | VSCode LSP |
+|---------------------------|---------------|----------|---------------|------------|
+| Highlighter               | ✅             | ✅        | ✅             | ✅          |
+| Find Usages               | ❌             | ✅        | ❌             | ✅          |
+| Type inference (codelens) | ❌             | ❌        | ❌             | ✅          |
+| Type checking             | ❌             | ❌        | ❌             | ✅          |
+| Autocompletion            | ❌             | ✅        | ✅<sup>1</sup> | ✅          |
+| Live Templates/Snippets   | ✅             | ✅        | ✅             | ✅          |
+| Debugging                 | ❌             | ?        | ?             | ?          |
+| Navigation <sup>2</sup>   | ✅<sup>3</sup> | ✅        | ❌             | ✅          |
+| Warnings                  | ❌             | ❌        | ❌             | ✅          |
+| Error                     | ❌             | ❌        | ❌             | ✅          |
 
 <sup>1</sup> Autocompletion is not context sensitive
 
 <sup>2</sup> From a function/type/etc. to its declaration/implementation
+
+<sup>3</sup> Minimal support (only for functions, and not all function calls)
 
 **Build Systems** (✅ = Triggered from the editor, ❌ = Manually, 🆗 = Using An External Plugin, 😓 = Syntax Highlight Only)
 
 |                      | OCaml | ReasonML | VSCode | VSCode (LSP)   |
 |----------------------|-------|----------|--------|----------------|
 | Native Build         | ❌     | ❌        | ❌      | ❌              |
-| Dune integration     | 😓    | 😓       | ❌      | ✅ <sup>3</sup> |
+| Dune integration     | ✅    | 😓       | ❌      | ✅ <sup>3</sup> |
 | Makefile integration | ?     | ?        | ?      | ?              |
 | REPL integration     | ❌     | ❌        | ✅      | ✅              |
 

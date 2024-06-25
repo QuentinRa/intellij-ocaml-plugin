@@ -9,7 +9,19 @@ The project is complex, so here are some notes for you.
 
 **Roadmap**
 
-* [ ] Remove "makefile" files including GEN+RES
+* Fix the new project wizard error for Dune
+* Add back the documentation (odoc)
+* Test resolving documentation for FQN functions
+* Work on resolve
+  * Try to resolve non-FQN functions from stdlib 
+  * Implement "open" + modules resolutions (it's important)
+  * Try to resolve non-FQN functions from context (e.g. walkback and add opens, then test "openname"+input)
+* Add back the editor (doc+REPL actions)
+* Add back the REPL
+* Add auto completion for FQN
+
+**Roadmap (old)**
+
 * [ ] Can add a SDK from an arbitrary path (I removed the code...)
 * [ ] Can add a "SimpleSDK" (non-opam) | Add Removed Code
 * [ ] Can build project
@@ -259,7 +271,7 @@ The OCaml SDK need to be loaded within the IDE to allow the user to navigate to 
 
 #### Build
 
-**Note**: it's "runConfiguration" and it doesn't necessarily build the project. Dune was implemented, try to integrate the build then copy it for use with OCaml. Also, what about passing args? build options?
+**Note**: it's "runConfiguration" and it doesn't necessarily build the project. Dune was implemented, try to integrate the "build dependency" then copy it for use with OCaml.
 
 * [ ] Create buildConfigurations
   * [x] Basic Settings

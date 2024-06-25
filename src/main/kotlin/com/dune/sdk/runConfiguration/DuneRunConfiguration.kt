@@ -55,7 +55,8 @@ class DuneRunConfiguration(project: Project, factory: DuneRunConfigurationFactor
     var moduleName: String = ""
     var workingDirectory: String = defaultWorkingDirectory()
     var environmentVariables: EnvironmentVariablesData = EnvironmentVariablesData.DEFAULT
-    var arguments: String = ""
+    var executableArguments: String = ""
+    var commandArguments: String = ""
 
     private fun defaultWorkingDirectory() : String = project.basePath.toString()
 
@@ -64,7 +65,8 @@ class DuneRunConfiguration(project: Project, factory: DuneRunConfigurationFactor
         const val FILENAME = "filename"
         const val TARGET = "target"
         const val WORKING_DIRECTORY = "workingDirectory"
-        const val ARGUMENTS = "arguments"
+        const val EXECUTABLE_ARGUMENTS = "executableArguments"
+        const val COMMAND_ARGUMENTS = "commandArguments"
         const val MODULE_NAME = "module"
     }
 
@@ -109,7 +111,8 @@ class DuneRunConfiguration(project: Project, factory: DuneRunConfigurationFactor
         child.setAttribute(FILENAME, duneFile)
         child.setAttribute(TARGET, target)
         child.setAttribute(WORKING_DIRECTORY, workingDirectory)
-        child.setAttribute(ARGUMENTS, arguments)
+        child.setAttribute(EXECUTABLE_ARGUMENTS, executableArguments)
+        child.setAttribute(COMMAND_ARGUMENTS, commandArguments)
         child.setAttribute(MODULE_NAME, moduleName)
         environmentVariables.writeExternal(child)
     }
@@ -121,7 +124,8 @@ class DuneRunConfiguration(project: Project, factory: DuneRunConfigurationFactor
             duneFile = child.getAttributeValue(FILENAME) ?: ""
             target = child.getAttributeValue(TARGET) ?: ""
             workingDirectory = child.getAttributeValue(WORKING_DIRECTORY) ?: ""
-            arguments = child.getAttributeValue(ARGUMENTS) ?: ""
+            executableArguments = child.getAttributeValue(EXECUTABLE_ARGUMENTS) ?: ""
+            commandArguments = child.getAttributeValue(COMMAND_ARGUMENTS) ?: ""
             moduleName = child.getAttributeValue(MODULE_NAME) ?: ""
             environmentVariables = EnvironmentVariablesData.readExternal(child)
         }
@@ -153,7 +157,7 @@ class DuneRunConfiguration(project: Project, factory: DuneRunConfigurationFactor
                     sdk.homePath!!,
                     OCamlSdkProviderDune.DuneCommandParameters(
                         duneFolder, target,
-                        workingDirectory, outputFolder, "", "", env
+                        workingDirectory, outputFolder, commandArguments, executableArguments, env
                     )
                 ) ?: error("Your SDK is not supported (${sdk.homePath}).")
                 val processHandler = ColoredProcessHandler(cmd)
@@ -190,7 +194,8 @@ class DuneRunConfigurationType : ConfigurationType {
 class DuneRunConfigurationEditor(project: Project) : SettingsEditor<DuneRunConfiguration>() {
     private val filenameField = TextFieldWithBrowseButton()
     private val targetField = EditorTextField("")
-    private val argumentsField = ExpandableTextField()
+    private val executableArguments = ExpandableTextField()
+    private val commandArguments = ExpandableTextField()
     private val workingDirectoryField = TextFieldWithBrowseButton()
     private val environmentVarsComponent = EnvironmentVariablesComponent()
 
@@ -205,7 +210,8 @@ class DuneRunConfigurationEditor(project: Project) : SettingsEditor<DuneRunConfi
             .addLabeledComponent(OCamlBundle.message("ocaml.runConfigurationType.use.sdk.of.module.label"), moduleChooser)
             .addLabeledComponent(DuneBundle.message("run.configuration.editor.filename.label"), filenameField)
             .addLabeledComponent(DuneBundle.message("run.configuration.editor.target.label"), targetField)
-            .addComponent(LabeledComponent.create(argumentsField, DuneBundle.message("run.configuration.editor.arguments.label")))
+            .addComponent(LabeledComponent.create(commandArguments, DuneBundle.message("run.configuration.editor.command.arguments.label")))
+            .addComponent(LabeledComponent.create(executableArguments, DuneBundle.message("run.configuration.editor.executable.arguments.label")))
             .addLabeledComponent(DuneBundle.message("run.configuration.editor.working.directory.label"), createComponentWithMacroBrowse(workingDirectoryField))
             .addComponent(environmentVarsComponent)
             .panel
@@ -232,7 +238,8 @@ class DuneRunConfigurationEditor(project: Project) : SettingsEditor<DuneRunConfi
         configuration.target = targetField.text
         configuration.workingDirectory = workingDirectoryField.text
         configuration.environmentVariables = environmentVarsComponent.envData
-        configuration.arguments = argumentsField.text
+        configuration.executableArguments = executableArguments.text
+        configuration.commandArguments = commandArguments.text
         configuration.moduleName = moduleSelector.module.name
     }
 
@@ -241,7 +248,8 @@ class DuneRunConfigurationEditor(project: Project) : SettingsEditor<DuneRunConfi
         targetField.text = configuration.target
         workingDirectoryField.text = configuration.workingDirectory
         environmentVarsComponent.envData = configuration.environmentVariables
-        argumentsField.text = configuration.arguments
+        executableArguments.text = configuration.executableArguments
+        commandArguments.text = configuration.commandArguments
         moduleSelector.reset()
         moduleChooser.setSelectedModule(configuration.project, configuration.moduleName)
     }
