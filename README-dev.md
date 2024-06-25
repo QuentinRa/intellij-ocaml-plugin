@@ -14,6 +14,13 @@ The project is complex, so here are some notes for you.
 **Roadmap**
 
 * Add back the documentation (odoc)
+  * [odoc](https://ocaml.org/manual/4.12/ocamldoc.html)
+  * [x] Can show documentation for "let"
+  * [ ] Manual testing with HTML/...
+  * [ ] Reader mode
+    * [ ] File comments
+    * [ ] Let comments
+  * [ ] Custom parser+lexer?
 * Test resolving documentation for FQN functions
 * Work on resolve
   * Try to resolve non-FQN functions from stdlib 
@@ -34,6 +41,7 @@ The project is complex, so here are some notes for you.
   * Modules (files but not just files) indexes
   * Dune file references?
   * [Doc](https://plugins.jetbrains.com/docs/intellij/references-and-resolve.html)
+* [coq](https://github.com/coq/coq.git)
 * Check Documentation
 * Modules (files but not just files) indexes
 * Add function parameters in annotator

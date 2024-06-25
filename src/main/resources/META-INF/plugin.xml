@@ -63,10 +63,16 @@
 <!--        <codeInsight.lineMarkerProvider language="OCaml" implementationClass="com.ocaml.ide.navigation.OCamlLineMarkerProvider"/>-->
 <!--        <annotator language="OCaml" implementationClass="com.ocaml.ide.insight.OCamlSyntaxAnnotator"/>-->
 
-        <!-- STRUCTURE / FOLDING / COMMENTS / DOC -->
+        <!-- STRUCTURE VIEW -->
         <lang.psiStructureViewFactory language="OCaml" implementationClass="com.ocaml.ide.structure.OCamlStructureViewFactory"/>
-        <lang.commenter language="OCaml" implementationClass="com.ocaml.ide.commenter.OCamlCommenter"/>
+
+        <!-- NAVIGATION -->
         <codeInsight.lineMarkerProvider language="OCaml" implementationClass="com.ocaml.ide.lineMarkers.OCamlLineMarkerProvider"/>
+
+        <!-- COMMENTS / DOC -->
+        <lang.commenter language="OCaml" implementationClass="com.ocaml.ide.commenter.OCamlCommenter"/>
+        <lang.documentationProvider language="OCaml" implementationClass="com.ocaml.ide.commenter.OCamlDocumentationProvider"/>
+        <lang.documentationProvider language="OCamli" implementationClass="com.ocaml.ide.commenter.OCamlDocumentationProvider"/>
 
         <!-- TYPING -->
         <lang.braceMatcher language="OCaml" implementationClass="com.ocaml.ide.typing.OCamlBraceMatcher"/>

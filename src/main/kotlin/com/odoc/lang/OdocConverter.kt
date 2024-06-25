@@ -195,6 +195,6 @@ class OdocConverter : ORDocConverter() {
 
     internal class TagHtmlBuilder(val myTag: String) : ORDocHtmlBuilder()
     companion object {
-        private val LOG = OdocLogger.getInstance()
+        private val LOG = OdocLogger.instance
     }
 }
