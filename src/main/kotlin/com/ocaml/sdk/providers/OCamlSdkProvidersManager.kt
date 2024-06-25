@@ -70,10 +70,13 @@ object OCamlSdkProvidersManager : OCamlSdkProvider {
         callProvidersValue { provider -> provider.getAssociatedSourcesFolders(sdkHome) } ?: emptySet()
 
     // OCamlSdkProviderDune
+    override fun isDuneInstalled(sdkHomePath: String?): Boolean =
+        callProvidersValue { provider -> provider.isDuneInstalled(sdkHomePath) } ?: false
+
     override fun getDuneExecCommand(sdkHomePath: String, args: DuneCommandParameters) =
         callProvidersValue { provider -> provider.getDuneExecCommand(sdkHomePath, args) }
 
-    override fun getDuneVersion(sdkHomePath: String?): String  {
+    override fun getDuneVersion(sdkHomePath: String?): String?  {
         var result : String? = null
         if (sdkHomePath != null) {
             result = callProvidersValue { provider ->
@@ -81,7 +84,7 @@ object OCamlSdkProvidersManager : OCamlSdkProvider {
                 return@callProvidersValue if (v.isNullOrBlank()) null else v
             }
         }
-        return result ?: "2.9" // default is 2.9
+        return result
     }
 
     // call providers

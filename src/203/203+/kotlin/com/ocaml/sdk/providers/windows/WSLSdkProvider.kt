@@ -11,6 +11,8 @@ import com.ocaml.sdk.providers.OCamlSdkProviderDune.DuneCommandParameters
 import com.ocaml.sdk.providers.unix.UnixOCamlSdkProvider
 import java.io.IOException
 import java.nio.file.Path
+import kotlin.io.path.exists
+import kotlin.io.path.notExists
 
 /**
  * A WSL can be installed easily with "Windows Store > Debian" or
@@ -248,8 +250,15 @@ class WSLSdkProvider : UnixOCamlSdkProvider() {
 //        }
 //    }
 
+    override fun isDuneInstalled(sdkHomePath: String?): Boolean {
+        if (sdkHomePath == null) return false
+        val dunePath = OCamlSdkProviderDune.getDuneExecutable(sdkHomePath)
+        return Path.of(dunePath).exists()
+    }
+
     override fun getDuneVersion(sdkHomePath: String?): String? {
-        val path = WslPath.parseWindowsUncPath((sdkHomePath)!!) ?: return null
+        if (!isDuneInstalled(sdkHomePath)) return null
+        val path = WslPath.parseWindowsUncPath(sdkHomePath!!) ?: return null
         val distribution = path.distribution
         try {
             // create command
@@ -261,7 +270,7 @@ class WSLSdkProvider : UnixOCamlSdkProvider() {
                     .inputStream
                     .readAllBytes()
             ).trim { it <= ' ' } // remove \n
-            return s.ifEmpty { null }
+            return s.ifBlank { null }
         } catch (e: IOException) {
             LOG.warn("Get dune version error:" + e.message)
             return null
@@ -272,6 +281,7 @@ class WSLSdkProvider : UnixOCamlSdkProvider() {
     }
 
     override fun getDuneExecCommand(sdkHomePath: String, args: DuneCommandParameters): GeneralCommandLine? {
+        if (!isDuneInstalled(sdkHomePath)) return null
         val wslSdkHome = WslPath.parseWindowsUncPath(windowsUncPath = sdkHomePath) ?: return null
         val wslDistribution = wslSdkHome.distribution
         val wslDuneFolder = wslDistribution.getWslPath(Path.of(args.duneFolderPath)) ?: return null

@@ -148,7 +148,17 @@ interface OCamlSdkProviderDune {
         /**
          * @return the path to the dune binary relative to the SDK home
          */
-        fun getDuneExecutable(sdkHomePath: String?): String = "$sdkHomePath/bin/dune"
+        fun getDuneExecutable(sdkHomePath: String): String = "$sdkHomePath/bin/dune"
+
+        /**
+         * @return convert "X.Y.Z" to "X.Y"
+         */
+        fun getDunProjectLang(duneVersion: String?) : String {
+            if (duneVersion == null) return "2.9" // default
+            val last = duneVersion.lastIndexOf('.')
+            if (last != duneVersion.indexOf('.')) return duneVersion.substring(0, last)
+            return duneVersion
+        }
 
         /**
          * @return "./{relative dune folder}/{targetName}.exe"
@@ -169,6 +179,8 @@ interface OCamlSdkProviderDune {
                                      val workingDirectory: String, val outputDirectory: String,
                                      val commandsArgs: String, val executableArgs: String,
                                      val env: MutableMap<String, String>)
+
+    fun isDuneInstalled(sdkHomePath: String?): Boolean
 
     /**
      * @param sdkHomePath path to the sdkHome

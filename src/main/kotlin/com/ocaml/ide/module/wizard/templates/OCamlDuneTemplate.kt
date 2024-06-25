@@ -1,12 +1,14 @@
 package com.ocaml.ide.module.wizard.templates
 
 import com.intellij.ide.util.projectWizard.AbstractModuleBuilder
+import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.ui.ValidationInfo
 import com.intellij.openapi.vfs.VfsUtilCore
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.platform.ProjectTemplate
 import com.ocaml.OCamlBundle.message
 import com.ocaml.icons.OCamlIcons
+import com.ocaml.sdk.providers.OCamlSdkProviderDune
 import com.ocaml.sdk.providers.OCamlSdkProvidersManager
 import com.ocaml.utils.OCamlFileSystemUtils
 import javax.swing.Icon
@@ -31,6 +33,7 @@ internal class OCamlDuneTemplate : ProjectTemplate, TemplateBuildInstructions {
     override fun validateSettings(): ValidationInfo? = null
 
     override fun createFiles(sourceRoot: VirtualFile?) = Unit
+
     override fun createFiles(sourceRoot: VirtualFile?, sdkHomePath: String?) {
         val sourceFolder = VfsUtilCore.virtualToIoFile(sourceRoot!!)
         val rootFolder = sourceFolder.parentFile
@@ -42,6 +45,10 @@ internal class OCamlDuneTemplate : ProjectTemplate, TemplateBuildInstructions {
 
         // Dune Source Files
         OCamlFileSystemUtils.createFile(sourceFolder, "dune", "(executable\n (name test_hello_world))")
-        OCamlFileSystemUtils.createFile(rootFolder, "dune-project", "(lang dune 2.9)")
+        ApplicationManager.getApplication().executeOnPooledThread {
+            val duneVersion = OCamlSdkProvidersManager.getDuneVersion(sdkHomePath)
+            val version = OCamlSdkProviderDune.getDunProjectLang(duneVersion)
+            OCamlFileSystemUtils.createFile(rootFolder, "dune-project", "(lang dune $version)")
+        }
     }
 }

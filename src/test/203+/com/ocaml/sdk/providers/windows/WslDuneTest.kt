@@ -13,6 +13,11 @@ class WslDuneTest : BaseWSLProviderTest() {
         folders.OPAM_VALID_SDK?.let { assertNotNull(OCamlSdkProvidersManager.getDuneVersion(it.path)) }
     }
 
+    @Test
+    fun testDuneVersionInvalid() {
+        folders.OPAM_INVALID_DIST?.let { assertNull(OCamlSdkProvidersManager.getDuneVersion(it.path)) }
+    }
+
     private fun runDuneExecTest(cmdArgs: String="", executableArgs: String=""): List<String>? {
         assumeTrue(folders.DUNE_INSTALLED);
         folders.OPAM_VALID_SDK?.let {
@@ -32,6 +37,13 @@ class WslDuneTest : BaseWSLProviderTest() {
             return parts
         }
         return null
+    }
+
+    @Test
+    fun testDuneExecInvalid() {
+        folders.OPAM_INVALID_DIST?.let { assertNull(OCamlSdkProvidersManager.getDuneExecCommand(it.path!!,
+            OCamlSdkProviderDune.DuneCommandParameters("", "", "", "", "", "", mutableMapOf())))
+        }
     }
 
     @Test

@@ -7,9 +7,12 @@ The project is complex, so here are some notes for you.
 * [ ] GitHub CI
 * [ ] User Documentation
 
+**IssuesToOpen**
+
+* new project wizard error for Dune (EDT=>Background)
+
 **Roadmap**
 
-* Fix the new project wizard error for Dune
 * Add back the documentation (odoc)
 * Test resolving documentation for FQN functions
 * Work on resolve
@@ -265,8 +268,6 @@ The OCaml SDK need to be loaded within the IDE to allow the user to navigate to 
 * [x] Can create a new project
 * [x] Can set the SDK
 * [x] Can use a template
-  * [ ] Set "dune-project" to "2.9" or "3.0"
-  * [ ] Check if dune is present?
 * [ ] Generate buildConfigurations
 
 #### Build

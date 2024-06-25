@@ -235,6 +235,8 @@ open class UnixOCamlSdkProvider : OCamlSdkProvider {
 //        return null
 //    }
 
+    override fun isDuneInstalled(sdkHomePath: String?): Boolean = false
+
     // Dune
     override fun getDuneVersion(sdkHomePath: String?): String? {
         if (!canUseProviderForHome(sdkHomePath!!)) return null
@@ -245,7 +247,7 @@ open class UnixOCamlSdkProvider : OCamlSdkProvider {
                     .inputStream
                     .readAllBytes()
             ).trim { it <= ' ' } // remove \n
-            return s.ifEmpty { null }
+            return s.ifBlank { null }
         } catch (e: IOException) {
             LOG.warn("Get dune version error:" + e.message)
             return null
