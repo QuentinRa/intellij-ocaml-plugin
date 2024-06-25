@@ -37,6 +37,7 @@ import com.intellij.util.EnvironmentUtil
 import com.intellij.util.ui.FormBuilder
 import com.intellij.util.ui.UIUtil
 import com.ocaml.OCamlBundle
+import com.ocaml.sdk.providers.OCamlSdkProviderDune
 import com.ocaml.sdk.providers.OCamlSdkProvidersManager
 import com.ocaml.sdk.utils.OCamlSdkIDEUtils
 import org.jdom.Element
@@ -150,8 +151,10 @@ class DuneRunConfiguration(project: Project, factory: DuneRunConfigurationFactor
                 // Invoke command
                 val cmd = OCamlSdkProvidersManager.getDuneExecCommand(
                     sdk.homePath!!,
-                    duneFolder, target,
-                    workingDirectory, outputFolder, env
+                    OCamlSdkProviderDune.DuneCommandParameters(
+                        duneFolder, target,
+                        workingDirectory, outputFolder, "", "", env
+                    )
                 ) ?: error("Your SDK is not supported (${sdk.homePath}).")
                 val processHandler = ColoredProcessHandler(cmd)
                 processHandler.setShouldKillProcessSoftly(true)

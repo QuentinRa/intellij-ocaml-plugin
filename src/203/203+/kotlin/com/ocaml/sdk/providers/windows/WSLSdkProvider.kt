@@ -4,8 +4,10 @@ import com.intellij.execution.ExecutionException
 import com.intellij.execution.configurations.GeneralCommandLine
 import com.intellij.execution.wsl.*
 import com.intellij.openapi.vfs.encoding.EncodingManager
+import com.intellij.util.execution.ParametersListUtil
 import com.ocaml.sdk.providers.InvalidHomeError
 import com.ocaml.sdk.providers.OCamlSdkProviderDune
+import com.ocaml.sdk.providers.OCamlSdkProviderDune.DuneCommandParameters
 import com.ocaml.sdk.providers.unix.UnixOCamlSdkProvider
 import java.io.IOException
 import java.nio.file.Path
@@ -269,22 +271,28 @@ class WSLSdkProvider : UnixOCamlSdkProvider() {
         }
     }
 
-    override fun getDuneExecCommand(sdkHomePath: String, duneFolderPath: String, duneTargetName: String, workingDirectory: String, outputDirectory: String, env: MutableMap<String, String>): GeneralCommandLine? {
+    override fun getDuneExecCommand(sdkHomePath: String, args: DuneCommandParameters): GeneralCommandLine? {
         val wslSdkHome = WslPath.parseWindowsUncPath(windowsUncPath = sdkHomePath) ?: return null
         val wslDistribution = wslSdkHome.distribution
-        val wslDuneFolder = wslDistribution.getWslPath(Path.of(duneFolderPath)) ?: return null
-        val wslWorkingDirectory = wslDistribution.getWslPath(Path.of(workingDirectory)) ?: return null
-        val wslOutputDirectory = wslDistribution.getWslPath(Path.of(outputDirectory)) ?: return null
+        val wslDuneFolder = wslDistribution.getWslPath(Path.of(args.duneFolderPath)) ?: return null
+        val wslWorkingDirectory = wslDistribution.getWslPath(Path.of(args.workingDirectory)) ?: return null
+        val wslOutputDirectory = wslDistribution.getWslPath(Path.of(args.outputDirectory)) ?: return null
 
         // must be a WSL path
-        env += OCamlSdkProviderDune.DUNE_BUILD_DIR to wslOutputDirectory
+        args.env += OCamlSdkProviderDune.DUNE_BUILD_DIR to wslOutputDirectory
+
+        val params = mutableListOf("exec")
+        if (args.commandsArgs != "") params.addAll(ParametersListUtil.parse(args.commandsArgs))
+        params.add("--")
+        params.add(OCamlSdkProviderDune.computeTargetName(wslDuneFolder, wslWorkingDirectory, args.duneTargetName))
+        if (args.executableArgs != "") params.addAll(ParametersListUtil.parse(args.executableArgs, false))
 
         val cli = GeneralCommandLine().apply {
             withExePath(OCamlSdkProviderDune.getDuneExecutable(wslSdkHome.linuxPath))
-            withWorkDirectory(workingDirectory)
-            withEnvironment(env)
+            withWorkDirectory(args.workingDirectory)
+            withEnvironment(args.env)
             withParentEnvironmentType(GeneralCommandLine.ParentEnvironmentType.NONE)
-            withParameters("exec", OCamlSdkProviderDune.computeTargetName(wslDuneFolder, wslWorkingDirectory, duneTargetName))
+            withParameters(params)
             withCharset(EncodingManager.getInstance().defaultConsoleEncoding)
         }
 

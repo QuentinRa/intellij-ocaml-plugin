@@ -159,6 +159,18 @@ interface OCamlSdkProviderDune {
     }
 
     /**
+     * @param duneFolderPath path to the folder with the Dune file
+     * @param duneTargetName name of the target
+     * @param workingDirectory the working directory
+     * @param outputDirectory the output directory
+     * @param env environment variables
+     */
+    data class DuneCommandParameters(val duneFolderPath: String, val duneTargetName: String,
+                                     val workingDirectory: String, val outputDirectory: String,
+                                     val commandsArgs: String, val executableArgs: String,
+                                     val env: MutableMap<String, String>)
+
+    /**
      * @param sdkHomePath path to the sdkHome
      * @return Version of dune
      */
@@ -168,14 +180,9 @@ interface OCamlSdkProviderDune {
      * "dune exec ${duneFolderPath}/test_hello_world.exe" (build+run)
      *
      * @param sdkHomePath path to the SDK home
-     * @param duneFolderPath path to the folder with the Dune file
-     * @param duneTargetName name of the target
-     * @param workingDirectory the working directory
-     * @param outputDirectory the output directory
-     * @param env environment variables
+     * @param args refer to DuneCommandParameters
      */
-    fun getDuneExecCommand(sdkHomePath: String, duneFolderPath: String, duneTargetName: String,
-                           workingDirectory: String, outputDirectory: String, env: MutableMap<String, String>): GeneralCommandLine?
+    fun getDuneExecCommand(sdkHomePath: String, args: DuneCommandParameters): GeneralCommandLine?
 }
 
 interface OCamlSdkProviderOpam {

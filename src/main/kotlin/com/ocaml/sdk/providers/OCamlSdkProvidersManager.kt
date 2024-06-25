@@ -1,7 +1,7 @@
 package com.ocaml.sdk.providers
 
-import com.intellij.execution.configurations.GeneralCommandLine
 import com.intellij.openapi.util.SystemInfo
+import com.ocaml.sdk.providers.OCamlSdkProviderDune.DuneCommandParameters
 import com.ocaml.sdk.providers.unix.UnixOCamlSdkProvider
 import com.ocaml.sdk.providers.windows.WindowsOCamlSdkProvider
 import java.nio.file.Path
@@ -70,8 +70,8 @@ object OCamlSdkProvidersManager : OCamlSdkProvider {
         callProvidersValue { provider -> provider.getAssociatedSourcesFolders(sdkHome) } ?: emptySet()
 
     // OCamlSdkProviderDune
-    override fun getDuneExecCommand(sdkHomePath: String, duneFolderPath: String, duneTargetName: String, workingDirectory: String, outputDirectory: String, env: MutableMap<String, String>) =
-        callProvidersValue { provider -> provider.getDuneExecCommand(sdkHomePath, duneFolderPath, duneTargetName, workingDirectory, outputDirectory, env) }
+    override fun getDuneExecCommand(sdkHomePath: String, args: DuneCommandParameters) =
+        callProvidersValue { provider -> provider.getDuneExecCommand(sdkHomePath, args) }
 
     override fun getDuneVersion(sdkHomePath: String?): String  {
         var result : String? = null

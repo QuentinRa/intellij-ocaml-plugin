@@ -4,13 +4,11 @@ package com.ocaml.sdk.providers.unix
 import com.intellij.execution.ExecutionException
 import com.intellij.execution.configurations.GeneralCommandLine
 import com.intellij.openapi.diagnostic.Logger
-import com.intellij.openapi.util.io.FileUtil
 import com.intellij.util.SystemProperties
 import com.ocaml.sdk.providers.*
+import com.ocaml.sdk.providers.OCamlSdkProviderDune.DuneCommandParameters
 import com.ocaml.sdk.utils.OCamlSdkScanner
 import com.ocaml.sdk.utils.OCamlSdkVersionUtils
-import com.ocaml.utils.OCamlPathUtils
-import java.io.File
 import java.io.IOException
 import java.nio.file.Files
 import java.nio.file.Path
@@ -257,7 +255,7 @@ open class UnixOCamlSdkProvider : OCamlSdkProvider {
         }
     }
 
-    override fun getDuneExecCommand(sdkHomePath: String, duneFolderPath: String, duneTargetName: String, workingDirectory: String, outputDirectory: String, env: MutableMap<String, String>): GeneralCommandLine? {
+    override fun getDuneExecCommand(sdkHomePath: String, args: DuneCommandParameters): GeneralCommandLine? {
         return null
     }
 
