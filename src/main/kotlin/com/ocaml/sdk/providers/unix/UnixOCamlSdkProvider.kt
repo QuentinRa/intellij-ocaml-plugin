@@ -238,12 +238,11 @@ open class UnixOCamlSdkProvider : OCamlSdkProvider {
 //    }
 
     // Dune
-    protected fun getDuneExecutable(sdkHomePath: String?): String = "$sdkHomePath/bin/dune"
     override fun getDuneVersion(sdkHomePath: String?): String? {
         if (!canUseProviderForHome(sdkHomePath!!)) return null
         try {
             val s = String(
-                GeneralCommandLine(getDuneExecutable(sdkHomePath), "--version")
+                GeneralCommandLine(OCamlSdkProviderDune.getDuneExecutable(sdkHomePath), "--version")
                     .createProcess()
                     .inputStream
                     .readAllBytes()

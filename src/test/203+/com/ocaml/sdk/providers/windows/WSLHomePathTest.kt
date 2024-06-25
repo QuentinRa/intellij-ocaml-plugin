@@ -13,12 +13,12 @@ class WSLHomePathTest : BaseWSLProviderTest() {
 
     @Test
     fun testInvalid() {
-        folders.HOME_INVALID?.let { assertWSLHomeInvalid(it)  }
+        folders.OCAML_INVALID_SDK_HOME?.let { assertWSLHomeInvalid(it)  }
     }
 
     @Test
     fun testInvalidTS() {
-        folders.HOME_INVALID?.let { assertWSLHomeInvalid(it + "\\")  }
+        folders.OCAML_INVALID_SDK_HOME?.let { assertWSLHomeInvalid(it + "\\")  }
     }
 
     @Test

@@ -54,13 +54,16 @@ class WSLFolders : OCamlSdkProviderFolders {
     var BIN_VALID_SDK: OCamlTestSdkInfo? = null
     var BIN_CREATE_SDK: OCamlTestSdkInfo? = null
     var BIN_VALID: String? = null
+
     var OPAM_HOME: String? = null
     var OPAM_VALID_SDK: OCamlTestSdkInfo? = null
     var OPAM_INVALID_DIST: OCamlTestSdkInfo? = null
     var OPAM_INVALID: String? = null
     var OPAM_INVALID_BIN: String? = null
 
-    var HOME_INVALID: String? = null
+    var DUNE_INSTALLED: Boolean = false
+
+    var OCAML_INVALID_SDK_HOME: String? = null
     var OCAML_BIN_INVALID: String? = null
 
     init {
@@ -82,9 +85,9 @@ class WSLFolders : OCamlSdkProviderFolders {
             try {
                 var cli = GeneralCommandLine("opam", "switch", "show")
                 cli = distribution.patchCommandLine(cli, null, WSLCommandLineOptions())
-                val process = cli.createProcess()
-                val version = String(process.inputStream.readAllBytes()).trim { it <= ' ' }
-                if (version.isEmpty() || process.exitValue() != 0) throw ExecutionException("No version / switch.")
+                var process = cli.createProcess()
+                var version = String(process.inputStream.readAllBytes()).trim { it <= ' ' }
+                if (version.isEmpty() || process.exitValue() != 0) continue
 
                 /* path to the opam folder **/
                 val opamFolder = distribution.safeUserHome() + "/.opam/"
@@ -106,6 +109,12 @@ class WSLFolders : OCamlSdkProviderFolders {
                 /* expected: properly formatted path, non-existing SDK version */
                 OPAM_INVALID = "$OPAM_HOME\\0.00.0"
                 OPAM_INVALID_BIN = "$OPAM_HOME\\0.00.0\\bin\\ocaml"
+
+                cli = GeneralCommandLine("dune", "--version")
+                cli = distribution.patchCommandLine(cli, null, WSLCommandLineOptions())
+                process = cli.createProcess()
+                version = String(process.inputStream.readAllBytes()).trim { it <= ' ' }
+                DUNE_INSTALLED = version.isNotEmpty() && process.exitValue() == 0
             } catch (ignore: ExecutionException) {
             } catch (ignore: IOException) {
             }
@@ -120,7 +129,7 @@ class WSLFolders : OCamlSdkProviderFolders {
                 cli = distribution.patchCommandLine(cli, null, WSLCommandLineOptions())
                 var process = cli.createProcess()
                 val version = String(process.inputStream.readAllBytes()).trim { it <= ' ' }
-                if (version.isEmpty() || process.exitValue() != 0) throw ExecutionException("No version.")
+                if (version.isEmpty() || process.exitValue() != 0) continue
 
                 cli = GeneralCommandLine("true")
                 val options = WSLCommandLineOptions()
@@ -150,7 +159,7 @@ class WSLFolders : OCamlSdkProviderFolders {
             }
         }
 
-        HOME_INVALID = "\\\\wsl$\\Debian\\invalid"
+        OCAML_INVALID_SDK_HOME = "\\\\wsl$\\Debian\\invalid"
         OCAML_BIN_INVALID = "\\\\wsl$\\Debian\\invalid\\ocaml"
     }
 
@@ -163,7 +172,7 @@ class WSLFolders : OCamlSdkProviderFolders {
                 "OPAM_INVALID_DIST=$OPAM_INVALID_DIST, \n" +
                 "OPAM_INVALID=$OPAM_INVALID, \n" +
                 "OPAM_INVALID_BIN=$OPAM_INVALID_BIN, \n" +
-                "HOME_INVALID=$HOME_INVALID, \n" +
+                "HOME_INVALID=$OCAML_INVALID_SDK_HOME, \n" +
                 "OCAML_BIN_INVALID=$OCAML_BIN_INVALID)\n"
     }
 

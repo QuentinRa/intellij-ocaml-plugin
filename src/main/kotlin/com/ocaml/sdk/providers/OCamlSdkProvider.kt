@@ -144,6 +144,18 @@ interface OCamlSdkProviderREPL {
 interface OCamlSdkProviderDune {
     companion object {
         const val DUNE_BUILD_DIR = "DUNE_BUILD_DIR"
+
+        /**
+         * @return the path to the dune binary relative to the SDK home
+         */
+        fun getDuneExecutable(sdkHomePath: String?): String = "$sdkHomePath/bin/dune"
+
+        /**
+         * @return "./{relative dune folder}/{targetName}.exe"
+         */
+        fun computeTargetName(wslDuneFolder: String, wslWorkingDirectory: String, duneTargetName: String): String {
+            return "./${wslDuneFolder.replace(wslWorkingDirectory, "").removePrefix("/")}/$duneTargetName.exe"
+        }
     }
 
     /**

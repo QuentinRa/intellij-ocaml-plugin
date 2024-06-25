@@ -251,7 +251,7 @@ class WSLSdkProvider : UnixOCamlSdkProvider() {
         val distribution = path.distribution
         try {
             // create command
-            val cli = GeneralCommandLine(getDuneExecutable(path.linuxPath), "--version")
+            val cli = GeneralCommandLine(OCamlSdkProviderDune.getDuneExecutable(path.linuxPath), "--version")
             // same code as for the base provider ><
             val s = String(
                 distribution.patchCommandLine(cli, null, WSLCommandLineOptions())
@@ -280,11 +280,11 @@ class WSLSdkProvider : UnixOCamlSdkProvider() {
         env += OCamlSdkProviderDune.DUNE_BUILD_DIR to wslOutputDirectory
 
         val cli = GeneralCommandLine().apply {
-            withExePath(getDuneExecutable(wslSdkHome.linuxPath))
+            withExePath(OCamlSdkProviderDune.getDuneExecutable(wslSdkHome.linuxPath))
             withWorkDirectory(workingDirectory)
             withEnvironment(env)
             withParentEnvironmentType(GeneralCommandLine.ParentEnvironmentType.NONE)
-            withParameters("exec", "./${wslDuneFolder.replace(wslWorkingDirectory, "")}/$duneTargetName.exe")
+            withParameters("exec", OCamlSdkProviderDune.computeTargetName(wslDuneFolder, wslWorkingDirectory, duneTargetName))
             withCharset(EncodingManager.getInstance().defaultConsoleEncoding)
         }
 
