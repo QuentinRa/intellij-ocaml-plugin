@@ -20,7 +20,7 @@ class DuneRunConfigurationProducer : LazyRunConfigurationProducer<DuneRunConfigu
         val path = context.location?.virtualFile?.path
         configuration.duneFile = macroManager.collapsePath(path) ?: ""
         configuration.target = context.psiLocation?.text ?: ""
-        configuration.moduleName = ModuleUtilCore.findModuleForFile(context.location?.virtualFile!!, context.project)?.name ?: ""
+        configuration.configurationModule.module = ModuleUtilCore.findModuleForFile(context.location?.virtualFile!!, context.project)
 
         if (configuration.target.isNotEmpty()) {
             configuration.name = configuration.target

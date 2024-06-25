@@ -23,7 +23,9 @@ import com.intellij.openapi.fileChooser.FileChooserDescriptor
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory
 import com.intellij.openapi.fileChooser.FileElement
 import com.intellij.openapi.fileTypes.FileTypeRegistry
+import com.intellij.openapi.module.Module
 import com.intellij.openapi.module.ModuleManager
+import com.intellij.openapi.module.ModuleType
 import com.intellij.openapi.options.SettingsEditor
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.FixedSizeButton
@@ -37,6 +39,7 @@ import com.intellij.util.EnvironmentUtil
 import com.intellij.util.ui.FormBuilder
 import com.intellij.util.ui.UIUtil
 import com.ocaml.OCamlBundle
+import com.ocaml.ide.module.OCamlIdeaModuleType
 import com.ocaml.sdk.providers.OCamlSdkProviderDune
 import com.ocaml.sdk.providers.OCamlSdkProvidersManager
 import com.ocaml.sdk.utils.OCamlSdkIDEUtils
@@ -49,14 +52,21 @@ import java.nio.file.Paths
 import javax.swing.JComponent
 import javax.swing.JPanel
 
-class DuneRunConfiguration(project: Project, factory: DuneRunConfigurationFactory, name: String) : LocatableConfigurationBase<RunProfileState>(project, factory, name) {
+class DuneRunConfiguration(project: Project, factory: DuneRunConfigurationFactory, name: String)
+    : ModuleBasedConfiguration<RunConfigurationModule, Element>(name, RunConfigurationModule(project), factory) {
     var duneFile: String = ""
     var target: String = ""
-    var moduleName: String = ""
     var workingDirectory: String = defaultWorkingDirectory()
     var environmentVariables: EnvironmentVariablesData = EnvironmentVariablesData.DEFAULT
     var executableArguments: String = ""
     var commandArguments: String = ""
+
+    override fun getValidModules(): Collection<Module> = ModuleManager.getInstance(project).modules.toList()
+        .filter { ModuleType.`is`(it, OCamlIdeaModuleType.instance) }
+
+    init {
+        configurationModule.setModuleToAnyFirstIfNotSpecified()
+    }
 
     private fun defaultWorkingDirectory() : String = project.basePath.toString()
 
@@ -95,7 +105,7 @@ class DuneRunConfiguration(project: Project, factory: DuneRunConfigurationFactor
         }
 
         // Check Module and SDK
-        val module = ModuleManager.getInstance(project).findModuleByName(moduleName)
+        val module = configurationModule.module
         if (module == null) {
             throw RuntimeConfigurationException(OCamlBundle.message("ocaml.runConfigurationType.module.not.found"))
         } else if (OCamlSdkIDEUtils.getModuleSdk(module) == null) {
@@ -113,7 +123,6 @@ class DuneRunConfiguration(project: Project, factory: DuneRunConfigurationFactor
         child.setAttribute(WORKING_DIRECTORY, workingDirectory)
         child.setAttribute(EXECUTABLE_ARGUMENTS, executableArguments)
         child.setAttribute(COMMAND_ARGUMENTS, commandArguments)
-        child.setAttribute(MODULE_NAME, moduleName)
         environmentVariables.writeExternal(child)
     }
 
@@ -126,7 +135,6 @@ class DuneRunConfiguration(project: Project, factory: DuneRunConfigurationFactor
             workingDirectory = child.getAttributeValue(WORKING_DIRECTORY) ?: ""
             executableArguments = child.getAttributeValue(EXECUTABLE_ARGUMENTS) ?: ""
             commandArguments = child.getAttributeValue(COMMAND_ARGUMENTS) ?: ""
-            moduleName = child.getAttributeValue(MODULE_NAME) ?: ""
             environmentVariables = EnvironmentVariablesData.readExternal(child)
         }
     }
@@ -139,10 +147,8 @@ class DuneRunConfiguration(project: Project, factory: DuneRunConfigurationFactor
                 val duneFolder = File(duneFilePath).parentFile.toPath().toAbsolutePath().toString()
 
                 // Locate the module and the sdk
-                val module = ModuleManager.getInstance(project).findModuleByName(moduleName)
-                    ?: error("Error: Module '$moduleName' was not found.")
-                val sdk = OCamlSdkIDEUtils.getModuleSdk(module)
-                    ?: error("Error: Module SDK for '$moduleName' was not found.")
+                val module = configurationModule.module ?: error("Error: Module was set found.")
+                val sdk = OCamlSdkIDEUtils.getModuleSdk(module) ?: error("Error: Module SDK was not set.")
 
                 // Compile arguments
                 val parentEnvironment = when {
@@ -240,7 +246,7 @@ class DuneRunConfigurationEditor(project: Project) : SettingsEditor<DuneRunConfi
         configuration.environmentVariables = environmentVarsComponent.envData
         configuration.executableArguments = executableArguments.text
         configuration.commandArguments = commandArguments.text
-        configuration.moduleName = moduleSelector.module.name
+        configuration.configurationModule.module = moduleSelector.module
     }
 
     override fun resetEditorFrom(configuration: DuneRunConfiguration) {
@@ -250,10 +256,8 @@ class DuneRunConfigurationEditor(project: Project) : SettingsEditor<DuneRunConfi
         environmentVarsComponent.envData = configuration.environmentVariables
         executableArguments.text = configuration.executableArguments
         commandArguments.text = configuration.commandArguments
-        moduleSelector.reset()
-        moduleChooser.setSelectedModule(configuration.project, configuration.moduleName)
+        moduleSelector.reset(configuration)
     }
-
 
     // copied & converted to Kotlin from com.intellij.execution.ui.CommonProgramParametersPanel
     private fun createComponentWithMacroBrowse(textAccessor: TextFieldWithBrowseButton): JComponent {
