@@ -5,7 +5,7 @@ import com.intellij.openapi.util.text.HtmlBuilder
 import com.intellij.openapi.util.text.HtmlChunk
 import com.intellij.psi.TokenType
 import com.intellij.util.containers.Stack
-import com.odoc.language.OdocLexer
+import com.odoc.language.lexer._OdocLexer
 import com.odoc.utils.logs.OdocLogger
 import java.io.IOException
 
@@ -17,10 +17,10 @@ import java.io.IOException
  * @see com.intellij.codeInsight.documentation.DocumentationManagerProtocol
  */
 class OdocConverter : ORDocConverter() {
-    private val myLexer = OdocLexer()
+    private val myLexer = _OdocLexer()
 
     override fun convert(text: String): HtmlBuilder {
-        myLexer.reset(text, 0, text.length, OdocLexer.YYINITIAL)
+        myLexer.reset(text, 0, text.length, _OdocLexer.YYINITIAL)
 
         val builders = Stack<ORDocHtmlBuilder>()
         builders.add(ORDocHtmlBuilder())

@@ -1,4 +1,4 @@
-package com.odoc.language;
+package com.odoc.language.lexer;
 
 import com.intellij.lexer.FlexLexer;
 import com.intellij.psi.tree.IElementType;
@@ -12,7 +12,7 @@ import static com.intellij.psi.TokenType.WHITE_SPACE;
 
 %unicode
 %public
-%class OdocLexer
+%class _OdocLexer
 %implements FlexLexer
 %function advance
 %type IElementType
@@ -24,7 +24,7 @@ import static com.intellij.psi.TokenType.WHITE_SPACE;
   private int codeDepth;
   private IElementType tag;
 
-   public OdocLexer() {
+   public _OdocLexer() {
       this((java.io.Reader)null);
   }
 
