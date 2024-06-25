@@ -107,6 +107,7 @@ To build the plugin (🪦 please make this easier...):
 * Locate `Dune.bnf` and generate DuneParser
 * Locate `_OCamlLexer.flex` to generate _OCamlLexer
 * Locate `_DuneLexer.flex` to generate _DuneLexer
+* Locate `_odoc.flex` to generate _OdocLexer
 * You can now use `Run Plugin`
 
 ## 📄 License

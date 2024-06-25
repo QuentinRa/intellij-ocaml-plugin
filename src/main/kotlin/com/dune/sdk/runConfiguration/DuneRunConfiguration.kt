@@ -62,7 +62,6 @@ class DuneRunConfiguration(project: Project, factory: DuneRunConfigurationFactor
     var commandArguments: String = ""
 
     override fun getValidModules(): Collection<Module> = ModuleManager.getInstance(project).modules.toList()
-        .filter { ModuleType.`is`(it, OCamlIdeaModuleType.instance) }
 
     init {
         configurationModule.setModuleToAnyFirstIfNotSpecified()
@@ -77,7 +76,6 @@ class DuneRunConfiguration(project: Project, factory: DuneRunConfigurationFactor
         const val WORKING_DIRECTORY = "workingDirectory"
         const val EXECUTABLE_ARGUMENTS = "executableArguments"
         const val COMMAND_ARGUMENTS = "commandArguments"
-        const val MODULE_NAME = "module"
     }
 
     override fun checkConfiguration() {
