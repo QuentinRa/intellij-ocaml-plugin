@@ -54,6 +54,7 @@
         <!-- HIGHLIGHT -->
         <lang.syntaxHighlighterFactory language="OCaml" implementationClass="com.ocaml.ide.highlight.OCamlSyntaxHighlighterFactory"/>
         <colorSettingsPage implementation="com.ocaml.ide.settings.OCamlColorSettingsPage"/>
+        <highlightErrorFilter implementation="com.ocaml.ide.highlight.OCamlSyntaxErrorFilter" />
 
         <!-- ANNOTATOR -->
         <annotator language="OCaml" implementationClass="com.ocaml.ide.annotator.OCamlHighlightingAnnotator"/>

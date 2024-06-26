@@ -33,7 +33,6 @@ The project is complex, so here are some notes for you.
 * To work on resolve, you must first
   * Test the indexes and the resolve
   * Work on the possible elements that reference something
-  * Shut up parser errors, they are annoying
 * Work on resolve
   * Try to resolve non-FQN functions from stdlib 
   * Implement "open" + modules resolutions (it's important)
@@ -288,6 +287,7 @@ Tests
 ##### Random
 
 * [ ] Warning/Error Annotations
+  * [x] Currently parser errors are hidden using highlightErrorFilter
 * [ ] Surround With
 * [x] Live Templates
   * [x] Basic implementation
