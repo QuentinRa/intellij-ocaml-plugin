@@ -16,7 +16,7 @@ import com.ocaml.language.psi.api.OCamlNameIdentifierOwner
 import com.ocaml.language.psi.api.OCamlNamedElement
 import com.ocaml.language.psi.mixin.computeValueNames
 import com.ocaml.language.psi.mixin.expandLetBindingStructuredName
-import com.ocaml.language.psi.stubs.index.OCamlNamedElementIndex
+import com.ocaml.language.psi.stubs.index.OCamlVariablesIndex
 
 // For tests:
 // - In ML, can go to ML or MLI for VAL
@@ -69,7 +69,7 @@ class OCamlLineMarkerProvider : RelatedItemLineMarkerProvider() {
         scope: GlobalSearchScope,
         result: MutableCollection<in RelatedItemLineMarkerInfo<*>>
     ) {
-        val elements = OCamlNamedElementIndex.Utils.findElementsByName(project, qualifiedName, scope)
+        val elements = OCamlVariablesIndex.Utils.findElementsByName(project, qualifiedName, scope)
         val filtered: Collection<OCamlNameIdentifierOwner> = elements.filterIsInstance<T>()
         if (filtered.isEmpty()) return
         val marker: RelatedItemLineMarkerInfo<PsiElement>? = createMarkerInfo(
