@@ -4,12 +4,12 @@ Tests for IDE Features
 
 |              | Status | Note                             |
 |--------------|--------|----------------------------------|
-| Annotator    | ✅      | Tested Variables colors          |
+| Annotator    | ✅      | LET/VAL/TYPE colors              |
 | Colors       | N/A    |                                  |
-| Commenter    | ✅      | Tested line and block comments   |
+| Commenter    | ✅      | Line and block comments          |
 | Files        | N/A    |                                  |
 | Highlight    | N/A    |                                  |
-| LineMarkers  | ✅      |                                  |
+| LineMarkers  | ✅      | Implemented/implements           |
 | Presentation | ✅      | Tested Simple Let/Val            |
 | Settings     | N/A    |                                  |
 | Spelling     | N/A    |                                  |

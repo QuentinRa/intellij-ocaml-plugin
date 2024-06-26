@@ -13,11 +13,26 @@ class OCamlHighlightingAnnotatorTest : OCamlBasePlatformTestCase() {
 
     @Test
     fun testLocalVariableHighlight() {
-        configureHighlight("dummy.ml", "let x = let <info>y</info> = 5 in y * y", OCamlColor.LOCAL_VARIABLE)
+        configureHighlight("dummy.ml", "let x = let <info>y</info> = 5 in y * y", OCamlColor.LOCAL_VARIABLE, true)
     }
 
     @Test
     fun testFunction() {
         configureHighlight("dummy.ml", "let <info>f</info> a b = ()", OCamlColor.FUNCTION_DECLARATION)
+    }
+
+    @Test
+    fun testType() {
+        configureHighlight("dummy.ml", "type <info>f</info> = ()", OCamlColor.TYPE)
+    }
+
+    @Test
+    fun testGlobalVariableDeclarationHighlight() {
+        configureHighlight("dummy.mli", "val <info>x</info>: int", OCamlColor.GLOBAL_VARIABLE)
+    }
+
+    @Test
+    fun testFunctionDeclaration() {
+        configureHighlight("dummy.mli", "val <info>f</info>: unit -> unit", OCamlColor.FUNCTION_DECLARATION)
     }
 }

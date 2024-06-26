@@ -7,6 +7,7 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.impl.source.tree.LeafPsiElement
 import com.intellij.psi.util.elementType
 import com.ocaml.ide.colors.OCamlColor
+import com.ocaml.language.psi.OCamlTypedef
 import com.ocaml.language.psi.OCamlTypes
 import com.ocaml.language.psi.api.OCamlLetDeclaration
 import com.ocaml.language.psi.api.OCamlNameIdentifierOwner
@@ -33,6 +34,8 @@ class OCamlHighlightingAnnotator : Annotator {
                 else OCamlColor.LOCAL_VARIABLE
             }
             // Type
+            is OCamlTypedef -> OCamlColor.TYPE
+            // Others
             else -> OCamlColor.IDENTIFIER
         }
         //println("--------")

@@ -39,11 +39,11 @@ abstract class OCamlBasePlatformTestCase : BasePlatformTestCase() {
     protected inline fun <reified T : PsiElement> configureOCamlInterface(code: String): List<T> =
         configureCodeAsList<T>("$FILE_NAME.mli", code)
 
-    protected fun configureHighlight(fileName: String, code: String, color: OCamlColor) {
+    protected fun configureHighlight(fileName: String, code: String, color: OCamlColor, ignoreExtra: Boolean = false) {
         myFixture.configureByText(fileName, code.replace(
             "<info>",
-            "<info textAttributesKey=\"${color.textAttributesKey.externalName}\""
+            "<info descr=\"null\" textAttributesKey=\"${color.textAttributesKey.externalName}\">"
         ))
-        myFixture.checkHighlighting(false, true, false, true)
+        myFixture.checkHighlighting(false, true, false, ignoreExtra)
     }
 }

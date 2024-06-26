@@ -10,21 +10,9 @@ The project is complex, so here are some notes for you.
 **IssuesToOpen**
 
 * new project wizard error for Dune (EDT=>Background)
-* [ ] Type index
 
 **Roadmap**
 
-* Add back the documentation (odoc)
-  * [odoc](https://ocaml.org/manual/4.12/ocamldoc.html)
-  * [x] Can show documentation for "let"
-  * [x] Can show documentation for "val"
-  * [x] Can show documentation for "type"
-  * [ ] Load the documentation of the parent if none found
-  * [ ] Manual testing with HTML/...
-  * [ ] Reader mode
-    * [ ] File comments
-    * [ ] Let comments
-  * [ ] Custom parser+lexer?
 * Test resolving documentation for FQN functions
 * Work on resolve
   * Try to resolve non-FQN functions from stdlib 
@@ -185,7 +173,8 @@ Before indexing, we need to create stubs for lightweight parsing. To create a st
 
 Tasks are:
 
-* [x] Add Stubs For Variables
+* [x] Add Stubs For Variables (let/val)
+* [x] Add Stubs For Types
 * [ ] Add Stubs For ...
 * [x] Do not store anonymous variables
 * [ ] Use stubs in structure view (What do you mean?)
@@ -193,8 +182,9 @@ Tasks are:
 
 Indexes are closely related to references. We can search for elements after indexing them. They are used when resolving references.
 
-* [x] Add indexes for variables
-* [ ] Use an index of integers?
+* [x] Add indexes for variables (let/val)
+* [x] Add indexes for types
+* ~~[ ] Use an index of integers?~~ (to store numbers)
 
 #### References
 
@@ -231,6 +221,21 @@ Additional problems
 * [x] Comments
 * [x] Strings
 * [x] Identifiers
+
+#### Documentation
+
+Refer to [odoc](https://ocaml.org/manual/4.12/ocamldoc.html).
+
+* [x] Let
+* [x] Type
+* [x] Val
+* [ ] Handle HTML
+* [ ] Show documentation nicely
+* [ ] Load the documentation of the parent if none found
+* [ ] Reader mode
+  * [ ] File comments
+  * [ ] Let comments
+* [ ] Custom parser+lexer for "odoc"
 
 #### Typing
 
