@@ -4,7 +4,6 @@ import com.intellij.lang.ASTNode
 import com.intellij.psi.stubs.*
 import com.ocaml.language.psi.api.*
 import com.ocaml.language.psi.createStubIfNotAnonymous
-import com.ocaml.language.psi.stubs.index.OCamlVariablesIndex
 
 /**
  * A class created in a effort of reducing the number of copy-pastes
@@ -25,10 +24,6 @@ open class OCamlBaseNamedStub<T>(
         override fun serialize(stub: R, dataStream: StubOutputStream) = with(dataStream) {
             writeName(stub.name)
             writeName(stub.qualifiedName)
-        }
-
-        override fun indexStub(stub: R, sink: IndexSink) {
-            stub.qualifiedName?.let { OCamlVariablesIndex.Utils.index(sink, it) }
         }
     }
 }

@@ -49,6 +49,7 @@
 
         <!-- INDICES -->
         <stubIndex implementation="com.ocaml.language.psi.stubs.index.OCamlVariablesIndex"/>
+        <stubIndex implementation="com.ocaml.language.psi.stubs.index.OCamlTypesIndex"/>
 
         <!-- HIGHLIGHT -->
         <lang.syntaxHighlighterFactory language="OCaml" implementationClass="com.ocaml.ide.highlight.OCamlSyntaxHighlighterFactory"/>

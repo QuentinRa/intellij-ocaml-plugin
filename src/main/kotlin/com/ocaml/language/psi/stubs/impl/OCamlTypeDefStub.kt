@@ -8,6 +8,7 @@ import com.intellij.psi.stubs.StubInputStream
 import com.ocaml.language.psi.OCamlTypedef
 import com.ocaml.language.psi.impl.OCamlTypedefImpl
 import com.ocaml.language.psi.stubs.OCamlBaseNamedStub
+import com.ocaml.language.psi.stubs.index.OCamlTypesIndex
 
 class OCamlTypeDefStub(parent: StubElement<*>?, elementType: IStubElementType<*, *>, name: String?, qualifiedName: String?) :
     OCamlBaseNamedStub<OCamlTypedef>(parent, elementType, name, qualifiedName) {
@@ -22,8 +23,8 @@ class OCamlTypeDefStub(parent: StubElement<*>?, elementType: IStubElementType<*,
             parentStub, this, dataStream.readName()?.string, dataStream.readName()?.string
         )
 
-        // todo: types must have their own index
         override fun indexStub(stub: OCamlTypeDefStub, sink: IndexSink) {
+            stub.qualifiedName?.let { OCamlTypesIndex.Utils.index(sink, it) }
         }
     }
 }

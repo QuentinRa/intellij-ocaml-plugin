@@ -5,6 +5,7 @@ import com.intellij.psi.stubs.*
 import com.ocaml.language.psi.OCamlValueBinding
 import com.ocaml.language.psi.impl.OCamlValueBindingImpl
 import com.ocaml.language.psi.stubs.OCamlBaseNamedStub
+import com.ocaml.language.psi.stubs.index.OCamlVariablesIndex
 
 class OCamlValBindingStub(parent: StubElement<*>?, elementType: IStubElementType<*, *>, name: String?, qualifiedName: String?) :
     OCamlBaseNamedStub<OCamlValueBinding>(parent, elementType, name, qualifiedName) {
@@ -18,5 +19,9 @@ class OCamlValBindingStub(parent: StubElement<*>?, elementType: IStubElementType
         override fun deserialize(dataStream: StubInputStream, parentStub: StubElement<*>?) = OCamlValBindingStub(
             parentStub, this, dataStream.readName()?.string, dataStream.readName()?.string
         )
+
+        override fun indexStub(stub: OCamlValBindingStub, sink: IndexSink) {
+            stub.qualifiedName?.let { OCamlVariablesIndex.Utils.index(sink, it) }
+        }
     }
 }
