@@ -10,7 +10,8 @@ The project is complex, so here are some notes for you.
 **IssuesToOpen**
 
 * new project wizard error for Dune (EDT=>Background)
-* weird ML/MLI bug
+* Fix why only "let" can have documentation/goto/...
+  * [x] If was due to the annotator
   * [x] Add type stub
   * [ ] Move type stub to typexpr
   * [ ] Move let stub too
