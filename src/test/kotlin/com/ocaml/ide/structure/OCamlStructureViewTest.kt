@@ -49,6 +49,8 @@ class OCamlStructureViewTest : OCamlBasePlatformTestCase() {
         assertEmpty(configureStructureView("A.ml", "let _ = ()"))
         assertEmpty(configureStructureView("A.ml", "let () = ()"))
         assertEmpty(configureStructureView("A.ml", "let (_) = ()"))
+        assertEmpty(configureStructureView("A.ml", "let _ = x Hello_world.x"))
+        //Not possible: "type _ = unit"
         //Not possible: "val _ : unit"
     }
 
@@ -57,6 +59,7 @@ class OCamlStructureViewTest : OCamlBasePlatformTestCase() {
         val expectedTree = FakeTreeElement("x")
         assertStructureTree("A.ml", "let x = ()", expectedTree)
         assertStructureTree("A.mli","val x : int", expectedTree)
+        assertStructureTree("A.ml","type x = unit", expectedTree)
     }
 
     @Test
@@ -65,17 +68,24 @@ class OCamlStructureViewTest : OCamlBasePlatformTestCase() {
         val yElement = FakeTreeElement("y")
         val zElement = FakeTreeElement("z")
         // Test an OCaml Implementation
-//        assertStructureTree("A.ml", """
-//                let x = ()
-//                let y = ()
-//                let z = ()
-//                """, xElement, yElement, zElement
-//        )
+        assertStructureTree("A.ml", """
+                let x = ()
+                let y = ()
+                let z = ()
+                """, xElement, yElement, zElement
+        )
         // Test an OCaml Interface
         assertStructureTree("A.mli", """
                 val x : unit
                 val y : unit
                 val z : unit
+                """, xElement, yElement, zElement
+        )
+        // Test types
+        assertStructureTree("A.ml", """
+                type x = unit
+                type y = unit
+                type z = unit
                 """, xElement, yElement, zElement
         )
     }
@@ -85,6 +95,23 @@ class OCamlStructureViewTest : OCamlBasePlatformTestCase() {
         val xElement = FakeTreeElement("x")
         assertStructureTree("A.ml", "let x = ();;let x = ()", xElement, xElement)
         assertStructureTree("A.mli","val x : int;;val x: int", xElement, xElement)
+        assertStructureTree("A.ml","type x = unit;;type x = unit", xElement, xElement)
+    }
+
+    @Test
+    fun test_and() {
+        assertStructureTree("A.ml", "let x = () and y = ()", FakeTreeElement("let x, y",
+            listOf(
+                FakeTreeElement("x"),
+                FakeTreeElement("y"),
+            )
+        ))
+        assertStructureTree("A.ml","type x and y = unit", FakeTreeElement("type x, y",
+            listOf(
+                FakeTreeElement("x"),
+                FakeTreeElement("y"),
+            )
+        ))
     }
 
     @Test

@@ -23,11 +23,15 @@ abstract class OCamlLetBindingMixin : OCamlStubbedNamedElementImpl<OCamlLetBindi
     constructor(stub: OCamlLetBindingStub, nodeType: IStubElementType<*, *>) : super(stub, nodeType)
 
     override fun getNameIdentifier(): PsiElement? {
-        val name = valueName?.lowercaseIdent?.firstChild ?: valueName
+        val name = getNameIdentifierWithAnonymous()
         return if ((name as? LeafPsiElement)?.isAnonymous() == true)
             null
         else
             name
+    }
+
+    internal fun getNameIdentifierWithAnonymous() : PsiElement? {
+        return valueName?.lowercaseIdent?.firstChild ?: valueName
     }
 
     override fun getName(): String? {
@@ -78,7 +82,7 @@ fun expandLetBindingStructuredName(structuredName: String?): List<String> {
 }
 
 fun handleStructuredLetBinding(letBinding: OCamlLetBinding): List<PsiElement> {
-    if (letBinding.nameIdentifier == null) {
+    if ((letBinding as OCamlLetBindingMixin).getNameIdentifierWithAnonymous() == null) {
         // we are expanding children variable names
         return letBinding.computeValueNames().map {
             OCamlLetBindingDeconstruction(it, letBinding)

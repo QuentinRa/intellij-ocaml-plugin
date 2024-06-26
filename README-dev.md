@@ -250,6 +250,29 @@ Refer to [odoc](https://ocaml.org/manual/4.12/ocamldoc.html).
 
 #### Smart Features
 
+##### Structure View
+
+The Structure View can be opened with `ALT+7`.
+
+* Show elements
+  * [x] Global Variables (LET/VAL)
+  * [ ] Types
+  * [ ] ...
+* Show appropriate icons
+  * [ ] Show "public/private" instead of "public" for all
+* [ ] Filters (nested variables?)
+* [ ] Add function arguments?
+
+Tests
+
+* [x] One/Multiple variable
+* [x] Redefinitions 
+* [x] Deconstructions (Let)
+* [x] Anonymous (Let)
+* [x] And
+
+##### Random
+
 * [ ] Warning/Error Annotations
 * [X] Structure View (ALT+7)
   * [x] Variables

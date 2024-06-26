@@ -60,7 +60,7 @@ class OCamlStructureViewElement(element: PsiElement) : StructureViewTreeElement,
                 }
 
                 is OCamlLetBindings -> psi.letBindingList.filter { !it.isAnonymous() }
-                is OCamlTypeDefinition -> psi.typedefList.filter { !it.isAnonymous() }
+                is OCamlTypeDefinition -> psi.typedefList
 
                 else -> emptyList()
             }
