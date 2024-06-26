@@ -13,12 +13,31 @@ import com.intellij.ui.RowIcon
 import com.intellij.util.PlatformIcons
 import com.intellij.util.containers.map2Array
 import com.ocaml.ide.presentation.getPresentationForStructure
+import com.ocaml.language.base.OCamlFileBase
 import com.ocaml.language.psi.OCamlLetBindings
+import com.ocaml.language.psi.OCamlTypeDefinition
 import com.ocaml.language.psi.OCamlValueDescription
 import com.ocaml.language.psi.api.isAnonymous
 import com.ocaml.language.psi.files.OCamlFile
 import com.ocaml.language.psi.files.OCamlInterfaceFile
 import com.ocaml.language.psi.mixin.handleStructuredLetBinding
+
+// A bit complex
+//
+// The first time this class is called, we are passed a FILE as "element"
+// We can then return in "childElements" the direct children.
+// Normal scenarios:
+// - OCamlValueDescription
+//
+// But, an element, such as a CLASS in JAVA, can have children too (methods, fields, etc.).
+// This is the case with:
+// - OCamlLetBindings
+// - OCamlTypeDefinition
+// In which case, the OCamlStructureViewElement is invoked again with them as "element"
+//
+// When an element has children, you have to add them in PresentationHandler.kt
+// Otherwise, we can't display them (error)
+
 
 class OCamlStructureViewElement(element: PsiElement) : StructureViewTreeElement, Queryable {
     private val psiAnchor = TreeAnchorizer.getService().createAnchor(element)
@@ -32,16 +51,17 @@ class OCamlStructureViewElement(element: PsiElement) : StructureViewTreeElement,
                         if (allBindings.size == 1)
                             handleStructuredLetBinding(allBindings[0])
                         else listOf(it)
-                    }
+                    } + collectCommonElements(psi)
                 }
 
                 is OCamlInterfaceFile -> {
                     psi.childrenOfType<OCamlValueDescription>()
-                        .mapNotNull { it.valueBinding }
-                        .filter { !it.isAnonymous() }
+                        .mapNotNull { it.valueBinding } + collectCommonElements(psi)
                 }
 
                 is OCamlLetBindings -> psi.letBindingList.filter { !it.isAnonymous() }
+                is OCamlTypeDefinition -> psi.typedefList.filter { !it.isAnonymous() }
+
                 else -> emptyList()
             }
         }
@@ -70,5 +90,12 @@ class OCamlStructureViewElement(element: PsiElement) : StructureViewTreeElement,
             null -> "none"
             else -> "unknown"
         }
+    }
+}
+
+fun collectCommonElements(psi: OCamlFileBase) : List<PsiElement> {
+    return psi.childrenOfType<OCamlTypeDefinition>().flatMap {
+        if (it.typedefList.size == 1) listOf(it.typedefList[0])
+        else listOf(it)
     }
 }

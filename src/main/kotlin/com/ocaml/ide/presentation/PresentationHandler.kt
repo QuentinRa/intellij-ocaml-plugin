@@ -10,6 +10,7 @@ import com.intellij.openapi.util.Iconable
 import com.intellij.psi.PsiElement
 import com.ocaml.language.base.OCamlFileBase
 import com.ocaml.language.psi.OCamlLetBindings
+import com.ocaml.language.psi.OCamlTypeDefinition
 import com.ocaml.language.psi.api.OCamlNamedElement
 import com.ocaml.language.psi.api.OCamlQualifiedNamedElement
 
@@ -17,6 +18,7 @@ private fun presentableName(psi: PsiElement): String? {
     return when(psi) {
         is OCamlNamedElement -> psi.name
         is OCamlLetBindings -> "let " + psi.letBindingList.map { it.name }.joinToString(", ")
+        is OCamlTypeDefinition -> "type " + psi.typedefList.map { it.name }.joinToString(", ")
         else -> null
     }
 }
@@ -27,7 +29,7 @@ fun getPresentationForStructure(psi: PsiElement): ItemPresentation {
         append(presentableName(psi))
     }
     val icon = when(psi) {
-        is OCamlLetBindings -> null
+        is OCamlLetBindings, is OCamlTypeDefinition -> null
         else -> psi.getIcon(Iconable.ICON_FLAG_VISIBILITY)
     }
     return PresentationData(presentation, null, icon, null)
