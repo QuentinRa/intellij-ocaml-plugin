@@ -18,7 +18,7 @@ class OCamlDocumentationProvider : DocumentationProvider {
 
     // CTRL+Q/hover
     override fun generateDoc(element: PsiElement?, originalElement: PsiElement?): String? {
-        println("Generate doc for ${element?.text}")
+        //println("Generate doc for ${element?.text}")
         // For now, nested elements are ignored
         val (root, parent) = when (val p = element?.parent) {
             is OCamlLetBindings -> p.parent to p

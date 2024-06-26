@@ -16,7 +16,6 @@ The project is complex, so here are some notes for you.
 * Add back the documentation (odoc)
   * [odoc](https://ocaml.org/manual/4.12/ocamldoc.html)
   * [x] Can show documentation for "let"
-  * [x] Take into account above and below comments
   * [ ] Manual testing with HTML/...
   * [ ] Reader mode
     * [ ] File comments

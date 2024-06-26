@@ -16,12 +16,12 @@ class OCamlValBindingStub(
     override val qualifiedName: String?
 ) : StubBase<OCamlValueDescription>(parent, elementType), OCamlNamedStub {
 
-    object Type : OCamlStubElementType<OCamlValBindingStub, OCamlValueDescription>("VALUE_DESCRIPTION") {
+    object Type : OCamlStubElementType<OCamlValBindingStub, OCamlValueDescriptionImpl>("VALUE_DESCRIPTION") {
         override fun shouldCreateStub(node: ASTNode): Boolean = createStubIfNotAnonymous(node)
 
         override fun createPsi(stub: OCamlValBindingStub) = OCamlValueDescriptionImpl(stub, this)
 
-        override fun createStub(psi: OCamlValueDescription, parentStub: StubElement<*>?) =
+        override fun createStub(psi: OCamlValueDescriptionImpl, parentStub: StubElement<*>?) =
             OCamlValBindingStub(parentStub, this, psi.name, psi.qualifiedName)
 
         override fun deserialize(dataStream: StubInputStream, parentStub: StubElement<*>?) = OCamlValBindingStub(
