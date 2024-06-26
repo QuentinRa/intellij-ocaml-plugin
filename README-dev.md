@@ -10,6 +10,11 @@ The project is complex, so here are some notes for you.
 **IssuesToOpen**
 
 * new project wizard error for Dune (EDT=>Background)
+* weird ML/MLI bug
+  * [x] Add type stub
+  * [ ] Move type stub to typexpr
+  * [ ] Move let stub too
+  * [ ] Fix the code appropriately
 
 **Roadmap**
 

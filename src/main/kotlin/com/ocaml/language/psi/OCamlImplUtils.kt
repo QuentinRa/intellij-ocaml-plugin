@@ -7,7 +7,7 @@ import com.ocaml.language.psi.api.OCamlNamedElement
 import com.ocaml.language.psi.api.OCamlStubElementType
 import com.ocaml.language.psi.api.isAnonymous
 import com.ocaml.language.psi.stubs.OCamlLetBindingStub
-import com.ocaml.language.psi.stubs.OCamlValBindingStub
+import com.ocaml.language.psi.stubs.impl.*
 
 // nothing for now
 class OCamlImplUtils {
@@ -45,5 +45,6 @@ fun createStubIfNotAnonymous(node: ASTNode): Boolean {
 fun factory(name: String): OCamlStubElementType<*, *> = when (name) {
     "LET_BINDING" -> OCamlLetBindingStub.Type
     "VALUE_DESCRIPTION" -> OCamlValBindingStub.Type
+    "TYPE_DEFINITION" -> OCamlTypeDefinitionStub.Type
     else -> error("Unknown element $name")
 }

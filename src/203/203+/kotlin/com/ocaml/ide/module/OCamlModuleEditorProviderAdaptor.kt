@@ -3,7 +3,6 @@ package com.ocaml.ide.module
 import com.intellij.openapi.module.Module
 import com.intellij.openapi.module.ModuleType
 import com.intellij.openapi.roots.ui.configuration.ModuleConfigurationState
-import com.ocaml.language.psi.OCamlModuleType
 
 /**
  * The check in this method changed in 211 (included), but we can't handle this fine.

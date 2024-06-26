@@ -11,7 +11,7 @@ import com.ocaml.language.psi.OCamlImplUtils
 import com.ocaml.language.psi.OCamlTypes
 import com.ocaml.language.psi.OCamlValueDescription
 import com.ocaml.language.psi.api.OCamlStubbedNamedElementImpl
-import com.ocaml.language.psi.stubs.OCamlValBindingStub
+import com.ocaml.language.psi.stubs.impl.OCamlValBindingStub
 import javax.swing.Icon
 
 abstract class OCamlValBindingMixin : OCamlStubbedNamedElementImpl<OCamlValBindingStub>, OCamlValueDescription {

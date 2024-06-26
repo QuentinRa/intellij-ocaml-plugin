@@ -444,7 +444,7 @@ expr ::=
   | non_op_expr
   | coloncolon_bin_expr
   | infix_expr
-+
+
 expr_comma_list ::= expr { COMMA expr } +                               // expr { , expr } +
 coloncolon_bin_expr ::= expr SHORTCUT expr { rightAssociative = true }  // expr :: expr
 infix_expr ::= expr infix_op expr                                       // expr infix-op expr
@@ -610,7 +610,15 @@ private field_expr ::= inst_var_name [EQ expr]
 // END OBJECT_EXPR
 
 // https://v2.ocaml.org/releases/4.14/htmlman/typedecl.html#ss:typedefs
-type_definition ::= TYPE [NONREC] typedef { type_definition_and }* { pin=1 }
+type_definition ::= TYPE [NONREC] typedef { type_definition_and }*
+{
+    implements=["com.ocaml.language.psi.api.OCamlNameIdentifierOwner"]
+    mixin="com.ocaml.language.psi.mixin.OCamlTypeBindingMixin"
+    extends = "com.ocaml.language.psi.api.OCamlStubbedElementImpl<?>"
+    stubClass = "com.ocaml.language.psi.stubs.impl.OCamlTypeDefinitionStub"
+    elementTypeFactory = "com.ocaml.language.psi.OCamlImplUtilsKt.factory"
+    pin=1
+}
 private type_definition_and ::= AND typedef { pin=1 }
 
 // [BETS]: used type_params instead of optional_type_parameters
@@ -798,7 +806,7 @@ value_description ::= VAL value_name_no_underscore COLON typexpr
     implements=["com.ocaml.language.psi.api.OCamlNameIdentifierOwner"; "com.ocaml.language.psi.api.OCamlLetDeclaration"]
     mixin="com.ocaml.language.psi.mixin.OCamlValBindingMixin"
     extends = "com.ocaml.language.psi.api.OCamlStubbedElementImpl<?>"
-    stubClass = "com.ocaml.language.psi.stubs.OCamlValBindingStub"
+    stubClass = "com.ocaml.language.psi.stubs.impl.OCamlValBindingStub"
     elementTypeFactory = "com.ocaml.language.psi.OCamlImplUtilsKt.factory"
     pin=1
     methods=[valueName = "value_name_no_underscore"]
