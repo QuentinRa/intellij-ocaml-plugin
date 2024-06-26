@@ -6,7 +6,7 @@ import com.intellij.util.PlatformIcons
 import com.ocaml.icons.OCamlIcons
 import com.ocaml.ide.OCamlBasePlatformTestCase
 import com.ocaml.language.psi.OCamlLetBinding
-import com.ocaml.language.psi.OCamlValueDescription
+import com.ocaml.language.psi.OCamlValueBinding
 import com.ocaml.language.psi.api.OCamlNamedElement
 import org.junit.Test
 import javax.swing.Icon
@@ -17,9 +17,9 @@ class PresentationHandlerTests : OCamlBasePlatformTestCase() {
     private var simpleFunctionAssignation : OCamlLetBinding? = null
     private var simpleOperatorAssignation : OCamlLetBinding? = null
 
-    private var simpleVariableDeclaration : OCamlValueDescription? = null
-    private var simpleFunctionDeclaration : OCamlValueDescription? = null
-    private var simpleOperatorDeclaration : OCamlValueDescription? = null
+    private var simpleVariableDeclaration : OCamlValueBinding? = null
+    private var simpleFunctionDeclaration : OCamlValueBinding? = null
+    private var simpleOperatorDeclaration : OCamlValueBinding? = null
 
     override fun setUp() {
         super.setUp()
@@ -41,9 +41,10 @@ class PresentationHandlerTests : OCamlBasePlatformTestCase() {
                val ( + ) : int -> int -> int 
             """
         )
-        simpleVariableDeclaration = ocamlInterfaceElements[0] as? OCamlValueDescription
-        simpleFunctionDeclaration = ocamlInterfaceElements[1] as? OCamlValueDescription
-        simpleOperatorDeclaration = ocamlInterfaceElements[2] as? OCamlValueDescription
+        println(ocamlInterfaceElements)
+        simpleVariableDeclaration = ocamlInterfaceElements[0] as? OCamlValueBinding
+        simpleFunctionDeclaration = ocamlInterfaceElements[1] as? OCamlValueBinding
+        simpleOperatorDeclaration = ocamlInterfaceElements[2] as? OCamlValueBinding
     }
 
     override fun tearDown() {

@@ -22,8 +22,8 @@ abstract class OCamlBasePlatformTestCase : BasePlatformTestCase() {
 
     protected fun configureCode(fileName: String, code: String): OCamlFileBase {
         val file: PsiFile = myFixture.configureByText(fileName, code)
-        println("» " + fileName + " " + this.javaClass)
-        println(DebugUtil.psiToString(file, false, true))
+//        println("» " + fileName + " " + this.javaClass)
+//        println(DebugUtil.psiToString(file, false, true))
         return file as OCamlFileBase
     }
 

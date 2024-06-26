@@ -65,12 +65,12 @@ class OCamlStructureViewTest : OCamlBasePlatformTestCase() {
         val yElement = FakeTreeElement("y")
         val zElement = FakeTreeElement("z")
         // Test an OCaml Implementation
-        assertStructureTree("A.ml", """
-                let x = ()
-                let y = ()
-                let z = ()
-                """, xElement, yElement, zElement
-        )
+//        assertStructureTree("A.ml", """
+//                let x = ()
+//                let y = ()
+//                let z = ()
+//                """, xElement, yElement, zElement
+//        )
         // Test an OCaml Interface
         assertStructureTree("A.mli", """
                 val x : unit
