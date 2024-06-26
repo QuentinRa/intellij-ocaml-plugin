@@ -610,19 +610,18 @@ private field_expr ::= inst_var_name [EQ expr]
 // END OBJECT_EXPR
 
 // https://v2.ocaml.org/releases/4.14/htmlman/typedecl.html#ss:typedefs
-type_definition ::= TYPE [NONREC] typedef { type_definition_and }*
-{
-    implements=["com.ocaml.language.psi.api.OCamlNameIdentifierOwner"]
-    mixin="com.ocaml.language.psi.mixin.OCamlTypeBindingMixin"
-    extends = "com.ocaml.language.psi.api.OCamlStubbedElementImpl<?>"
-    stubClass = "com.ocaml.language.psi.stubs.impl.OCamlTypeDefinitionStub"
-    elementTypeFactory = "com.ocaml.language.psi.OCamlImplUtilsKt.factory"
-    pin=1
-}
+type_definition ::= TYPE [NONREC] typedef { type_definition_and }* { pin=1 }
 private type_definition_and ::= AND typedef { pin=1 }
 
 // [BETS]: used type_params instead of optional_type_parameters
 typedef ::= [type_params] typeconstr_name type_information
+{
+    implements=["com.ocaml.language.psi.api.OCamlNameIdentifierOwner"]
+    mixin="com.ocaml.language.psi.mixin.OCamlTypeDefMixin"
+    extends = "com.ocaml.language.psi.api.OCamlStubbedElementImpl<?>"
+    stubClass = "com.ocaml.language.psi.stubs.impl.OCamlTypeDefStub"
+    elementTypeFactory = "com.ocaml.language.psi.OCamlImplUtilsKt.factory"
+}
 
 type_information ::= [type_equation] [type_representation] { type_constraint }*
 

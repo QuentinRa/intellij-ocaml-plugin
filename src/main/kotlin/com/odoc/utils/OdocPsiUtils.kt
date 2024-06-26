@@ -61,12 +61,13 @@ object OdocPsiUtils {
     // If there is one, then we must ensure it doesn't belong to another element
     // We are checking the follower/predecessor of "target", and if it's null OR a comment, then we can use it.
     private fun findDocumentationComment(element: PsiElement, preceding: Boolean): PsiComment? {
+        //val word = if (preceding) "Previous" else "Next"
         //println("Starting for ${element.elementType}")
         val comment = findDocumentationCommentSkipNormalComments(element, preceding) ?: return null
-        //println("Previous is ${comment.elementType}")
+        //println("$word is ${comment.elementType}")
         val target = previousElementSkipWhitespaceIfAllowed(comment, preceding)
-        //println("PreviousPrevious is ${target?.elementType}")
-        return if (target == null || target is PsiComment) {
+        //println("$word$word is ${target?.elementType}")
+        return if (!preceding || target == null || target is PsiComment) {
             comment
         } else null
     }

@@ -7,6 +7,7 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
 import com.ocaml.language.base.OCamlFileBase
 import com.ocaml.language.psi.OCamlLetBindings
+import com.ocaml.language.psi.OCamlTypeDefinition
 import com.odoc.lang.OdocConverter
 import com.odoc.utils.OdocPsiUtils
 import java.util.function.Consumer
@@ -18,10 +19,12 @@ class OCamlDocumentationProvider : DocumentationProvider {
 
     // CTRL+Q/hover
     override fun generateDoc(element: PsiElement?, originalElement: PsiElement?): String? {
-        println("Generate doc for ${element?.text}")
+        //println("Generate doc for ${element?.text}")
         // For now, nested elements are ignored
         val (root, parent) = when (val p = element?.parent) {
             is OCamlLetBindings -> p.parent to p
+            is OCamlFileBase -> p to element
+            is OCamlTypeDefinition -> p.parent to p
             else -> return null
         }
         if (root !is OCamlFileBase) return null

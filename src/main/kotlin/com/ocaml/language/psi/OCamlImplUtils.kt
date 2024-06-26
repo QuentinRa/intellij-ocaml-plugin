@@ -44,6 +44,6 @@ fun createStubIfNotAnonymous(node: ASTNode): Boolean {
 fun factory(name: String): OCamlStubElementType<*, *> = when (name) {
     "LET_BINDING" -> OCamlLetBindingStub.Type
     "VALUE_DESCRIPTION" -> OCamlValBindingStub.Type
-    "TYPE_DEFINITION" -> OCamlTypeDefinitionStub.Type
+    "TYPEDEF" -> OCamlTypeDefStub.Type
     else -> error("Unknown element $name")
 }
