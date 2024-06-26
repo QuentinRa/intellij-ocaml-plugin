@@ -13,7 +13,27 @@ The project is complex, so here are some notes for you.
 
 **Roadmap**
 
-* Test resolving documentation for FQN functions
+* Add tests for comments
+  * Comment above
+  * Comment below
+  * Comment above and below
+  * Comment above/below with normal comment in-between
+  * Comment above/below with annotation in-between
+  * The first comment of the file is for the file
+  * Test generating the documentation and check it
+* Add tests for "VAL"/"TYPE" (cf. README)
+* Add tests for "dune run configuration"
+  * Then add executables/names
+  * Then test with "odoc" project
+  * Then add tests
+  * Then add libraries (runConfig starting build)
+  * That is to make something flexible before using it for OCaml/...
+* ~~Then work on the FileIndex and index files as modules~~
+* ~~Test resolving documentation for FQN functions~~
+* To work on resolve, you must first
+  * Test the indexes and the resolve
+  * Work on the possible elements that reference something
+  * Shut up parser errors, they are annoying
 * Work on resolve
   * Try to resolve non-FQN functions from stdlib 
   * Implement "open" + modules resolutions (it's important)
@@ -21,12 +41,6 @@ The project is complex, so here are some notes for you.
 * Add back the editor (doc+REPL actions)
 * Add back the REPL
 * Add auto completion for FQN
-* Add tests for comments
-  * Comment above
-  * Comment below
-  * Comment above and below
-  * Comment above/below with normal comment in-between
-  * Comment above/below with annotation in-between
 
 **Roadmap (old)**
 
@@ -269,17 +283,11 @@ Tests
 * [x] Redefinitions 
 * [x] Deconstructions (Let)
 * [x] Anonymous (Let)
-* [x] And
+* [x] And (Let, Type)
 
 ##### Random
 
 * [ ] Warning/Error Annotations
-* [X] Structure View (ALT+7)
-  * [x] Variables
-  * [x] Handle Visibility (public/private)
-  * [ ] Filters (nested variables?)
-  * [ ] Add types?
-  * [ ] Add function arguments?
 * [ ] Surround With
 * [x] Live Templates
   * [x] Basic implementation
