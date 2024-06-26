@@ -6,7 +6,6 @@ import com.intellij.psi.tree.IElementType
 import com.ocaml.language.psi.api.OCamlNamedElement
 import com.ocaml.language.psi.api.OCamlStubElementType
 import com.ocaml.language.psi.api.isAnonymous
-import com.ocaml.language.psi.stubs.OCamlLetBindingStub
 import com.ocaml.language.psi.stubs.impl.*
 
 // nothing for now

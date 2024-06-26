@@ -1,4 +1,4 @@
-package com.ocaml.language.psi.stubs
+package com.ocaml.language.psi.stubs.impl
 
 import com.intellij.lang.ASTNode
 import com.intellij.psi.stubs.*

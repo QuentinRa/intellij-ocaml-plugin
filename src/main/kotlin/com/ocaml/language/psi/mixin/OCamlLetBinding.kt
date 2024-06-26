@@ -15,7 +15,7 @@ import com.ocaml.language.psi.OCamlValueName
 import com.ocaml.language.psi.api.OCamlStubbedNamedElementImpl
 import com.ocaml.language.psi.api.isAnonymous
 import com.ocaml.language.psi.impl.OCamlLetBindingImpl
-import com.ocaml.language.psi.stubs.OCamlLetBindingStub
+import com.ocaml.language.psi.stubs.impl.OCamlLetBindingStub
 import javax.swing.Icon
 
 abstract class OCamlLetBindingMixin : OCamlStubbedNamedElementImpl<OCamlLetBindingStub>, OCamlLetBinding {

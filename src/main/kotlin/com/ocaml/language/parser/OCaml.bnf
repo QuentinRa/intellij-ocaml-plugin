@@ -563,7 +563,7 @@ let_binding ::= value_name COLON poly_typexpr EQ seq_expr
     ]
     mixin="com.ocaml.language.psi.mixin.OCamlLetBindingMixin"
     extends = "com.ocaml.language.psi.api.OCamlStubbedElementImpl<?>"
-    stubClass = "com.ocaml.language.psi.stubs.OCamlLetBindingStub"
+    stubClass = "com.ocaml.language.psi.stubs.impl.OCamlLetBindingStub"
     elementTypeFactory = "com.ocaml.language.psi.OCamlImplUtilsKt.factory"
     pin(".*")="EQ"
 }

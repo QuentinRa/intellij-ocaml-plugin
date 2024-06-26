@@ -3,6 +3,7 @@ package com.ocaml.language.psi.stubs
 import com.intellij.psi.stubs.StubElement
 import com.ocaml.ide.OCamlBasePlatformTestCase
 import com.ocaml.language.psi.files.OCamlFileStub
+import com.ocaml.language.psi.stubs.impl.OCamlLetBindingStub
 import org.junit.Test
 
 class OCamlLetBindingStubTest : OCamlBasePlatformTestCase() {
