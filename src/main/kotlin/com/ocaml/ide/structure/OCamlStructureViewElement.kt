@@ -14,7 +14,7 @@ import com.intellij.util.PlatformIcons
 import com.intellij.util.containers.map2Array
 import com.ocaml.ide.presentation.getPresentationForStructure
 import com.ocaml.language.psi.OCamlLetBindings
-import com.ocaml.language.psi.OCamlValueDescription
+import com.ocaml.language.psi.OCamlValueBinding
 import com.ocaml.language.psi.api.isAnonymous
 import com.ocaml.language.psi.files.OCamlFile
 import com.ocaml.language.psi.files.OCamlInterfaceFile
@@ -36,7 +36,7 @@ class OCamlStructureViewElement(element: PsiElement) : StructureViewTreeElement,
                 }
 
                 is OCamlInterfaceFile -> {
-                    psi.childrenOfType<OCamlValueDescription>().filter { !it.isAnonymous() }
+                    psi.childrenOfType<OCamlValueBinding>().filter { !it.isAnonymous() }
                 }
 
                 is OCamlLetBindings -> psi.letBindingList.filter { !it.isAnonymous() }

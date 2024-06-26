@@ -10,18 +10,16 @@ The project is complex, so here are some notes for you.
 **IssuesToOpen**
 
 * new project wizard error for Dune (EDT=>Background)
-* Fix why only "let" can have documentation/goto/...
-  * [x] If was due to the annotator
-  * [x] Add type stub
-  * [ ] Move type stub to typexpr
-  * [ ] Move let stub too
-  * [ ] Fix the code appropriately
+* [ ] Type index
 
 **Roadmap**
 
 * Add back the documentation (odoc)
   * [odoc](https://ocaml.org/manual/4.12/ocamldoc.html)
   * [x] Can show documentation for "let"
+  * [x] Can show documentation for "val"
+  * [x] Can show documentation for "type"
+  * [ ] Load the documentation of the parent if none found
   * [ ] Manual testing with HTML/...
   * [ ] Reader mode
     * [ ] File comments
@@ -170,7 +168,16 @@ Some variables may be introduced as a part of an object deconstruction.
 
 #### Indexes
 
-Before indexing, we need to create stubs for lightweight parsing.
+Before indexing, we need to create stubs for lightweight parsing. To create a stub, you need:
+
+* [x] Create an element if needed to ensure the element name <small>(ex: variable name)</small> is the first element of the class we will edit. Ex: `value_binding` in `value_description ::= VAL value_binding`
+* [x] Refer to `value_binding` to inject the interfaces/classes/mixin/etc.
+* [x] First, edit `OCamlImplUtils#factory`
+* [x] Second, create the stub class such as `OCamlTypeDefStub`
+* [x] Third, update the mixin such as `OCamlTypeDefMixin`
+* [x] Generate the parser and run
+
+Tasks are:
 
 * [x] Add Stubs For Variables
 * [ ] Add Stubs For ...

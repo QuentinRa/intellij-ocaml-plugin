@@ -19,25 +19,31 @@ class OCamlHighlightingAnnotator : Annotator {
 
         // Works for: TYPE, VAL, LET
         if (elementType != OCamlTypes.LOWERCASE_IDENT_VALUE) return
-//        val ancestor = element.parent // LOWERCASE_IDENT | LOWERCASE_IDENT_NO_UNDERSCORE
-//            ?.parent // VALUE_NAME | VALUE_NAME_NO_UNDERSCORE | TYPECONSTRNAME
-//            ?.parent // OCamlNameIdentifierOwner | VALUE_DESCRIPTION | Typedef
-//        println(ancestor?.text)
-//        println(ancestor?.elementType)
+        val ancestor = element.parent // LOWERCASE_IDENT | LOWERCASE_IDENT_NO_UNDERSCORE
+            ?.parent // VALUE_NAME | VALUE_NAME_NO_UNDERSCORE | TYPECONSTRNAME
+            ?.parent // OCamlNameIdentifierOwner (Typedef, ...)
+        if (ancestor !is OCamlNameIdentifierOwner) return
 
-//        // OCamlNameIdentifierOwner
-//        // todo: only works with "let", not generic at all (and a tad hard-coded)
-//        val ancestor = element.parent // LOWERCASE_IDENT
-//            ?.parent // VALUE_NAME
-//            ?.parent // OCamlNameIdentifierOwner
-//        if (ancestor !is OCamlNameIdentifierOwner) return
-//        if (ancestor !is OCamlLetDeclaration) return
-//        val color =
-//            if (ancestor.isFunction()) OCamlColor.FUNCTION_DECLARATION
-//            else if (ancestor.isGlobal()) OCamlColor.GLOBAL_VARIABLE
-//            else OCamlColor.LOCAL_VARIABLE
-//        holder.newSilentAnnotation(HighlightSeverity.INFORMATION)
-//            .textAttributes(color.textAttributesKey)
-//            .create()
+        // Determine the color
+        val color = when (ancestor) {
+            // LET and VAL
+            is OCamlLetDeclaration -> {
+                if (ancestor.isFunction()) OCamlColor.FUNCTION_DECLARATION
+                else if (ancestor.isGlobal()) OCamlColor.GLOBAL_VARIABLE
+                else OCamlColor.LOCAL_VARIABLE
+            }
+            // Type
+            else -> OCamlColor.IDENTIFIER
+        }
+        //println("--------")
+        //println(element.textRange)
+        //println(ancestor.text)
+        //println(ancestor.elementType)
+        //println(color)
+
+        // Apply the color
+        holder.newSilentAnnotation(HighlightSeverity.INFORMATION)
+            .textAttributes(color.textAttributesKey)
+            .create()
     }
 }

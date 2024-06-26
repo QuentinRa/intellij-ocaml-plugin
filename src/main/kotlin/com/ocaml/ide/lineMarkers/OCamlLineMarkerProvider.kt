@@ -10,7 +10,7 @@ import com.intellij.psi.search.GlobalSearchScope
 import com.ocaml.icons.OCamlIcons
 import com.ocaml.language.psi.OCamlImplUtils.Companion.toLeaf
 import com.ocaml.language.psi.OCamlLetBinding
-import com.ocaml.language.psi.OCamlValueDescription
+import com.ocaml.language.psi.OCamlValueBinding
 import com.ocaml.language.psi.api.OCamlLetDeclaration
 import com.ocaml.language.psi.api.OCamlNameIdentifierOwner
 import com.ocaml.language.psi.api.OCamlNamedElement
@@ -41,7 +41,7 @@ class OCamlLineMarkerProvider : RelatedItemLineMarkerProvider() {
             // From LET, Resolve VAL
             collectLetNavigationMarkers(it, project, scope, result)
         }
-        (element as? OCamlValueDescription)?.let {
+        (element as? OCamlValueBinding)?.let {
             // From VAL, Resolve LET
             collectNamedElementNavigationMarkers<OCamlLetBinding>(it, "let/val", true, project, scope, result)
         }
@@ -88,7 +88,7 @@ class OCamlLineMarkerProvider : RelatedItemLineMarkerProvider() {
         // Handle variable declarations of multiple variables
         val nameIdentifier = element.nameIdentifier?.toLeaf()
         if (nameIdentifier != null) {
-            processQualifiedName<OCamlValueDescription>(
+            processQualifiedName<OCamlValueBinding>(
                 element.qualifiedName!!,
                 nameIdentifier,
                 "let/val",
@@ -100,7 +100,7 @@ class OCamlLineMarkerProvider : RelatedItemLineMarkerProvider() {
         } else if (element.qualifiedName !== null) {
             val qualifiedNames = expandLetBindingStructuredName(element.qualifiedName!!)
             element.computeValueNames().forEachIndexed { index, it ->
-                processQualifiedName<OCamlValueDescription>(
+                processQualifiedName<OCamlValueBinding>(
                     qualifiedNames[index],
                     it.toLeaf(),
                     "let/val",

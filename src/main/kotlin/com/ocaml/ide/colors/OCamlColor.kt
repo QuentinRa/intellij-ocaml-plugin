@@ -13,6 +13,8 @@ enum class OCamlColor(humanText: String, attr: TextAttributesKey? = null) {
     LOCAL_VARIABLE(OptionsBundle.message("options.language.defaults.local.variable"), Default.LOCAL_VARIABLE),
     GLOBAL_VARIABLE(OptionsBundle.message("options.language.defaults.global.variable"), Default.GLOBAL_VARIABLE),
 
+    IDENTIFIER(OptionsBundle.message("options.language.defaults.identifier"), Default.IDENTIFIER),
+    TYPE(OCamlBundle.message("settings.ocaml.color.type"), Default.CLASS_NAME),
     FUNCTION_DECLARATION(OptionsBundle.message("options.language.defaults.function.declaration"), Default.FUNCTION_DECLARATION),
 
     KEYWORD(OCamlBundle.message("settings.ocaml.color.keyword"), Default.KEYWORD),

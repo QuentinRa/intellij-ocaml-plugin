@@ -41,9 +41,10 @@ fun createStubIfNotAnonymous(node: ASTNode): Boolean {
     return (node.psi as? OCamlNamedElement)?.isAnonymous() == false
 }
 
+// left == element name "value_binding ::=" becomes "VALUE_BINDING"
 fun factory(name: String): OCamlStubElementType<*, *> = when (name) {
     "LET_BINDING" -> OCamlLetBindingStub.Type
-    "VALUE_DESCRIPTION" -> OCamlValBindingStub.Type
+    "VALUE_BINDING" -> OCamlValBindingStub.Type
     "TYPEDEF" -> OCamlTypeDefStub.Type
     else -> error("Unknown element $name")
 }
