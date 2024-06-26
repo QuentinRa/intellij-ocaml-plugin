@@ -53,6 +53,8 @@ object OdocPsiUtils {
             OCamlTypes.DOC_COMMENT -> comment
             OCamlTypes.COMMENT -> // normal comments are only allowed for preceding doc comments
                 if (preceding) findDocumentationCommentSkipNormalComments(comment, true) else null
+            OCamlTypes.ANNOTATION -> // annotations are allowed for succeeding comments (it seems)
+                if (!preceding) findDocumentationCommentSkipNormalComments(comment, false) else null
             else -> null
         }
     }
@@ -61,12 +63,12 @@ object OdocPsiUtils {
     // If there is one, then we must ensure it doesn't belong to another element
     // We are checking the follower/predecessor of "target", and if it's null OR a comment, then we can use it.
     private fun findDocumentationComment(element: PsiElement, preceding: Boolean): PsiComment? {
-        //val word = if (preceding) "Previous" else "Next"
-        //println("Starting for ${element.elementType}")
+//        val word = if (preceding) "Previous" else "Next"
+//        println("Starting for ${element.elementType}")
         val comment = findDocumentationCommentSkipNormalComments(element, preceding) ?: return null
-        //println("$word is ${comment.elementType}")
+//        println("$word is ${comment.elementType}")
         val target = previousElementSkipWhitespaceIfAllowed(comment, preceding)
-        //println("$word$word is ${target?.elementType}")
+//        println("$word$word is ${target?.elementType}")
         return if (!preceding || target == null || target is PsiComment) {
             comment
         } else null

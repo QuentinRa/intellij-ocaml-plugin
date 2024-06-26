@@ -8,6 +8,7 @@ import com.intellij.psi.PsiFile
 import com.ocaml.language.base.OCamlFileBase
 import com.ocaml.language.psi.OCamlLetBindings
 import com.ocaml.language.psi.OCamlTypeDefinition
+import com.ocaml.language.psi.OCamlValueDescription
 import com.odoc.lang.OdocConverter
 import com.odoc.utils.OdocPsiUtils
 import java.util.function.Consumer
@@ -19,20 +20,22 @@ class OCamlDocumentationProvider : DocumentationProvider {
 
     // CTRL+Q/hover
     override fun generateDoc(element: PsiElement?, originalElement: PsiElement?): String? {
-        //println("Generate doc for ${element?.text}")
+//        println("Generate doc for ${element?.text}")
         // For now, nested elements are ignored
         val (root, parent) = when (val p = element?.parent) {
             is OCamlLetBindings -> p.parent to p
-            is OCamlFileBase -> p to element
+            is OCamlValueDescription -> p.parent to p
             is OCamlTypeDefinition -> p.parent to p
             else -> return null
         }
+//        println("Root: $root")
+//        println("Parent: $parent")
         if (root !is OCamlFileBase) return null
 
         val preceding = OdocPsiUtils.precedingDocumentationComment(parent)
         val following = OdocPsiUtils.succeedingDocumentationComment(parent)
-        //println("Prev comment is ${preceding?.text}")
-        //println("Next comment is ${following?.text}")
+//        println("Prev comment is ${preceding?.text}")
+//        println("Next comment is ${following?.text}")
 
         val converter = OdocConverter()
         var text = ""

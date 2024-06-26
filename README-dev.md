@@ -33,6 +33,12 @@ The project is complex, so here are some notes for you.
 * Add back the editor (doc+REPL actions)
 * Add back the REPL
 * Add auto completion for FQN
+* Add tests for comments
+  * Comment above
+  * Comment below
+  * Comment above and below
+  * Comment above/below with normal comment in-between
+  * Comment above/below with annotation in-between
 
 **Roadmap (old)**
 
