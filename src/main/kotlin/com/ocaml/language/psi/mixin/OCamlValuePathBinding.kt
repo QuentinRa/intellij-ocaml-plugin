@@ -5,6 +5,7 @@ import com.intellij.psi.*
 import com.intellij.psi.tree.IElementType
 import com.ocaml.language.psi.OCamlValuePath
 import com.ocaml.language.psi.api.OCamlElementImpl
+import com.ocaml.language.psi.files.OCamlInterfaceFile
 import com.ocaml.language.psi.stubs.index.OCamlVariablesIndex
 
 
@@ -24,7 +25,11 @@ class OCamlValuePathReference(element: OCamlValuePathBindingMixin) : PsiReferenc
     PsiPolyVariantReference {
     override fun resolve(): PsiElement? {
         val resolveResults = multiResolve(false)
-        return if (resolveResults.size == 1) resolveResults[0].element else null
+        return if (resolveResults.size == 1) resolveResults[0].element else {
+            //
+            val definitions = resolveResults.filter { it.element?.containingFile is OCamlInterfaceFile }
+            definitions.firstOrNull()?.element ?: resolveResults[0].element
+        }
     }
 
     override fun multiResolve(incompleteCode: Boolean): Array<ResolveResult> {
