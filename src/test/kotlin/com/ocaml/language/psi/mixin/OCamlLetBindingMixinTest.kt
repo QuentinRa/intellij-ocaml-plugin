@@ -2,11 +2,13 @@ package com.ocaml.language.psi.mixin
 
 import com.intellij.psi.impl.DebugUtil
 import com.intellij.psi.impl.source.tree.LeafPsiElement
+import com.intellij.testFramework.UsefulTestCase
 import com.ocaml.language.OCamlParsingTestCase
 import com.ocaml.language.psi.OCamlImplUtils.Companion.toLeaf
 import com.ocaml.language.psi.OCamlLetBinding
 import com.ocaml.language.psi.OCamlLetBindings
 import com.ocaml.language.psi.mixin.utils.expandLetBindingStructuredName
+import com.ocaml.language.psi.mixin.utils.getNestedLetBindings
 import com.ocaml.language.psi.mixin.utils.handleStructuredLetBinding
 import org.junit.Test
 
@@ -164,8 +166,12 @@ class OCamlLetBindingMixinTest : OCamlParsingTestCase() {
     @Test
     fun test_nested() {
         assertNotNull(letWithNested)
-        val letWithNested = letWithNested!!
-        println(DebugUtil.psiToString(letWithNested, false, true))
-        val children = letWithNested.exprList.mapNotNull { it.firstChild as? OCamlLetBindings }
+        val letA = letWithNested!!
+        val children = letA.getNestedLetBindings()
+        assertSize(2, children)
+        val letB = children[0]
+        val letC = children[1]
+        assertEquals("let b = 5", letB.text)
+        assertEquals("let c = 6", letC.text)
     }
 }

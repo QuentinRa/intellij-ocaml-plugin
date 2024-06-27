@@ -4,6 +4,7 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.impl.source.tree.LeafPsiElement
 import com.intellij.psi.util.PsiTreeUtil
 import com.ocaml.language.psi.OCamlLetBinding
+import com.ocaml.language.psi.OCamlLetBindings
 import com.ocaml.language.psi.OCamlValueName
 import com.ocaml.language.psi.api.isAnonymous
 import com.ocaml.language.psi.mixin.OCamlLetBindingMixin
@@ -17,6 +18,15 @@ fun OCamlLetBinding.computeValueNames(): List<PsiElement> =
         else
             nameIdentifier
     }
+
+fun OCamlLetBinding.getNestedLetBindings(): List<OCamlLetBindings> {
+    return exprList.flatMap { it.children.toList() }.mapNotNull {
+        when (it) {
+            is OCamlLetBindings -> it
+            else -> it.firstChild as? OCamlLetBindings // EXPR.<OCamlLetBindings>
+        }
+    }
+}
 
 fun expandLetBindingStructuredName(structuredName: String?): List<String> {
     if (structuredName.isNullOrEmpty()) return listOf()

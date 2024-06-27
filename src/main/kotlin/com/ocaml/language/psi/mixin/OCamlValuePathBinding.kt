@@ -8,7 +8,6 @@ import com.ocaml.language.psi.api.OCamlElementImpl
 import com.ocaml.language.psi.files.OCamlInterfaceFile
 import com.ocaml.language.psi.stubs.index.OCamlVariablesIndex
 
-
 abstract class OCamlValuePathBindingMixin(type: IElementType) : OCamlElementImpl(type), OCamlValuePath {
     override fun getReference(): PsiReference? {
         return OCamlValuePathReference(this)
