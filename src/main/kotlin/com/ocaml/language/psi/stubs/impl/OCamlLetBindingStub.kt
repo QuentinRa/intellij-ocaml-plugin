@@ -6,7 +6,7 @@ import com.ocaml.language.psi.OCamlLetBinding
 import com.ocaml.language.psi.api.*
 import com.ocaml.language.psi.createStubIfNotAnonymous
 import com.ocaml.language.psi.impl.OCamlLetBindingImpl
-import com.ocaml.language.psi.mixin.expandLetBindingStructuredName
+import com.ocaml.language.psi.mixin.utils.expandLetBindingStructuredName
 import com.ocaml.language.psi.stubs.index.OCamlVariablesIndex
 
 class OCamlLetBindingStub(

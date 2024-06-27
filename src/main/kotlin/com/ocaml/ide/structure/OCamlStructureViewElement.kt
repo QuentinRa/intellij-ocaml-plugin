@@ -20,7 +20,7 @@ import com.ocaml.language.psi.OCamlValueDescription
 import com.ocaml.language.psi.api.isAnonymous
 import com.ocaml.language.psi.files.OCamlFile
 import com.ocaml.language.psi.files.OCamlInterfaceFile
-import com.ocaml.language.psi.mixin.handleStructuredLetBinding
+import com.ocaml.language.psi.mixin.utils.handleStructuredLetBinding
 
 // A bit complex
 //

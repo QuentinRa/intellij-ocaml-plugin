@@ -14,8 +14,8 @@ import com.ocaml.language.psi.OCamlValueBinding
 import com.ocaml.language.psi.api.OCamlLetDeclaration
 import com.ocaml.language.psi.api.OCamlNameIdentifierOwner
 import com.ocaml.language.psi.api.OCamlNamedElement
-import com.ocaml.language.psi.mixin.computeValueNames
-import com.ocaml.language.psi.mixin.expandLetBindingStructuredName
+import com.ocaml.language.psi.mixin.utils.computeValueNames
+import com.ocaml.language.psi.mixin.utils.expandLetBindingStructuredName
 import com.ocaml.language.psi.stubs.index.OCamlVariablesIndex
 
 // For tests:

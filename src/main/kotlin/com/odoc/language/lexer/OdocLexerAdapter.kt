@@ -19,7 +19,6 @@ class OdocLexerAdapter : _OdocLexer() {
                         callback(ParsedTokenInfo(tokenType, tokenStart, tokenEnd))
                     }
                 }
-
                 tokenType = advance()
             }
         } catch (_: IOException) {}

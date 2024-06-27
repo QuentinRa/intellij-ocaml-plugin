@@ -1,9 +1,13 @@
 package com.ocaml.language.psi.mixin
 
+import com.intellij.psi.impl.DebugUtil
 import com.intellij.psi.impl.source.tree.LeafPsiElement
 import com.ocaml.language.OCamlParsingTestCase
 import com.ocaml.language.psi.OCamlImplUtils.Companion.toLeaf
 import com.ocaml.language.psi.OCamlLetBinding
+import com.ocaml.language.psi.OCamlLetBindings
+import com.ocaml.language.psi.mixin.utils.expandLetBindingStructuredName
+import com.ocaml.language.psi.mixin.utils.handleStructuredLetBinding
 import org.junit.Test
 
 class OCamlLetBindingMixinTest : OCamlParsingTestCase() {
@@ -16,6 +20,7 @@ class OCamlLetBindingMixinTest : OCamlParsingTestCase() {
     private var letOperatorDeconstruction: OCamlLetBinding? = null
     private var letAnonymous: OCamlLetBinding? = null
     private var letAnonymousDeconstruction: OCamlLetBinding? = null
+    private var letWithNested: OCamlLetBinding? = null
 
     override fun setUp() {
         super.setUp()
@@ -31,6 +36,10 @@ class OCamlLetBindingMixinTest : OCamlParsingTestCase() {
             let ((a), (+)) = ()
             let _ = ()
             let (a,(_)) = ()
+            let a =
+                let b = 5 in
+                let c = 6 in
+                b * c
         """)
         letSimple = letBindings[0]
         letDeconstruction = letBindings[1]
@@ -41,6 +50,7 @@ class OCamlLetBindingMixinTest : OCamlParsingTestCase() {
         letOperatorDeconstruction = letBindings[6]
         letAnonymous = letBindings[7]
         letAnonymousDeconstruction = letBindings[8]
+        letWithNested = letBindings[9]
     }
 
     override fun tearDown() {
@@ -54,6 +64,7 @@ class OCamlLetBindingMixinTest : OCamlParsingTestCase() {
         letOperatorDeconstruction = null
         letAnonymous = null
         letAnonymousDeconstruction = null
+        letWithNested = null
     }
 
     @Test
@@ -148,5 +159,13 @@ class OCamlLetBindingMixinTest : OCamlParsingTestCase() {
         """).forEach {
             assertEquals(it.name, "( === )")
         }
+    }
+
+    @Test
+    fun test_nested() {
+        assertNotNull(letWithNested)
+        val letWithNested = letWithNested!!
+        println(DebugUtil.psiToString(letWithNested, false, true))
+        val children = letWithNested.exprList.mapNotNull { it.firstChild as? OCamlLetBindings }
     }
 }
