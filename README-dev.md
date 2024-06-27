@@ -4,13 +4,18 @@ This README is for internal use and a reference for any developer.
 
 **Roadmap**
 
-* [ ] Review which tests are missing
+* [ ] Documentation: element under the cursor
 * [ ] StructureView: nested variables
-* [ ] SmartElements: visibility
-* [ ] Navigation Line Marker: type
-* [ ] Open/Include
 * [ ] Index: module files
+* [ ] SmartElements: visibility
+* [ ] Navigation Line Marker: add "type"
+* [ ] Add: open
+  * let open
+  * Stdlib (OCaml 4.07+)
+  * open Stdlib
+  * open List (`let length = List.length [1; 2; 3] ;;  print_int length ;;`)
 * [ ] Add: module
+* [ ] Add: include (inherit another module)
 * [ ] Add: exception
 * [ ] Add: function parameters
 
@@ -139,6 +144,7 @@ For annotated elements, you can use `CTRL+Q`/`<hover>` to view their quick docum
 * [x] Support annotations comments in-between
 * [ ] Use the element on the cursor
   * [ ] Ex: hover an module name => module documentation
+* [x] Allow one blank line with orphan doc comment below the element to accommodate "Format.fprintf".
 
 Additionally, it would be good if we can generate the documentation.
 
