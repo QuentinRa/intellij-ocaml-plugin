@@ -1,23 +1,18 @@
 package com.ocaml.language.psi.stubs
 
-import com.intellij.psi.stubs.StubElement
-import com.ocaml.ide.OCamlBasePlatformTestCase
+import com.intellij.psi.StubBuilder
 import com.ocaml.language.psi.files.OCamlFileStub
 import com.ocaml.language.psi.stubs.impl.OCamlLetBindingStub
 import org.junit.Test
 
-class OCamlLetBindingStubTest : OCamlBasePlatformTestCase() {
-    protected fun <T: StubElement<*>> generateStubTree(code: String, expectedChildren: Int): List<T> {
-        val file = configureCode("A.ml", code)
-        val stubTree = OCamlFileStub.Type.builder.buildStubTree(file)
-        assertSize(expectedChildren, stubTree.childrenStubs)
-        @Suppress("UNCHECKED_CAST")
-        return stubTree.childrenStubs as List<T>
-    }
+class OCamlLetBindingStubTest : BaseStubTestCase() {
+
+    override val builder: StubBuilder
+        get() = OCamlFileStub.Type.builder
 
     @Test
     fun testBasicTree() {
-        val nodes = generateStubTree<OCamlLetBindingStub>("""
+        val nodes = generateOCamlStubTree<OCamlLetBindingStub>("""
                 let a = ()
                 let b = ()
             """, 2)
@@ -27,7 +22,7 @@ class OCamlLetBindingStubTest : OCamlBasePlatformTestCase() {
 
     @Test
     fun testAnonymous() {
-        generateStubTree<OCamlLetBindingStub>("""
+        generateOCamlStubTree<OCamlLetBindingStub>("""
                 let _ = ()
                 let _ = 
                     let d = 5
@@ -37,7 +32,7 @@ class OCamlLetBindingStubTest : OCamlBasePlatformTestCase() {
 
     @Test
     fun testLocalVariable() {
-        generateStubTree<OCamlLetBindingStub>("""
+        generateOCamlStubTree<OCamlLetBindingStub>("""
                 let c = 
                     let d = 5
                     in d * d
@@ -46,7 +41,7 @@ class OCamlLetBindingStubTest : OCamlBasePlatformTestCase() {
 
     @Test
     fun testNestedGlobalVariable() {
-        generateStubTree<OCamlLetBindingStub>("""
+        generateOCamlStubTree<OCamlLetBindingStub>("""
                 class xxx = let x = () in object end;;
                 module xxx = struct let x = () end;;
             """, 0)

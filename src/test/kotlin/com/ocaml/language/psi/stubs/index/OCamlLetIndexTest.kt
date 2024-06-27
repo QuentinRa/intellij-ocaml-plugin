@@ -1,6 +1,5 @@
 package com.ocaml.language.psi.stubs.index
 
-import com.BaseIndexTestCase
 import com.intellij.psi.StubBuilder
 import com.ocaml.language.psi.api.OCamlNamedElement
 import com.ocaml.language.psi.files.OCamlFileStub

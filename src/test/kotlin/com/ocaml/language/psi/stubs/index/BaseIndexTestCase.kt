@@ -1,25 +1,23 @@
-package com
+package com.ocaml.language.psi.stubs.index
 
 import com.intellij.psi.PsiElement
 import com.intellij.psi.StubBuilder
 import com.intellij.psi.stubs.IndexSink
 import com.intellij.psi.stubs.StubIndexKey
 import com.ocaml.ide.OCamlBasePlatformTestCase
-import com.ocaml.language.psi.api.OCamlNamedElement
-import com.ocaml.language.psi.files.OCamlFileStub
-
-interface StubIndexForTests {
-    /**
-     * Number of element indexed
-     */
-    var total : Int
-    /**
-     * Each name is mapped to its number of occurrences
-     */
-    val namedIndexValuesCount : MutableMap<String, Int>
-}
 
 abstract class BaseIndexTestCase<T> : OCamlBasePlatformTestCase() where T : PsiElement {
+    interface StubIndexForTests {
+        /**
+         * Number of element indexed
+         */
+        var total : Int
+        /**
+         * Each name is mapped to its number of occurrences
+         */
+        val namedIndexValuesCount : MutableMap<String, Int>
+    }
+
 
     private class FakeStubSinkIndex<T> : IndexSink, StubIndexForTests where T : PsiElement {
         /**
