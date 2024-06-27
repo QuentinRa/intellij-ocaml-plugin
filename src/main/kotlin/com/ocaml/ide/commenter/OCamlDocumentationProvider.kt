@@ -8,6 +8,7 @@ import com.intellij.openapi.util.text.HtmlChunk
 import com.intellij.psi.PsiDocCommentBase
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
+import com.intellij.psi.util.elementType
 import com.ocaml.language.base.OCamlFileBase
 import com.ocaml.language.psi.OCamlLetBindings
 import com.ocaml.language.psi.OCamlTypeDefinition
@@ -31,7 +32,7 @@ class OCamlDocumentationProvider : DocumentationProvider {
             else -> base
         }
 
-//        println("Generate doc for ${element?.text}/${element?.elementType}/${element?.parent?.elementType}")
+        println("Generate doc for ${element?.text}/${element?.elementType}/${element?.parent?.elementType}")
         // For now, nested elements are ignored
         val (root, parent) = when (val p = element?.parent) {
             is OCamlLetBindings -> p.parent to p

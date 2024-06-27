@@ -7,11 +7,6 @@ This README is for internal use and a reference for any developer.
 * [ ] Review which tests are missing
 * [ ] StructureView: nested variables
 * [ ] SmartElements: visibility
-* Add tests for comments (+update todos)
-  * Comment above/below with annotation in-between
-  * The first comment of the file is for the file
-  * The doc for Format.fprintf is weird
-  * Test generating the documentation and check it
 * [ ] Navigation Line Marker: type
 * [ ] Open/Include
 * [ ] Index: module files
@@ -139,7 +134,17 @@ And a few templates in `liveTemplates/default.xml`.
 
 For annotated elements, you can use `CTRL+Q`/`<hover>` to view their quick documentation. 
 
-* [x] ...
+* [x] Can resolve the comment above/below an element
+* [x] Support normal comments in-between
+* [x] Support annotations comments in-between
+* [ ] Use the element on the cursor
+  * [ ] Ex: hover an module name => module documentation
+
+Additionally, it would be good if we can generate the documentation.
+
+* [ ] Dune "opam project"
+* [ ] Dune "dune build && dune build @doc"
+* [ ] Open the documentation?
 
 For normal comments:
 

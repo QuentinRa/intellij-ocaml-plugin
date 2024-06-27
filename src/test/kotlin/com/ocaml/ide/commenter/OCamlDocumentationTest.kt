@@ -48,24 +48,31 @@ class OCamlDocumentationTest : OCamlBasePlatformTestCase() {
 
     @Test
     fun test_comment_after() {
-        assertGeneratedDocMatchesExpected(
-            "let x<caret> = 1\n(** doc for x *)",
-            "<div class=\"definition\"><b>A.x</b></div><div class=\"content\"><p>doc for x</p></div>"
-        )
-        assertGeneratedDocMatchesExpected(
-            "let x<caret> = 1\n\n(** doc for x *)",
-            null
-        )
+        val expected = "<div class=\"definition\"><b>A.x</b></div><div class=\"content\"><p>doc for x</p></div>"
+        assertGeneratedDocMatchesExpected("let x<caret> = 1\n(** doc for x *)", expected)
+        assertGeneratedDocMatchesExpected("let x<caret> = 1\n\n(** doc for x *)", expected)
+        assertGeneratedDocMatchesExpected("let x<caret> = 1\n\n\n(** doc for x *)", null)
     }
 
     @Test
     fun test_comment_before_and_after() {
+        val expected = "<div class=\"definition\"><b>A.x</b></div><div class=\"content\"><p>doc for x</p><p>doc for x</p></div>"
         assertGeneratedDocMatchesExpected(
             "(** doc for x *)\nlet x<caret> = 1\n(** doc for x *)",
-            "<div class=\"definition\"><b>A.x</b></div><div class=\"content\"><p>doc for x</p><p>doc for x</p></div>"
+            expected
         )
         assertGeneratedDocMatchesExpected(
-            "(** doc for x *)\n\nlet x<caret> = 1\n\n(** doc for x *)",
+            "(** doc for x *)\nlet x<caret> = 1\n\n(** doc for x *)",
+            expected
+        )
+
+        assertGeneratedDocMatchesExpected(
+            "(** doc for x *)\n\nlet x<caret> = 1\n\n(** doc for y *)\nlet y = 2",
+            null
+        )
+
+        assertGeneratedDocMatchesExpected(
+            "(** some doc *)\n\nlet x<caret> = 1\n\n\n(** doc for x *)",
             null
         )
     }
