@@ -1,16 +1,5 @@
 # README
 
-**Goal**: implement the least feature to have a working plugin using the new parser. This is PoC to test if we can use JetBrains Grammar File.
-
-The project is complex, so here are some notes for you.
-
-* [ ] GitHub CI
-* [ ] User Documentation
-
-**IssuesToOpen**
-
-* new project wizard error for Dune (EDT=>Background)
-
 **Roadmap**
 
 * Add tests for "VAL"/"TYPE" (cf. README)
@@ -32,59 +21,6 @@ The project is complex, so here are some notes for you.
 * Add back the editor (doc+REPL actions)
 * Add back the REPL
 * Add auto completion for FQN
-
-**Roadmap (old)**
-
-```none
-FilenameIndex.getVirtualFilesByName(
-  "filename.extension",
-  false,
-  GlobalSearchScope.projectScope(element.project)
-)
-```
-* [ ] Most of API stuff was removed, add it back as needed
-* Add reference/include tests
-* Add template tests
-* Extract StructureView#getChildren and test it
-* Add OCamlLanguageUtils tests
-  * `let test = A.B.C xxx`
-  * `module A (B: C)` in ML
-* Add dune tests (annotator, parser)
-* Test DunePsiFactory
-  * Cannot rename ":xxx"
-  * Cannot rename "-xxx"
-  * Cannot rename "a/b/c"
-* Add REPL
-* Can display warnings/errors
-* Can generate annot file
-* Can use annot for type inference
-* Space allowed (spaceExistenceTypeBetweenTokens)
-* Better stubs (skipChildProcessingWhenBuildingStubs)
-
-## Parsed Tree Integration
-
-Once we were able to match the code to a syntax tree, we need to integrate "smart features".
-
-Generalization List
-
-* [x] Let
-* [x] Val
-* [ ] Exception
-* [ ] Type
-* [ ] Module
-* [ ] Module Type
-
-Generalize steps
-
-* [ ] Add stubs for others
-* [ ] Add structure view for others
-* [ ] Add indexes for others
-* [ ] Add colors (settings+annotator) for others
-* [ ] Ensure everything anonymous is correctly handled (stubs, structure view, etc.)
-
-Random
-
-* Let#isFunction: use type inference?
 
 Additional problems
 
