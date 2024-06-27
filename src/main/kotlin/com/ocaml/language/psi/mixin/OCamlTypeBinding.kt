@@ -25,7 +25,6 @@ abstract class OCamlTypeDefMixin : OCamlStubbedNamedElementImpl<OCamlTypeDefStub
             name
     }
 
-    override fun getIconPath(): String = "OCamlIcons.Nodes.TYPE"
     override fun getIcon(flags: Int): Icon? {
         val visibilityIcon = PlatformIcons.PUBLIC_ICON
         val icon = OCamlIcons.Nodes.TYPE

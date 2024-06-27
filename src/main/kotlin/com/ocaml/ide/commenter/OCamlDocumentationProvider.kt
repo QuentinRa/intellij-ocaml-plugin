@@ -71,10 +71,9 @@ class OCamlDocumentationProvider : DocumentationProvider {
     private fun formatDocumentation(element: PsiElement, text: String) : String {
         val target = element as? OCamlQualifiedNamedElement ?: return text
         val targetQualifiedName = target.qualifiedName ?: return text
-        val targetIconPath = target.getIconPath() ?: "AllIcons.Nodes.Variable"
 
         val definitionBuilder = HtmlBuilder()
-        definitionBuilder.append(HtmlChunk.tag("icon").attr("src", targetIconPath))
+        //definitionBuilder.append(HtmlChunk.tag("icon").attr("src", "AllIcons.Nodes.Package"))
         definitionBuilder.append(HtmlChunk.text(" $targetQualifiedName").bold())
 
         val contentBuilder = HtmlBuilder()
