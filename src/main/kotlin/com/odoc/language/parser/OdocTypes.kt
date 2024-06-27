@@ -1,4 +1,4 @@
-package com.odoc.lang
+package com.odoc.language.parser
 
 import com.intellij.psi.tree.IElementType
 import com.odoc.OdocLanguage

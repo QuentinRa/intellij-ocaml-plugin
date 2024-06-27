@@ -1,10 +1,11 @@
-package com.odoc.lang
+package com.odoc.language
 
 import com.intellij.lang.documentation.DocumentationMarkup
 import com.intellij.openapi.util.text.HtmlBuilder
 import com.intellij.openapi.util.text.HtmlChunk
 import com.intellij.psi.TokenType
 import com.intellij.util.containers.Stack
+import com.odoc.language.parser.OdocTypes
 import com.odoc.language.lexer._OdocLexer
 import com.odoc.utils.logs.OdocLogger
 import java.io.IOException

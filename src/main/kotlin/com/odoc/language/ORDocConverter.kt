@@ -1,4 +1,4 @@
-package com.odoc.lang
+package com.odoc.language
 
 import com.intellij.lang.documentation.DocumentationMarkup
 import com.intellij.lexer.FlexLexer

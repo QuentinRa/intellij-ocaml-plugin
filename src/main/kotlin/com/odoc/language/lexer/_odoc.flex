@@ -1,8 +1,7 @@
 package com.odoc.language.lexer;
 
-import com.intellij.lexer.FlexLexer;
 import com.intellij.psi.tree.IElementType;
-import com.odoc.lang.OdocTypes;
+import com.odoc.language.parser.OdocTypes;
 
 import static com.intellij.psi.TokenType.BAD_CHARACTER;
 import static com.intellij.psi.TokenType.WHITE_SPACE;

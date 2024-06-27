@@ -4,9 +4,7 @@ This README is for internal use and a reference for any developer.
 
 **Roadmap**
 
-* [ ] Documentation: element under the cursor
 * [ ] Documentation: tests for resolving (+add below)
-* [ ] Documentation: how did I render it nicely before?
 * [ ] StructureView: nested variables
 * [ ] Index: module files
 * [ ] SmartElements: visibility
@@ -18,6 +16,7 @@ This README is for internal use and a reference for any developer.
   * open Stdlib
   * open List (`let length = List.length [1; 2; 3] ;;  print_int length ;;`)
 * [ ] Add: module
+* [ ] Documentation: element under the cursor (Module?)
 * [ ] Add: include (inherit another module)
 * [ ] Add: exception
 * [ ] Add: function parameters
@@ -122,6 +121,8 @@ Similarly to JAVA, you can change highlight colors in settings:
 
 📚 Dune files are highlighted and annotated too. They also have their colors settings page.
 
+* [ ] Only stuff that can be refactored should be an identifier
+
 ## Live Templates
 
 A live template is a code sample that is generated when selected in a specified context. For instance, inside a method in JAVA (context), when we write "for" and select the live template "fori" to generate a "for i loop".
@@ -153,6 +154,7 @@ For the rendering of the [odoc](https://ocaml.org/manual/4.12/ocamldoc.html) doc
 
 * [ ] Create a parser/lexer, handle HTML + tags
 * [ ] Implement the "render mode" for sources
+* [x] Added an annotator for elements between brackets
 
 Additionally, it would be good if we can generate the documentation.
 
