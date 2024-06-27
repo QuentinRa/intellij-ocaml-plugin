@@ -4,7 +4,7 @@ This README is for internal use and a reference for any developer.
 
 **Roadmap**
 
-* [ ] Review which tests are missing (+Dune)
+* [ ] Review which tests are missing
 * [ ] StructureView: nested variables
 * [ ] SmartElements: visibility
 * Add tests for comments (+update todos)
@@ -16,7 +16,7 @@ This README is for internal use and a reference for any developer.
   * The first comment of the file is for the file
   * The doc for Format.fprintf is weird
   * Test generating the documentation and check it
-* [ ] Navigation: type
+* [ ] Navigation Line Marker: type
 * [ ] Open/Include
 * [ ] Index: module files
 * [ ] Add: module

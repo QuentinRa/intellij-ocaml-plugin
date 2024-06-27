@@ -1,8 +1,15 @@
 package com.ocaml.language.psi.stubs.index
 
+import com.BaseIndexTestCase
+import com.intellij.psi.StubBuilder
+import com.ocaml.language.psi.api.OCamlNamedElement
+import com.ocaml.language.psi.files.OCamlFileStub
 import org.junit.Test
 
-class OCamlLetIndexTest : BaseIndexTest() {
+class OCamlLetIndexTest : BaseIndexTestCase<OCamlNamedElement>() {
+    override val builder: StubBuilder
+        get() = OCamlFileStub.Type.builder
+
     @Test
     fun test_simple_statements() {
         // Test duplicate, nested, and anonymous
