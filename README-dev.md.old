@@ -1,0 +1,321 @@
+# README
+
+**Goal**: implement the least feature to have a working plugin using the new parser. This is PoC to test if we can use JetBrains Grammar File.
+
+The project is complex, so here are some notes for you.
+
+* [ ] GitHub CI
+* [ ] User Documentation
+
+**IssuesToOpen**
+
+* new project wizard error for Dune (EDT=>Background)
+
+**Roadmap**
+
+* Add tests for comments
+  * Comment above
+  * Comment below
+  * Comment above and below
+  * Comment above/below with normal comment in-between
+  * Comment above/below with annotation in-between
+  * The first comment of the file is for the file
+  * Test generating the documentation and check it
+* Add tests for "VAL"/"TYPE" (cf. README)
+* Add tests for "dune run configuration"
+  * Then add executables/names
+  * Then test with "odoc" project
+  * Then add tests
+  * Then add libraries (runConfig starting build)
+  * That is to make something flexible before using it for OCaml/...
+* ~~Then work on the FileIndex and index files as modules~~
+* ~~Test resolving documentation for FQN functions~~
+* To work on resolve, you must first
+  * Test the indexes and the resolve
+  * Work on the possible elements that reference something
+* Work on resolve
+  * Try to resolve non-FQN functions from stdlib 
+  * Implement "open" + modules resolutions (it's important)
+  * Try to resolve non-FQN functions from context (e.g. walkback and add opens, then test "openname"+input)
+* Add back the editor (doc+REPL actions)
+* Add back the REPL
+* Add auto completion for FQN
+
+**Roadmap (old)**
+
+* [ ] Can add a SDK from an arbitrary path (I removed the code...)
+* [ ] Can add a "SimpleSDK" (non-opam) | Add Removed Code
+* [ ] Can build project
+* Check references
+  * Handle Include and Open
+    * Line Markers?
+  * Modules (files but not just files) indexes
+  * Dune file references?
+  * [Doc](https://plugins.jetbrains.com/docs/intellij/references-and-resolve.html)
+* [coq](https://github.com/coq/coq.git)
+* Check Documentation
+* Modules (files but not just files) indexes
+* Add function parameters in annotator
+* Check completion
+* Check folding
+  * OCaml Folding
+  * Dune Folding
+* Find usages
+* Go to
+* Quotes Handler
+  * OCaml
+  * Dune
+* Smart Enter
+* Qualified path
+  * [ ] Include Modules/Classes/...
+  * [ ] Stub parsers are not ignoring valid parents
+  * [ ] Add them to indexes
+  * [ ] Ensure Line Marker is still working
+* Check refactoring
+
+```none
+FilenameIndex.getVirtualFilesByName(
+  "filename.extension",
+  false,
+  GlobalSearchScope.projectScope(element.project)
+)
+```
+* [ ] Most of API stuff was removed, add it back as needed
+* Add reference/include tests
+* Add template tests
+* Extract StructureView#getChildren and test it
+* Add OCamlLanguageUtils tests
+  * `let test = A.B.C xxx`
+  * `module A (B: C)` in ML
+* Add dune tests (annotator, parser)
+* Test DunePsiFactory
+  * Cannot rename ":xxx"
+  * Cannot rename "-xxx"
+  * Cannot rename "a/b/c"
+* Test Dune Structure View
+  * Do not show empty lists
+  * Do not show values (strings, atoms)
+* Add REPL
+* Handle Module Creation
+* Handle Run Configurations
+* Can compile using dune (.gitignore? etc.)
+* Can display warnings/errors
+* Can generate annot file
+* Can use annot for type inference
+* Space allowed (spaceExistenceTypeBetweenTokens)
+* Better stubs (skipChildProcessingWhenBuildingStubs)
+
+## Parsed Tree Integration
+
+Once we were able to match the code to a syntax tree, we need to integrate "smart features".
+
+Generalization List
+
+* [x] Let
+* [x] Val
+* [ ] Exception
+* [ ] Type
+* [ ] Module
+* [ ] Module Type
+
+Generalize steps
+
+* [ ] Add stubs for others
+* [ ] Add structure view for others
+* [ ] Add indexes for others
+* [ ] Add colors (settings+annotator) for others
+* [ ] Ensure everything anonymous is correctly handled (stubs, structure view, etc.)
+
+Random
+
+* Let#isFunction: use type inference?
+
+#### From "syntax" to "logic"
+
+In short, you can use these as reference when you need to highlight stuff differently based on what their type:
+
+* `OCamlLetDeclaration` (declaration) and `OCamlLetBindingMixin` (implementation): refer to highlighter to see how it is used. For instance, functions are highlighted differently than normal variables
+* `OCamlLetDeclaration` (declaration) and `OCamlValBindingMixin` (implementation): same as for Let
+* ...
+
+#### Anonymous
+
+In OCaml, we can use `_` as a name identifier for an anonymous element. Such element should NOT be:
+
+* Indexed
+* Shown in the structure view
+* Considered as having a name (name=null)
+
+#### Deconstructions
+
+Some variables may be introduced as a part of an object deconstruction.
+
+#### Indexes
+
+Before indexing, we need to create stubs for lightweight parsing. To create a stub, you need:
+
+* [x] Create an element if needed to ensure the element name <small>(ex: variable name)</small> is the first element of the class we will edit. Ex: `value_binding` in `value_description ::= VAL value_binding`
+* [x] Refer to `value_binding` to inject the interfaces/classes/mixin/etc.
+* [x] First, edit `OCamlImplUtils#factory`
+* [x] Second, create the stub class such as `OCamlTypeDefStub`
+* [x] Third, update the mixin such as `OCamlTypeDefMixin`
+* [x] Generate the parser and run
+
+Tasks are:
+
+* [x] Add Stubs For Variables (let/val)
+* [x] Add Stubs For Types
+* [ ] Add Stubs For ...
+* [x] Do not store anonymous variables
+* [ ] Use stubs in structure view (What do you mean?)
+* [ ] Supported nested variables (e.g. fix qualified path, etc.)
+
+Indexes are closely related to references. We can search for elements after indexing them. They are used when resolving references.
+
+* [x] Add indexes for variables (let/val)
+* [x] Add indexes for types
+* ~~[ ] Use an index of integers?~~ (to store numbers)
+
+#### References
+
+From a fully qualified path, we can find the declarations for:
+
+* [x] Variables (Let)
+* [x] Variable declarations (VAL)
+
+From all others, e.g. nested variables, included variables, local variables:
+
+* [ ] Determine how to handle that (compiler? manual?)
+
+Additional problems
+
+* [ ] The named element should be "x" and not "let x = ..."
+
+## User Features
+
+#### Spellchecker
+
+* [x] Comments
+* [x] Strings
+* [x] Identifiers
+
+#### Documentation
+
+Refer to [odoc](https://ocaml.org/manual/4.12/ocamldoc.html).
+
+* [x] Let
+* [x] Type
+* [x] Val
+* [ ] Handle HTML
+* [ ] Show documentation nicely
+* [ ] Load the documentation of the parent if none found
+* [ ] Reader mode
+  * [ ] File comments
+  * [ ] Let comments
+* [ ] Custom parser+lexer for "odoc"
+
+#### Typing
+
+* [x] Braces matching (hover the other)
+* [ ] Quotes handler
+* [ ] Paste processor
+* [ ] Smart enter processor
+* [x] Single Line Comments Handler (CTRL+/)
+* [x] Multi Lines Comments Handler (CTRL+SHIFT+/)
+* [ ] Comments: space not removed after uncommenting ("(* ")
+* [ ] Other handlers
+
+#### Smart Features
+
+##### Structure View
+
+The Structure View can be opened with `ALT+7`.
+
+* Show elements
+  * [x] Global Variables (LET/VAL)
+  * [ ] Types
+  * [ ] ...
+* Show appropriate icons
+  * [ ] Show "public/private" instead of "public" for all
+* [ ] Filters (nested variables?)
+* [ ] Add function arguments?
+
+Tests
+
+* [x] One/Multiple variable
+* [x] Redefinitions 
+* [x] Deconstructions (Let)
+* [x] Anonymous (Let)
+* [x] And (Let, Type)
+
+##### Random
+
+* [ ] Warning/Error Annotations
+  * [x] Currently parser errors are hidden using highlightErrorFilter
+* [ ] Surround With
+* [x] Live Templates
+  * [x] Basic implementation
+  * [ ] Add scopes (no for in MLI?)
+  * [x] Not available in comments
+  * [x] Not available in other files
+* [X] Line Markers
+  * [X] Declaration
+  * [x] Implementation
+  * [x] Show a nice presentation
+  * [x] Works with pattern variables (ex: "a,b,c")
+
+## SDK
+
+The OCaml SDK need to be loaded within the IDE to allow the user to navigate to OCaml sources or consult the documentation.
+
+* [x] Can set the basic common settings
+* [x] Can use an existing SDK
+* [x] Can load a detected SDK
+* Support the followings SDKs providers
+  * [x] WSL
+  * [ ] Cygwin
+  * [ ] OCaml64
+  * [ ] Linux
+* Test the support of the following SDKs providers
+  * [x] WSL
+  * [ ] Cygwin
+  * [ ] OCaml64
+  * [ ] Linux
+* Support the following SDK types
+  * [x] Opam
+  * [ ] Non-opam
+* [x] We can't manually set the SDK additional data anymore as I can't manage to make it work. The user cannot edit the OCaml manual/API URLs.
+* [x] We suggest the user to set the SDK if not set
+* [x] The SDK files are shown nicely in the Library
+
+## Menus
+
+#### Build
+
+**Note**: it's "runConfiguration" and it doesn't necessarily build the project. Dune was implemented, try to integrate the "build dependency" then copy it for use with OCaml.
+
+* [ ] Create buildConfigurations
+  * [x] Basic Settings
+  * [ ] Control/Limit the "mainClass" (like in JAVA)
+  * [ ] Verify options
+* [ ] Can build project
+  * [ ] IntelliJ
+  * [ ] Dune
+  * [ ] Makefile
+* [ ] Can build project on remote target. I tested setting a JAVA WSL SDK, the target was still as "Local" and not "WSL".
+
+#### Module Wizard
+
+* [x] Can create a new module
+* [x] Can edit the module configuration in project structure
+
+## Dune
+
+* [x] Highlight
+* [x] Annotator Highlight
+* [x] Structure View
+* [x] Braces matching
+* [x] Commenter
+* [ ] Add references for paths/files
+* [ ] Add folding for variables
+* [ ] Live Templates
