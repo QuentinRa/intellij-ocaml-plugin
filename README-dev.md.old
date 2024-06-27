@@ -13,14 +13,6 @@ The project is complex, so here are some notes for you.
 
 **Roadmap**
 
-* Add tests for comments
-  * Comment above
-  * Comment below
-  * Comment above and below
-  * Comment above/below with normal comment in-between
-  * Comment above/below with annotation in-between
-  * The first comment of the file is for the file
-  * Test generating the documentation and check it
 * Add tests for "VAL"/"TYPE" (cf. README)
 * Add tests for "dune run configuration"
   * Then add executables/names
@@ -42,33 +34,6 @@ The project is complex, so here are some notes for you.
 * Add auto completion for FQN
 
 **Roadmap (old)**
-
-* Check references
-  * Handle Include and Open
-    * Line Markers?
-  * Modules (files but not just files) indexes
-  * Dune file references?
-  * [Doc](https://plugins.jetbrains.com/docs/intellij/references-and-resolve.html)
-* [coq](https://github.com/coq/coq.git)
-* Check Documentation
-* Modules (files but not just files) indexes
-* Add function parameters in annotator
-* Check completion
-* Check folding
-  * OCaml Folding
-  * Dune Folding
-* Find usages
-* Go to
-* Quotes Handler
-  * OCaml
-  * Dune
-* Smart Enter
-* Qualified path
-  * [ ] Include Modules/Classes/...
-  * [ ] Stub parsers are not ignoring valid parents
-  * [ ] Add them to indexes
-  * [ ] Ensure Line Marker is still working
-* Check refactoring
 
 ```none
 FilenameIndex.getVirtualFilesByName(
@@ -121,63 +86,6 @@ Random
 
 * Let#isFunction: use type inference?
 
-#### From "syntax" to "logic"
-
-In short, you can use these as reference when you need to highlight stuff differently based on what their type:
-
-* `OCamlLetDeclaration` (declaration) and `OCamlLetBindingMixin` (implementation): refer to highlighter to see how it is used. For instance, functions are highlighted differently than normal variables
-* `OCamlLetDeclaration` (declaration) and `OCamlValBindingMixin` (implementation): same as for Let
-* ...
-
-#### Anonymous
-
-In OCaml, we can use `_` as a name identifier for an anonymous element. Such element should NOT be:
-
-* Indexed
-* Shown in the structure view
-* Considered as having a name (name=null)
-
-#### Deconstructions
-
-Some variables may be introduced as a part of an object deconstruction.
-
-#### Indexes
-
-Before indexing, we need to create stubs for lightweight parsing. To create a stub, you need:
-
-* [x] Create an element if needed to ensure the element name <small>(ex: variable name)</small> is the first element of the class we will edit. Ex: `value_binding` in `value_description ::= VAL value_binding`
-* [x] Refer to `value_binding` to inject the interfaces/classes/mixin/etc.
-* [x] First, edit `OCamlImplUtils#factory`
-* [x] Second, create the stub class such as `OCamlTypeDefStub`
-* [x] Third, update the mixin such as `OCamlTypeDefMixin`
-* [x] Generate the parser and run
-
-Tasks are:
-
-* [x] Add Stubs For Variables (let/val)
-* [x] Add Stubs For Types
-* [ ] Add Stubs For ...
-* [x] Do not store anonymous variables
-* [ ] Use stubs in structure view (What do you mean?)
-* [ ] Supported nested variables (e.g. fix qualified path, etc.)
-
-Indexes are closely related to references. We can search for elements after indexing them. They are used when resolving references.
-
-* [x] Add indexes for variables (let/val)
-* [x] Add indexes for types
-* ~~[ ] Use an index of integers?~~ (to store numbers)
-
-#### References
-
-From a fully qualified path, we can find the declarations for:
-
-* [x] Variables (Let)
-* [x] Variable declarations (VAL)
-
-From all others, e.g. nested variables, included variables, local variables:
-
-* [ ] Determine how to handle that (compiler? manual?)
-
 Additional problems
 
 * [ ] The named element should be "x" and not "let x = ..."
@@ -196,10 +104,3 @@ Refer to [odoc](https://ocaml.org/manual/4.12/ocamldoc.html).
   * [ ] File comments
   * [ ] Let comments
 * [ ] Custom parser+lexer for "odoc"
-
-## Dune
-
-* [x] Braces matching
-* [x] Commenter
-* [ ] Add references for paths/files
-* [ ] Add folding for variables

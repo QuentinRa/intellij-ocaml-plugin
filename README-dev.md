@@ -6,6 +6,20 @@ This README is for internal use and a reference for any developer.
 
 * [ ] StructureView: nested variables
 * [ ] SmartElements: visibility
+* Add tests for comments
+  * Comment above
+  * Comment below
+  * Comment above and below
+  * Comment above/below with normal comment in-between
+  * Comment above/below with annotation in-between
+  * The first comment of the file is for the file
+  * The doc for Format.fprintf is weird
+  * Test generating the documentation and check it
+* [ ] Navigation: type
+* [ ] Open/Include
+* [ ] Index: module files
+* [ ] Add: module
+* [ ] Add: function parameters
 
 ## Parser
 
@@ -68,6 +82,7 @@ We can only run dune executables for now:
 
 We would want:
 
+* [coq](https://github.com/coq/coq.git)
 * [ ] Build dune libraries
 * [ ] Work on the "build" dependency
 * [ ] Test if "makefile" works
@@ -86,7 +101,7 @@ Files matching `*.ml`/`*.mli` are highlighted and the following are annotated (i
 * [x] Variables (LET/VAL)
 * [x] Functions (LET/VAL)
 * [x] Types (TYPE)
-* [ ] Every other element
+* [ ] Every other element ([process here](#supporting-a-new-element))
 
 Similarly to JAVA, you can change highlight colors in settings:
 
@@ -136,6 +151,7 @@ The Structure View can be opened with `ALT+7` for OCaml files. It only shows ann
 * [x] Show the visibility of the element as an ICON
 * [ ] Show nested annotated elements
 * [ ] Show function arguments?
+* [ ] Use stubs in structure view (better when we don't open a file)
 
 The structure view panel itself can have more features:
 
@@ -154,6 +170,42 @@ A few tests were implemented:
 * [ ] Test it
 * [ ] Do not show empty lists
 * [ ] Do not show values (strings, atoms)
+
+## Navigation
+
+**Implementation/Declaration**
+
+We can show line markers to implementation/declaration for the following elements:
+
+* [x] Variables/Functions
+* [ ] Types
+
+To work, we are resolving indexed elements matching the qualified name (ex: A.B.name) of the element (ex: name). For indexes to work, we need to define them in fill them with stub elements.
+
+We defined stubs for every annotated element.
+
+We define the following indexes:
+
+* [x] Variables/Functions
+* [x] Types
+
+📚 We don't index anonymous elements:
+
+* [x] Variables/Functions
+* [x] Types and VAL declarations CANNOT BE ANONYMOUS
+
+⚠️ Reminder: what about elements in a module, etc.
+
+* [ ] Fix qualified path (maybe not required once modules are qualified)
+
+**Resolve**
+
+From a fully qualified path, we can find the declarations for:
+
+* [x] Variables/Functions (LET/VAL)
+* [ ] ...
+
+✍️ Dune is referencing files/paths and that's not handled.
 
 ## OCaml SDK
 
@@ -176,15 +228,41 @@ Currently, every element is considering itself as public.
 
 * [ ] Fix this, detect MLI, none==PUBLIC, if MLI, inside==PUBLIC
 
+# Special notes
+
+## Deconstructions
+
+A deconstruction is an element whose name is made of multiple names, e.g., such as `let (x,y) = ...`. Such elements are a pain to handle.
+
+They impact:
+
+* [x] Structure View
+* [x] Indexes
+* [ ] Spellchecking?
+* [ ] ...
+
+Currently, only `LET` is known to introduce variables like this.
+
 # Supporting a new element
 
 Adding support for a new element, e.g. making the element "smart" so that you can resolve its references, usages, etc. requires quite a few steps.
 
-* ...
+* Add a mixin and a stub ; the element is a named owner
+  * Create an element if needed to ensure the element name <small>(ex: variable name)</small> is the first element of the class we will edit. Ex: `value_binding` in `value_description ::= VAL value_binding`
+  * Refer to `value_binding` to inject the interfaces/classes/mixin/etc.
+  * First, edit `OCamlImplUtils#factory`
+  * Second, create the stub class such as in `OCamlTypeDefStub`
+  * Third, update the mixin such as in `OCamlTypeDefMixin`
+  * Generate the parser
+* Add or connect to the stub to an index
+* Is the element anonymous?
 * Update the annotator
 * Update the color settings page
 * Update the structure view
 * Update the presentation handler
+* Update spellchecker if you need to
+* Update template contexts if you want
+* Update navigation
 * ...
 
 # Other missing features
@@ -196,3 +274,8 @@ A few of the things that are missing:
 * [ ] Quotes handler
 * [ ] Paste processor
 * [ ] Smart enter processor
+* [ ] Folding
+  * Dune variables?
+* [ ] Code completion
+* [ ] Find usages
+* [ ] Go to
