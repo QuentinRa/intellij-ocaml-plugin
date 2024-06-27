@@ -1,7 +1,7 @@
 package com.odoc.language.parser
 
 import com.intellij.psi.tree.IElementType
-import com.odoc.OdocLanguage
+import com.odoc.language.OdocLanguage
 
 interface OdocTypes {
     companion object {

@@ -1,4 +1,4 @@
-package com.odoc
+package com.odoc.language
 
 import com.intellij.lang.Language
 

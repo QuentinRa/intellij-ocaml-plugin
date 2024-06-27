@@ -16,7 +16,7 @@ import com.ocaml.language.psi.OCamlValueDescription
 import com.ocaml.language.psi.api.OCamlQualifiedNamedElement
 import com.ocaml.language.psi.mixin.OCamlValuePathBindingMixin
 import com.ocaml.language.psi.mixin.OCamlValuePathReference
-import com.odoc.language.OdocConverter
+import com.odoc.language.parser.OdocConverter
 import com.odoc.utils.OdocPsiUtils
 import java.util.function.Consumer
 
