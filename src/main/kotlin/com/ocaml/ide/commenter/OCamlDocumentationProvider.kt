@@ -1,15 +1,20 @@
 package com.ocaml.ide.commenter
 
+import com.intellij.lang.documentation.DocumentationMarkup
 import com.intellij.lang.documentation.DocumentationProvider
 import com.intellij.openapi.util.TextRange
+import com.intellij.openapi.util.text.HtmlBuilder
+import com.intellij.openapi.util.text.HtmlChunk
 import com.intellij.psi.PsiDocCommentBase
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
-import com.intellij.psi.util.elementType
 import com.ocaml.language.base.OCamlFileBase
 import com.ocaml.language.psi.OCamlLetBindings
 import com.ocaml.language.psi.OCamlTypeDefinition
 import com.ocaml.language.psi.OCamlValueDescription
+import com.ocaml.language.psi.api.OCamlQualifiedNamedElement
+import com.ocaml.language.psi.mixin.OCamlValuePathBindingMixin
+import com.ocaml.language.psi.mixin.OCamlValuePathReference
 import com.odoc.lang.OdocConverter
 import com.odoc.utils.OdocPsiUtils
 import java.util.function.Consumer
@@ -20,7 +25,12 @@ class OCamlDocumentationProvider : DocumentationProvider {
     }
 
     // CTRL+Q/hover
-    override fun generateDoc(element: PsiElement?, originalElement: PsiElement?): String? {
+    override fun generateDoc(base: PsiElement?, originalElement: PsiElement?): String? {
+        val element = when (base) {
+            is OCamlValuePathBindingMixin -> OCamlValuePathReference(base).resolveFirst()
+            else -> base
+        }
+
 //        println("Generate doc for ${element?.text}/${element?.elementType}/${element?.parent?.elementType}")
         // For now, nested elements are ignored
         val (root, parent) = when (val p = element?.parent) {
@@ -42,7 +52,7 @@ class OCamlDocumentationProvider : DocumentationProvider {
         var text = ""
         preceding?.text?.let { text += converter.convert(it) }
         following?.text?.let { text += converter.convert(it) }
-        return if (text == "") null else text
+        return if (text == "") null else formatDocumentation(element, text)
     }
 
     // Pretty render
@@ -54,5 +64,25 @@ class OCamlDocumentationProvider : DocumentationProvider {
     // Call on every file
     override fun collectDocComments(file: PsiFile, sink: Consumer<in PsiDocCommentBase>) {
         if (file !is OCamlFileBase) return
+    }
+
+    // JavaDocInfoGenerator
+    // JavaDocumentationProvider
+    private fun formatDocumentation(element: PsiElement, text: String) : String {
+        val target = element as? OCamlQualifiedNamedElement ?: return text
+        val targetQualifiedName = target.qualifiedName ?: return text
+        val targetIconPath = target.getIconPath() ?: "AllIcons.Nodes.Variable"
+
+        val definitionBuilder = HtmlBuilder()
+        definitionBuilder.append(HtmlChunk.tag("icon").attr("src", targetIconPath))
+        definitionBuilder.append(HtmlChunk.text(" $targetQualifiedName").bold())
+
+        val contentBuilder = HtmlBuilder()
+        contentBuilder.appendRaw(text)
+
+        val builder = HtmlBuilder()
+        builder.append(definitionBuilder.wrapWith(DocumentationMarkup.DEFINITION_ELEMENT))
+        builder.append(contentBuilder.wrapWith(DocumentationMarkup.CONTENT_ELEMENT))
+        return builder.toString()
     }
 }

@@ -23,10 +23,17 @@ class OCamlValuePathManipulator : AbstractElementManipulator<OCamlValuePathBindi
 
 class OCamlValuePathReference(element: OCamlValuePathBindingMixin) : PsiReferenceBase<PsiElement>(element),
     PsiPolyVariantReference {
+    // when we return null, the IDE will check multiResolve
     override fun resolve(): PsiElement? {
         val resolveResults = multiResolve(false)
+        return if (resolveResults.size == 1) resolveResults[0].element else null
+    }
+
+    // but, there may be a case, such as when resolving documentation
+    // in which multiResolve is NOT called, so I have to manually invoke this method
+    fun resolveFirst(): PsiElement? {
+        val resolveResults = multiResolve(false)
         return if (resolveResults.size == 1) resolveResults[0].element else {
-            //
             val definitions = resolveResults.filter { it.element?.containingFile is OCamlInterfaceFile }
             definitions.firstOrNull()?.element ?: resolveResults[0].element
         }

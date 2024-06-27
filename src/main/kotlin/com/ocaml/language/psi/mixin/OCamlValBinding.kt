@@ -35,6 +35,7 @@ abstract class OCamlValBindingMixin : OCamlStubbedNamedElementImpl<OCamlValBindi
     // PsiFile.ValueDescription.<this>
     override fun isGlobal(): Boolean = parent?.parent is PsiFile
 
+    override fun getIconPath(): String = if (isFunction()) "OCamlIcons.Nodes.FUNCTION" else "OCamlIcons.Nodes.LET"
     override fun getIcon(flags: Int): Icon? {
         val visibilityIcon = PlatformIcons.PUBLIC_ICON
         val icon = if (isFunction()) OCamlIcons.Nodes.FUNCTION else OCamlIcons.Nodes.LET

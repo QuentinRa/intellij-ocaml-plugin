@@ -56,6 +56,7 @@ abstract class OCamlLetBindingMixin : OCamlStubbedNamedElementImpl<OCamlLetBindi
     // PsiFile.LetBindings.<this>
     override fun isGlobal(): Boolean = parent.parent is PsiFile
 
+    override fun getIconPath(): String = if (isFunction()) "OCamlIcons.Nodes.FUNCTION" else "OCamlIcons.Nodes.LET"
     override fun getIcon(flags: Int): Icon? {
         val visibilityIcon = PlatformIcons.PUBLIC_ICON
         val icon = if (isFunction()) OCamlIcons.Nodes.FUNCTION else OCamlIcons.Nodes.LET
@@ -93,7 +94,7 @@ fun handleStructuredLetBinding(letBinding: OCamlLetBinding): List<PsiElement> {
     return listOf(letBinding)
 }
 
-private class OCamlLetBindingDeconstruction(private val psi: PsiElement, private val letBinding: OCamlLetBinding) :
+class OCamlLetBindingDeconstruction(private val psi: PsiElement, private val letBinding: OCamlLetBinding) :
     OCamlLetBindingImpl(letBinding.node) {
     override fun getNameIdentifier(): PsiElement = psi
     override fun getName(): String? {
