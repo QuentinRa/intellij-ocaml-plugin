@@ -11,6 +11,7 @@ import org.junit.runners.JUnit4
 
 @RunWith(JUnit4::class)
 abstract class DuneBasePlatformTestCase : BasePlatformTestCase() {
+
     protected fun configureCode(fileName: String, code: String): DuneFile {
         val file: PsiFile = myFixture.configureByText(fileName, code)
 //        println("» " + fileName + " " + this.javaClass)
