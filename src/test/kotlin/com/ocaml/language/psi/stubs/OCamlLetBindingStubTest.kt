@@ -43,7 +43,7 @@ class OCamlLetBindingStubTest : BaseStubTestCase() {
     fun test_nested_global_variable() {
         generateOCamlStubTree<OCamlLetBindingStub>("""
                 class xxx = let x = () in object end;;
-                module xxx = struct let x = () end;;
+                module X = struct let x = () end
             """, 0)
     }
 }

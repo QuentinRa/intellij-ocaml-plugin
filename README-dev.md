@@ -195,9 +195,11 @@ We can show line markers to implementation/declaration for the following element
 
 To work, we are resolving indexed elements matching the qualified name (ex: A.B.name) of the element (ex: name). For indexes to work, we need to define them in fill them with stub elements.
 
-We defined stubs for every annotated element.
+We defined stubs for every annotated element. **WARNING**: the stub tree is parsed based on the rules in the PsiFileStubImpl associated with the kind of file.
 
-* [ ] skipChildProcessingWhenBuildingStubs
+* If an element is not parsed
+* This is because the method "skipChildProcessingWhenBuildingStubs"
+* Returns `true` (don't parse children) by default
 
 We define the following indexes:
 

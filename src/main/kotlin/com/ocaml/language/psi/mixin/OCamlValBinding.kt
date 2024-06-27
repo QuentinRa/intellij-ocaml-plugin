@@ -7,6 +7,7 @@ import com.intellij.psi.impl.ElementBase
 import com.intellij.psi.stubs.IStubElementType
 import com.intellij.util.PlatformIcons
 import com.ocaml.icons.OCamlIcons
+import com.ocaml.language.OCamlLanguageUtils.pretty
 import com.ocaml.language.psi.OCamlImplUtils
 import com.ocaml.language.psi.OCamlTypes
 import com.ocaml.language.psi.OCamlValueBinding
@@ -22,7 +23,7 @@ abstract class OCamlValBindingMixin : OCamlStubbedNamedElementImpl<OCamlValBindi
 
     override fun getName(): String? {
         // Operators names are formatted by OCaml
-        if (valueName.operatorName != null) return "( ${valueName.operatorName!!.text} )"
+        if (valueName.operatorName != null) return valueName.operatorName!!.pretty()
         // Fallback to the default behavior
         return super.getName()
     }

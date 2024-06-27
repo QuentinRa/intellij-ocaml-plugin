@@ -18,11 +18,13 @@ class OCamlLetIndexTest : BaseIndexTestCase<OCamlNamedElement>() {
                 let c = 
                     let d = 5
                     in d * d
+                module X = struct let x = () end
                 let _ = ()
             """)
         assertEquals(3, indexSink.total)
         assertEquals(2, indexSink.namedIndexValuesCount["A.a"])
         assertEquals(1, indexSink.namedIndexValuesCount["A.c"])
+        assertEquals(null, indexSink.namedIndexValuesCount["A.X.x"])
     }
 
     @Test
