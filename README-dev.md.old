@@ -22,10 +22,6 @@
 * Add back the REPL
 * Add auto completion for FQN
 
-Additional problems
-
-* [ ] The named element should be "x" and not "let x = ..."
-
 #### Documentation
 
 Refer to [odoc](https://ocaml.org/manual/4.12/ocamldoc.html).
