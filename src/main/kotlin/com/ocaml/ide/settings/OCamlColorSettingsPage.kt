@@ -20,13 +20,13 @@ class OCamlColorSettingsPage : ColorSettingsPage {
     override fun getDemoText() = Constants.DEMO_TEXT
 
     internal object Constants {
-        val ATTRS: Array<AttributesDescriptor> = OCamlColor.values().map{ it.attributesDescriptor }.toTypedArray()
-        val ANNOTATOR_TAGS: Map<String, TextAttributesKey> = OCamlColor.values().associateBy({ it.name }, { it.textAttributesKey })
+        val ATTRS: Array<AttributesDescriptor> = OCamlColor.entries.map{ it.attributesDescriptor }.toTypedArray()
+        val ANNOTATOR_TAGS: Map<String, TextAttributesKey> = OCamlColor.entries.associateBy({ it.name }, { it.textAttributesKey })
         val DEMO_TEXT: String by lazy {
             """(* Variables and Types *)
 let <GLOBAL_VARIABLE>x</GLOBAL_VARIABLE> = 10 and <GLOBAL_VARIABLE>z</GLOBAL_VARIABLE> = 'c'
 let <GLOBAL_VARIABLE>y</GLOBAL_VARIABLE> = 3.14
-let <GLOBAL_VARIABLE>name</GLOBAL_VARIABLE> = "OCaml"
+let <GLOBAL_VARIABLE>name</GLOBAL_VARIABLE> = "OCaml" (** Hello, World! *)
 let <GLOBAL_VARIABLE>t</GLOBAL_VARIABLE> = 
     let <LOCAL_VARIABLE>v</LOCAL_VARIABLE> = 5 
     in v * v
@@ -57,7 +57,7 @@ let <FUNCTION_DECLARATION>divide</FUNCTION_DECLARATION> a b =
 let <GLOBAL_VARIABLE>list</GLOBAL_VARIABLE> = [1; 2; 3; 4; 5]
 let <GLOBAL_VARIABLE>array</GLOBAL_VARIABLE> = [|1; 2; 3; 4; 5|]
 let <GLOBAL_VARIABLE>pair</GLOBAL_VARIABLE> = (10, "hello")
-type person = { name: string; age: int }
+type <TYPE>person</TYPE> = { name: string; age: int }
 let <GLOBAL_VARIABLE>john</GLOBAL_VARIABLE> = { name = "John"; age = 30 }
 
 (* Modules *)

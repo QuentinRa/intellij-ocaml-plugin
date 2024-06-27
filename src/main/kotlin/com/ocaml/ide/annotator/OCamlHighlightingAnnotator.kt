@@ -5,7 +5,6 @@ import com.intellij.lang.annotation.Annotator
 import com.intellij.lang.annotation.HighlightSeverity
 import com.intellij.psi.PsiElement
 import com.intellij.psi.impl.source.tree.LeafPsiElement
-import com.intellij.psi.util.elementType
 import com.ocaml.ide.colors.OCamlColor
 import com.ocaml.language.psi.OCamlTypedef
 import com.ocaml.language.psi.OCamlTypes

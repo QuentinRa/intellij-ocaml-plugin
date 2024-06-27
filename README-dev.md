@@ -82,3 +82,12 @@ Similarly to JAVA, you can change highlight colors in settings:
 For annotated elements, you can use `CTRL+Q`/`<hover>` to view their quick documentation. 
 
 * [x] ...
+
+# Supporting a new element
+
+Adding support for a new element, e.g. making the element "smart" so that you can resolve its references, usages, etc. requires quite a few steps.
+
+* ...
+* Update the annotator
+* Update the color settings page
+* ...
