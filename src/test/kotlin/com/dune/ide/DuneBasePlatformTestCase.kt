@@ -27,6 +27,7 @@ abstract class DuneBasePlatformTestCase : BasePlatformTestCase() {
 
     protected inline fun <reified T : PsiElement> configureDune(code: String): List<T> =
         configureCodeAsList<T>("dune", code)
+
     protected inline fun <reified T : PsiElement> configureDuneProject(code: String): List<T> =
         configureCodeAsList<T>("dune-project", code)
 
