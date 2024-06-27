@@ -6,5 +6,5 @@ package com.ocaml.language.psi.stubs
  */
 object OCamlStubVersions {
     // Bump this number if Stub structure changes
-    const val STUB_VERSION = 29
+    const val STUB_VERSION = 30
 }

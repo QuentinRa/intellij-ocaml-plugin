@@ -8,10 +8,6 @@ This README is for internal use and a reference for any developer.
 * [ ] StructureView: nested variables
 * [ ] SmartElements: visibility
 * Add tests for comments (+update todos)
-  * Comment above
-  * Comment below
-  * Comment above and below
-  * Comment above/below with normal comment in-between
   * Comment above/below with annotation in-between
   * The first comment of the file is for the file
   * The doc for Format.fprintf is weird

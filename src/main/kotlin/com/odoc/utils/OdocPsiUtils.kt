@@ -38,6 +38,7 @@ object OdocPsiUtils {
     // It basically crawl the whitespace (if any) and pass it to "checkIfCommentIsInScope"
     private fun previousElementSkipWhitespaceIfAllowed(element: PsiElement?, preceding: Boolean) : PsiElement? {
         val sibling = if (preceding) element?.prevSibling else element?.nextSibling
+        if (sibling is PsiComment) return sibling
         val whitespace = sibling as? PsiWhiteSpace ?: return null
         return if (checkIfCommentIsInScope(whitespace))
             if (preceding) whitespace.prevSibling else whitespace.nextSibling
@@ -52,7 +53,8 @@ object OdocPsiUtils {
         return when (comment.elementType) {
             OCamlTypes.DOC_COMMENT -> comment
             OCamlTypes.COMMENT -> // normal comments are only allowed for preceding doc comments
-                if (preceding) findDocumentationCommentSkipNormalComments(comment, true) else null
+                // Tested: the doc lied again, both above and below
+                findDocumentationCommentSkipNormalComments(comment, preceding)
             OCamlTypes.ANNOTATION -> // annotations are allowed for succeeding comments (it seems)
                 if (!preceding) findDocumentationCommentSkipNormalComments(comment, false) else null
             else -> null
@@ -67,11 +69,12 @@ object OdocPsiUtils {
 //        println("Starting for ${element.elementType}")
         val comment = findDocumentationCommentSkipNormalComments(element, preceding) ?: return null
 //        println("$word is ${comment.elementType}")
-        val target = previousElementSkipWhitespaceIfAllowed(comment, preceding)
+//        val target = previousElementSkipWhitespaceIfAllowed(comment, preceding)
 //        println("$word$word is ${target?.elementType}")
-        return if (!preceding || target == null || target is PsiComment) {
-            comment
-        } else null
+//        return if (!preceding || target == null || target is PsiComment) {
+//            comment
+//        } else null
+        return comment // The doc lied, odoc associate to everyone ambiguous comments
     }
 
     fun precedingDocumentationComment(element: PsiElement): PsiComment? = findDocumentationComment(element, true)

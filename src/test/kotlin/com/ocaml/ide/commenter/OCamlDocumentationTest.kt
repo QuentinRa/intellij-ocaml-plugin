@@ -76,10 +76,30 @@ class OCamlDocumentationTest : OCamlBasePlatformTestCase() {
             "(** doc for x *)\n(* x *)\nlet x<caret> = 1",
             "<div class=\"definition\"><b>A.x</b></div><div class=\"content\"><p>doc for x</p></div>"
         )
-//        assertGeneratedDocMatchesExpected(
-//            "(** doc for x *)(* x *)\nlet x<caret> = 1",
-//            "<div class=\"definition\"><b>A.x</b></div><div class=\"content\"><p>doc for x</p></div>"
-//        )
+        assertGeneratedDocMatchesExpected(
+            "(** doc for x *)(* x *)\nlet x<caret> = 1",
+            "<div class=\"definition\"><b>A.x</b></div><div class=\"content\"><p>doc for x</p></div>"
+        )
+        assertGeneratedDocMatchesExpected(
+            "let x<caret> = 1\n(* x *)\n(** doc for x *)",
+            "<div class=\"definition\"><b>A.x</b></div><div class=\"content\"><p>doc for x</p></div>"
+        )
+        assertGeneratedDocMatchesExpected(
+            "let x<caret> = 1\n(* x *)(** doc for x *)",
+            "<div class=\"definition\"><b>A.x</b></div><div class=\"content\"><p>doc for x</p></div>"
+        )
+    }
+
+    @Test
+    fun test_with_annotation_in_between() {
+        assertGeneratedDocMatchesExpected(
+            "let x<caret> = 1\n[@@ocaml.deprecated]\n(** doc for x *)",
+            "<div class=\"definition\"><b>A.x</b></div><div class=\"content\"><p>doc for x</p></div>"
+        )
+        assertGeneratedDocMatchesExpected(
+            "let x<caret> = 1\n[@@ocaml.deprecated](** doc for x *)",
+            "<div class=\"definition\"><b>A.x</b></div><div class=\"content\"><p>doc for x</p></div>"
+        )
     }
 
     @Test
@@ -100,7 +120,7 @@ class OCamlDocumentationTest : OCamlBasePlatformTestCase() {
         )
         assertGeneratedDocMatchesExpected(
             code.replace("let bar", "let bar<caret>"),
-            "<div class=\"definition\"><b>A.foo</b></div><div class=\"content\"><p>Comment for bar</p><p>This comment is associated to foo and not to bar.</p></div>"
+            "<div class=\"definition\"><b>A.bar</b></div><div class=\"content\"><p>This comment is associated to foo and not to bar.</p><p>This comment is associated to bar.</p></div>"
         )
     }
 
