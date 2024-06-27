@@ -11,7 +11,7 @@ class OCamlLetBindingStubTest : BaseStubTestCase() {
         get() = OCamlFileStub.Type.builder
 
     @Test
-    fun testBasicTree() {
+    fun test_basic_tree() {
         val nodes = generateOCamlStubTree<OCamlLetBindingStub>("""
                 let a = ()
                 let b = ()
@@ -21,7 +21,7 @@ class OCamlLetBindingStubTest : BaseStubTestCase() {
     }
 
     @Test
-    fun testAnonymous() {
+    fun test_anonymous() {
         generateOCamlStubTree<OCamlLetBindingStub>("""
                 let _ = ()
                 let _ = 
@@ -31,7 +31,7 @@ class OCamlLetBindingStubTest : BaseStubTestCase() {
     }
 
     @Test
-    fun testLocalVariable() {
+    fun test_local_variable() {
         generateOCamlStubTree<OCamlLetBindingStub>("""
                 let c = 
                     let d = 5
@@ -40,7 +40,7 @@ class OCamlLetBindingStubTest : BaseStubTestCase() {
     }
 
     @Test
-    fun testNestedGlobalVariable() {
+    fun test_nested_global_variable() {
         generateOCamlStubTree<OCamlLetBindingStub>("""
                 class xxx = let x = () in object end;;
                 module xxx = struct let x = () end;;

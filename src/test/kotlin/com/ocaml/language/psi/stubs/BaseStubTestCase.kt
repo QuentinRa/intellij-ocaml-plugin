@@ -21,4 +21,8 @@ abstract class BaseStubTestCase : OCamlBasePlatformTestCase() {
     protected fun <T: StubElement<*>> generateOCamlStubTree(code: String, expectedChildren: Int): List<T> {
         return generateStubTree("A.ml", code, expectedChildren)
     }
+
+    protected fun <T: StubElement<*>> generateOCamlInterfaceStubTree(code: String, expectedChildren: Int): List<T> {
+        return generateStubTree("A.mli", code, expectedChildren)
+    }
 }
