@@ -9,27 +9,24 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.util.elementType
 import com.ocaml.language.psi.OCamlTypes
 import com.odoc.ide.colors.OdocColor
-import java.util.regex.Pattern
+import com.odoc.language.lexer.OdocLexerAdapter
+import com.odoc.language.parser.OdocTypes
 
 /**
  * Add some brown for "parameters" (values between [], regardeless of the content)
  * in the documentation.
  */
 class OdocDocumentationAnnotator : Annotator {
+    private val lexer = OdocLexerAdapter()
+
     override fun annotate(element: PsiElement, holder: AnnotationHolder) {
         if (element !is PsiComment) return
         if (element.elementType != OCamlTypes.DOC_COMMENT) return
-
-        val matcher = PARAMETERS_MATCHER.matcher(element.getText())
-        val range = element.getTextRange()
-        while (matcher.find()) {
+        lexer.consumeTokens(element.text) {
+            if (it.tokenType !== OdocTypes.CODE) return@consumeTokens
             holder.newSilentAnnotation(HighlightSeverity.INFORMATION)
-                .range(range.cutOut(TextRange(matcher.start(), matcher.end())))
+                .range(TextRange(it.start, it.stop))
                 .textAttributes(OdocColor.PARAMETER.textAttributesKey).create()
         }
-    }
-
-    companion object {
-        val PARAMETERS_MATCHER: Pattern = Pattern.compile("(\\[[^]]*])")
     }
 }

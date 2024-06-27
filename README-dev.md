@@ -150,7 +150,7 @@ For annotated elements, you can use `CTRL+Q`/`<hover>` to view their quick docum
   * [ ] Ex: hover an module name => module documentation
 * [x] Allow one blank line with orphan doc comment below the element to accommodate "Format.fprintf".
 
-For the rendering of the [odoc](https://ocaml.org/manual/4.12/ocamldoc.html) documentation:
+For the rendering of the [odoc](https://ocaml.org/manual/4.12/ocamldoc.html)/[+](https://ocaml.github.io/odoc/ocamldoc_differences.html)/[+](https://github.com/ocaml/odoc) documentation:
 
 * [ ] Create a parser/lexer, handle HTML + tags
 * [ ] Implement the "render mode" for sources
