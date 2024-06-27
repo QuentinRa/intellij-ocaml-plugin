@@ -21,18 +21,3 @@
 * Add back the editor (doc+REPL actions)
 * Add back the REPL
 * Add auto completion for FQN
-
-#### Documentation
-
-Refer to [odoc](https://ocaml.org/manual/4.12/ocamldoc.html).
-
-* [x] Let
-* [x] Type
-* [x] Val
-* [ ] Handle HTML
-* [ ] Show documentation nicely
-* [ ] Load the documentation of the parent if none found
-* [ ] Reader mode
-  * [ ] File comments
-  * [ ] Let comments
-* [ ] Custom parser+lexer for "odoc"

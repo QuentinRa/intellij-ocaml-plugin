@@ -5,10 +5,13 @@ This README is for internal use and a reference for any developer.
 **Roadmap**
 
 * [ ] Documentation: element under the cursor
+* [ ] Documentation: tests for resolving (+add below)
+* [ ] Documentation: how did I render it nicely before?
 * [ ] StructureView: nested variables
 * [ ] Index: module files
 * [ ] SmartElements: visibility
-* [ ] Navigation Line Marker: add "type"
+* [ ] Navigation: add "resolve" to "let/val/type"
+* [ ] Navigation: add "line markers" to "type"
 * [ ] Add: open
   * let open
   * Stdlib (OCaml 4.07+)
@@ -145,6 +148,11 @@ For annotated elements, you can use `CTRL+Q`/`<hover>` to view their quick docum
 * [ ] Use the element on the cursor
   * [ ] Ex: hover an module name => module documentation
 * [x] Allow one blank line with orphan doc comment below the element to accommodate "Format.fprintf".
+
+For the rendering of the [odoc](https://ocaml.org/manual/4.12/ocamldoc.html) documentation:
+
+* [ ] Create a parser/lexer, handle HTML + tags
+* [ ] Implement the "render mode" for sources
 
 Additionally, it would be good if we can generate the documentation.
 
