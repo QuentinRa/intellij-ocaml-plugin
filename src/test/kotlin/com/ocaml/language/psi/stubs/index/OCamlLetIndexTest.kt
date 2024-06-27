@@ -4,7 +4,7 @@ import org.junit.Test
 
 class OCamlLetIndexTest : BaseIndexTest() {
     @Test
-    fun testSimpleStatements() {
+    fun test_simple_statements() {
         // Test duplicate, nested, and anonymous
         val indexSink = testIndex("A.ml", """
                 let a = ()
@@ -20,7 +20,7 @@ class OCamlLetIndexTest : BaseIndexTest() {
     }
 
     @Test
-    fun testPatternStatements() {
+    fun test_pattern_statements() {
         // every pattern statement is a stub
         // e.g., they are tested in the stubs category
         // We only need to test one pattern here

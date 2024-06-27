@@ -57,7 +57,7 @@ class OCamlLetBindingMixinTest : OCamlParsingTestCase() {
     }
 
     @Test
-    fun testNameIdentifierIsLeaf() {
+    fun test_name_identifier_is_leaf() {
         assertInstanceOf(letSimple?.nameIdentifier?.toLeaf(), LeafPsiElement::class.java)
         assertInstanceOf(letOperatorName?.nameIdentifier?.toLeaf(), LeafPsiElement::class.java)
         assertInstanceOf(letOperatorNameNoSpace?.nameIdentifier?.toLeaf(), LeafPsiElement::class.java)
@@ -72,7 +72,7 @@ class OCamlLetBindingMixinTest : OCamlParsingTestCase() {
     }
 
     @Test
-    fun testName() {
+    fun test_name() {
         assertEquals("a", letSimple?.name)
         assertEquals("b,c", letDeconstruction?.name)
         assertEquals("d,e,f", letDeconstructionComplex?.name)
@@ -86,7 +86,7 @@ class OCamlLetBindingMixinTest : OCamlParsingTestCase() {
     }
 
     @Test
-    fun testQualifiedName() {
+    fun test_qualified_name() {
         // named
         assertEquals(OCAML_FILE_QUALIFIED_NAME_DOT + "a", letSimple?.qualifiedName)
         assertEquals(OCAML_FILE_QUALIFIED_NAME_DOT + "b,c", letDeconstruction?.qualifiedName)
@@ -101,7 +101,7 @@ class OCamlLetBindingMixinTest : OCamlParsingTestCase() {
     }
 
     @Test
-    fun testExpandStructuredName() {
+    fun test_expand_structured_name() {
         fun assertExpanded (name: String, count: Int) {
             assertSize(
                 count,
@@ -117,7 +117,7 @@ class OCamlLetBindingMixinTest : OCamlParsingTestCase() {
     }
 
     @Test
-    fun testHandleStructuredLetBinding() {
+    fun test_handle_structured_let_binding() {
         // Split in PSI elements and returns
         fun assertStructured (letBinding: OCamlLetBinding?, count: Int) {
             assertNotNull(letBinding) ; letBinding!!
@@ -139,7 +139,7 @@ class OCamlLetBindingMixinTest : OCamlParsingTestCase() {
     }
 
     @Test
-    fun testOperatorSpacing() {
+    fun test_operator_spacing() {
         initWith<OCamlLetBinding>("""
             let ( === ) = ()
             let (===) = ()

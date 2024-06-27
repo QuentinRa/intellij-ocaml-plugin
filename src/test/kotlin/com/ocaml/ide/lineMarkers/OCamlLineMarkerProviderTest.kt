@@ -7,7 +7,7 @@ import org.junit.Test
 class OCamlLineMarkerProviderTest : OCamlBasePlatformTestCase() {
 
     @Test
-    fun testOneMarker() {
+    fun test_one_marker() {
         val ml = myFixture.configureByText("A.ml", "let x = ()")
         val mli = myFixture.configureByText("A.mli", "val x : unit")
         val mlMarkers = OCamlLineMarkerProvider().collectNavigationMarkersForTest(ml)
@@ -19,7 +19,7 @@ class OCamlLineMarkerProviderTest : OCamlBasePlatformTestCase() {
     }
 
     @Test
-    fun testMultipleMarkers() {
+    fun test_multiple_markers() {
         val ml = myFixture.configureByText("A.ml", "let x = ();; let x = ();; let y = ()")
         val mli = myFixture.configureByText("A.mli", "val x : unit;;val y: unit")
         val mlMarkers = OCamlLineMarkerProvider().collectNavigationMarkersForTest(ml)
@@ -31,7 +31,7 @@ class OCamlLineMarkerProviderTest : OCamlBasePlatformTestCase() {
     }
 
     @Test
-    fun testPatternMarkers() {
+    fun test_pattern_markers() {
         val ml = myFixture.configureByText("A.ml", "let (x,y) = ()")
         val mli = myFixture.configureByText("A.mli", "val x : unit;;val y: unit")
         val mlMarkers = OCamlLineMarkerProvider().collectNavigationMarkersForTest(ml)
@@ -43,7 +43,7 @@ class OCamlLineMarkerProviderTest : OCamlBasePlatformTestCase() {
     }
 
     @Test
-    fun testOperatorsMarkers() {
+    fun test_operators_markers() {
         val ml = myFixture.configureByText("A.ml", "let ((+),_) = ();;let (-) = ();;")
         val mli = myFixture.configureByText("A.mli", "val ( + ) : unit;;val ( -): unit")
         val mlMarkers = OCamlLineMarkerProvider().collectNavigationMarkersForTest(ml)

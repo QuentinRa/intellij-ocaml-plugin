@@ -80,7 +80,7 @@ class OCamlPresentationHandlerTests : OCamlBasePlatformTestCase() {
     }
 
     @Test
-    fun testNamedPresentationForStructure() {
+    fun test_named_presentation_for_structure() {
         // assignations
         val varAssignationIcons = testPresentationForStructure(simpleVariableAssignation!!, "x")
         assertEquals(OCamlIcons.Nodes.VARIABLE, varAssignationIcons[0])
