@@ -74,7 +74,7 @@ class OCamlDocumentationProvider : DocumentationProvider {
 
         val definitionBuilder = HtmlBuilder()
         //definitionBuilder.append(HtmlChunk.tag("icon").attr("src", "AllIcons.Nodes.Package"))
-        definitionBuilder.append(HtmlChunk.text(" $targetQualifiedName").bold())
+        definitionBuilder.append(HtmlChunk.text(targetQualifiedName).bold())
 
         val contentBuilder = HtmlBuilder()
         contentBuilder.appendRaw(text)
