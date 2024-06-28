@@ -12,13 +12,13 @@ class OCamlValIndexTest : BaseIndexTestCase<OCamlNamedElement>() {
     @Test
     fun test_simple_statements() {
         // Test duplicate, nested, and anonymous
-        val indexSink = testIndex("A.mli", """
+        val indexSink = testFQNIndex("A.mli", """
                 val a : unit
                 val a : unit
                 module X : sig val c : unit end
             """)
         assertEquals(2, indexSink.total)
-        assertEquals(2, indexSink.namedIndexValuesCount["A.a"])
-        assertEquals(null, indexSink.namedIndexValuesCount["A.X.c"])
+        assertEquals(2, indexSink.count("A.a"))
+        assertEquals(null, indexSink.count("A.X.c"))
     }
 }

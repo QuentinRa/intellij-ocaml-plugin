@@ -12,7 +12,7 @@ class OCamlLetIndexTest : BaseIndexTestCase<OCamlNamedElement>() {
     @Test
     fun test_simple_statements() {
         // Test duplicate, nested, and anonymous
-        val indexSink = testIndex("A.ml", """
+        val indexSink = testFQNIndex("A.ml", """
                 let a = ()
                 let a = ()
                 let c = 
@@ -22,9 +22,9 @@ class OCamlLetIndexTest : BaseIndexTestCase<OCamlNamedElement>() {
                 let _ = ()
             """)
         assertEquals(3, indexSink.total)
-        assertEquals(2, indexSink.namedIndexValuesCount["A.a"])
-        assertEquals(1, indexSink.namedIndexValuesCount["A.c"])
-        assertEquals(null, indexSink.namedIndexValuesCount["A.X.x"])
+        assertEquals(2, indexSink.count("A.a"))
+        assertEquals(1, indexSink.count("A.c"))
+        assertEquals(null, indexSink.count("A.X.x"))
     }
 
     @Test
@@ -32,11 +32,11 @@ class OCamlLetIndexTest : BaseIndexTestCase<OCamlNamedElement>() {
         // every pattern statement is a stub
         // e.g., they are tested in the stubs category
         // We only need to test one pattern here
-        val indexSink = testIndex("A.ml", """
+        val indexSink = testFQNIndex("A.ml", """
                 let a,b = ()
             """)
         assertEquals(2, indexSink.total)
-        assertEquals(1, indexSink.namedIndexValuesCount["A.a"])
-        assertEquals(1, indexSink.namedIndexValuesCount["A.b"])
+        assertEquals(1, indexSink.count("A.a"))
+        assertEquals(1, indexSink.count("A.b"))
     }
 }

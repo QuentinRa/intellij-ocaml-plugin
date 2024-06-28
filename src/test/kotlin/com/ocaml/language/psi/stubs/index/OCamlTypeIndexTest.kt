@@ -18,7 +18,7 @@ class OCamlTypeIndexTest : BaseIndexTestCase<OCamlNamedElement>() {
                 module X : sig type t end
             """)
         assertEquals(2, indexSink.total)
-        assertEquals(2, indexSink.namedIndexValuesCount["A.u"])
-        assertEquals(null, indexSink.namedIndexValuesCount["A.X.t"])
+        assertEquals(2, indexSink.count("A.u"))
+        assertEquals(null, indexSink.count("A.X.t"))
     }
 }
