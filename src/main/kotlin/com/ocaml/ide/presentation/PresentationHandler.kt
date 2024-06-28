@@ -23,10 +23,10 @@ private fun presentableName(psi: PsiElement): String? {
     }
 }
 
-fun getPresentationForStructure(psi: PsiElement): ItemPresentation {
+fun getPresentationForStructure(psi: PsiElement, root: PsiElement? = null): ItemPresentation {
     if (psi is OCamlFileBase) return psi.presentation!!
     val presentation = buildString {
-        append(presentableName(psi))
+        append(presentableName(root ?: psi))
     }
     val icon = when(psi) {
         is OCamlLetBindings, is OCamlTypeDefinition -> null

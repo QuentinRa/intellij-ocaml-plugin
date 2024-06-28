@@ -14,12 +14,15 @@ import com.intellij.util.PlatformIcons
 import com.intellij.util.containers.map2Array
 import com.ocaml.ide.presentation.getPresentationForStructure
 import com.ocaml.language.base.OCamlFileBase
+import com.ocaml.language.psi.OCamlLetBinding
 import com.ocaml.language.psi.OCamlLetBindings
 import com.ocaml.language.psi.OCamlTypeDefinition
 import com.ocaml.language.psi.OCamlValueDescription
+import com.ocaml.language.psi.api.OCamlFakeElement
 import com.ocaml.language.psi.api.isAnonymous
 import com.ocaml.language.psi.files.OCamlFile
 import com.ocaml.language.psi.files.OCamlInterfaceFile
+import com.ocaml.language.psi.mixin.utils.getNestedLetBindings
 import com.ocaml.language.psi.mixin.utils.handleStructuredLetBinding
 
 // A bit complex
@@ -40,18 +43,15 @@ import com.ocaml.language.psi.mixin.utils.handleStructuredLetBinding
 
 
 class OCamlStructureViewElement(element: PsiElement) : StructureViewTreeElement, Queryable {
-    private val psiAnchor = TreeAnchorizer.getService().createAnchor(element)
+    // Ensure TreeAnchorizer is still working as expected
+    private val root : OCamlFakeElement? = element as? OCamlFakeElement
+    private val psiAnchor = TreeAnchorizer.getService().createAnchor(root?.source ?: element)
     private val myElement: PsiElement? get() = TreeAnchorizer.getService().retrieveElement(psiAnchor) as? PsiElement
     private val childElements: List<PsiElement>
         get() {
             return when (val psi = myElement) {
                 is OCamlFile -> {
-                    psi.childrenOfType<OCamlLetBindings>().flatMap {
-                        val allBindings = it.letBindingList
-                        if (allBindings.size == 1)
-                            handleStructuredLetBinding(allBindings[0])
-                        else listOf(it)
-                    } + collectCommonElements(psi)
+                    psi.childrenOfType<OCamlLetBindings>().expand() + collectCommonElements(psi)
                 }
 
                 is OCamlInterfaceFile -> {
@@ -60,6 +60,7 @@ class OCamlStructureViewElement(element: PsiElement) : StructureViewTreeElement,
                 }
 
                 is OCamlLetBindings -> psi.letBindingList.filter { !it.isAnonymous() }
+                is OCamlLetBinding -> psi.getNestedLetBindings().expand()
                 is OCamlTypeDefinition -> psi.typedefList
 
                 else -> emptyList()
@@ -74,7 +75,9 @@ class OCamlStructureViewElement(element: PsiElement) : StructureViewTreeElement,
     override fun canNavigate(): Boolean = (myElement as? Navigatable)?.canNavigate() == true
     override fun canNavigateToSource(): Boolean = (myElement as? Navigatable)?.canNavigateToSource() == true
     override fun getPresentation(): ItemPresentation {
-        return myElement?.let(::getPresentationForStructure) ?: PresentationData("unknown", null, null, null)
+        return myElement?.let {
+            getPresentationForStructure(it, root)
+        } ?: PresentationData("unknown", null, null, null)
     }
 
     override fun getChildren(): Array<out TreeElement> = childElements.map2Array { OCamlStructureViewElement(it) }
@@ -90,6 +93,15 @@ class OCamlStructureViewElement(element: PsiElement) : StructureViewTreeElement,
             null -> "none"
             else -> "unknown"
         }
+    }
+}
+
+fun List<OCamlLetBindings>.expand() : List<PsiElement> {
+    return this.flatMap {
+        val allBindings = it.letBindingList
+        if (allBindings.size == 1)
+            handleStructuredLetBinding(allBindings[0])
+        else listOf(it)
     }
 }
 

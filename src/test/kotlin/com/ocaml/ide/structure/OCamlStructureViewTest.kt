@@ -106,4 +106,38 @@ class OCamlStructureViewTest : OCamlBasePlatformTestCase() {
             FakeTreeElement("( + )"), FakeTreeElement("( - )"), FakeTreeElement("a")
         )
     }
+
+    @Test
+    fun test_pattern_declarations_fix() {
+        assertStructureTree("A.ml",
+            "let (a, b) = c",
+            FakeTreeElement("a"), FakeTreeElement("b")
+        )
+    }
+
+    @Test
+    fun test_nested() {
+        assertStructureTree("A.ml",
+            "let a = let b = 5 in let c = 6 in b * c",
+            FakeTreeElement("a", listOf(
+                FakeTreeElement("b"),
+                FakeTreeElement("c"),
+            ))
+        )
+        assertStructureTree("A.ml",
+            "let a = let (b, c) = 5,6 in b * c",
+            FakeTreeElement("a", listOf(
+                FakeTreeElement("b"),
+                FakeTreeElement("c"),
+            ))
+        )
+
+        assertStructureTree("A.ml",
+            "let a = let b = 5,6 in let (c, d) = b in c * d",
+            FakeTreeElement("a", listOf(
+                FakeTreeElement("b"),
+                FakeTreeElement("c, d"),
+            ))
+        )
+    }
 }

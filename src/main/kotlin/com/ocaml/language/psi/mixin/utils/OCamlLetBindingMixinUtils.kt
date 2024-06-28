@@ -10,22 +10,28 @@ import com.ocaml.language.psi.api.isAnonymous
 import com.ocaml.language.psi.mixin.OCamlLetBindingMixin
 import com.ocaml.language.psi.mixin.fake.OCamlLetBindingDeconstruction
 
-fun OCamlLetBinding.computeValueNames(): List<PsiElement> =
-    PsiTreeUtil.findChildrenOfType(this, OCamlValueName::class.java).mapNotNull {
+fun OCamlLetBinding.computeValueNames(): List<PsiElement> {
+    val results = mutableListOf<OCamlValueName>()
+    // only these elements can have names
+    exprList.forEach { results.addAll(PsiTreeUtil.findChildrenOfType(it, OCamlValueName::class.java)) }
+    patternNoExn?.let { results.addAll(PsiTreeUtil.findChildrenOfType(it, OCamlValueName::class.java)) }
+    // map them
+    return results.mapNotNull {
         val nameIdentifier = it.lowercaseIdent?.firstChild ?: it
         if ((nameIdentifier as? LeafPsiElement)?.isAnonymous() == true)
             null
         else
             nameIdentifier
     }
+}
 
 fun OCamlLetBinding.getNestedLetBindings(): List<OCamlLetBindings> {
-    return exprList.flatMap { it.children.toList() }.mapNotNull {
+    return letBindingBody?.exprList?.flatMap { it.children.toList() }?.mapNotNull {
         when (it) {
             is OCamlLetBindings -> it
             else -> it.firstChild as? OCamlLetBindings // EXPR.<OCamlLetBindings>
         }
-    }
+    } ?: emptyList()
 }
 
 fun expandLetBindingStructuredName(structuredName: String?): List<String> {

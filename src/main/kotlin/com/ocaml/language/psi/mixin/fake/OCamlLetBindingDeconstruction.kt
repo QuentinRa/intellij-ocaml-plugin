@@ -4,10 +4,12 @@ import com.intellij.psi.PsiElement
 import com.ocaml.language.OCamlLanguageUtils.pretty
 import com.ocaml.language.psi.OCamlLetBinding
 import com.ocaml.language.psi.OCamlValueName
+import com.ocaml.language.psi.api.OCamlFakeElement
 import com.ocaml.language.psi.impl.OCamlLetBindingImpl
 
-class OCamlLetBindingDeconstruction(private val psi: PsiElement, private val letBinding: OCamlLetBinding) :
-    OCamlLetBindingImpl(letBinding.node) {
+class OCamlLetBindingDeconstruction(private val psi: PsiElement, override val source: OCamlLetBinding) :
+    OCamlLetBindingImpl(source.node), OCamlFakeElement {
+
     override fun getNameIdentifier(): PsiElement = psi
     override fun getName(): String? {
         // Operators names are formatted by OCaml
@@ -18,6 +20,6 @@ class OCamlLetBindingDeconstruction(private val psi: PsiElement, private val let
     override fun isFunction(): Boolean = false
 
     // Ensure TreeAnchorizer is still working as expected:
-    override fun equals(other: Any?): Boolean = letBinding == other
-    override fun hashCode(): Int = letBinding.hashCode()
+    override fun equals(other: Any?): Boolean = source == other
+    override fun hashCode(): Int = source.hashCode()
 }

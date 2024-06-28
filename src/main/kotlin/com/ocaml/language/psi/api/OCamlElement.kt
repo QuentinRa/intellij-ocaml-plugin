@@ -14,3 +14,8 @@ interface OCamlQualifiedNamedElement : OCamlNamedElement, PsiQualifiedNamedEleme
 
 // an element with a name given from another element
 interface OCamlNameIdentifierOwner : OCamlQualifiedNamedElement, PsiNameIdentifierOwner
+
+// a fake element created from a source
+interface OCamlFakeElement : OCamlElement {
+    val source : PsiElement
+}

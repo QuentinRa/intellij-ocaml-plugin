@@ -6,6 +6,9 @@ This README is for internal use and a reference for any developer.
 
 * [ ] Documentation: tests for resolving (+add below)
 * [ ] StructureView: nested variables
+  * [x] Can detect nested Let
+  * [ ] Add to structure view
+  * [ ] Implements tests
 * [ ] Index: module files
 * [ ] SmartElements: visibility
 * [ ] Navigation: add "resolve" to "let/val/type"

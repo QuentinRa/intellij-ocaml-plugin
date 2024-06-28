@@ -551,11 +551,10 @@ pattern_matching ::=
     [PIPE] pattern_expression [WHEN seq_expr] RIGHT_ARROW seq_expr
     { PIPE  pattern_expression [WHEN seq_expr] RIGHT_ARROW seq_expr }*
 
-let_binding ::= value_name COLON poly_typexpr EQ seq_expr
-| value_name {parameter}* [COLON typexpr] [COLON_GT typexpr] EQ seq_expr
-| pattern_no_exn EQ seq_expr
+let_binding ::= value_name COLON poly_typexpr let_binding_body
+| value_name {parameter}* [COLON typexpr] [COLON_GT typexpr] let_binding_body
+| pattern_no_exn let_binding_body
 | abstract_types_let_binding
-// todo: the mixin is only partially implemented
 {
     implements=[
         "com.ocaml.language.psi.api.OCamlNameIdentifierOwner"
@@ -565,7 +564,11 @@ let_binding ::= value_name COLON poly_typexpr EQ seq_expr
     extends = "com.ocaml.language.psi.api.OCamlStubbedElementImpl<?>"
     stubClass = "com.ocaml.language.psi.stubs.impl.OCamlLetBindingStub"
     elementTypeFactory = "com.ocaml.language.psi.OCamlImplUtilsKt.factory"
-    pin(".*")="EQ"
+}
+
+let_binding_body ::= EQ seq_expr
+{
+    pin(".*")=1
 }
 
 parameter ::=
