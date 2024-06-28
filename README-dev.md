@@ -7,8 +7,10 @@ This README is for internal use and a reference for any developer.
 * [ ] Documentation: tests for resolving (+add below)
 * [ ] StructureView: nested variables
   * [x] Can detect nested Let
-  * [ ] Add to structure view
-  * [ ] Implements tests
+  * [x] Add to structure view
+  * [x] Implements tests
+  * [ ] Add nested filter
+  * [ ] Add variable filter
 * [ ] Index: module files
 * [ ] SmartElements: visibility
 * [ ] Navigation: add "resolve" to "let/val/type"
@@ -182,13 +184,17 @@ The Structure View can be opened with `ALT+7` for OCaml files. It only shows ann
 * [x] Show the name of the element
 * [x] Show the type of the element as an ICON
 * [x] Show the visibility of the element as an ICON
-* [ ] Show nested annotated elements
+* [x] Show nested annotated elements
 * [ ] Show function arguments?
 * [ ] Use stubs in structure view (better when we don't open a file)
 
 The structure view panel itself can have more features:
 
-* [ ] Filters (nested variables?)
+* [ ] Filter: nested variables
+* [x] Sort: name | Manual test
+* [x] Sort: visibility
+  * [ ] Test it
+* [ ] Group: refer to JAVA implementation for inspiration
 
 A few tests were implemented:
 

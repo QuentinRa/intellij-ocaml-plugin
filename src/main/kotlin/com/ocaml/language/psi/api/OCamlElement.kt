@@ -1,5 +1,6 @@
 package com.ocaml.language.psi.api
 
+import com.intellij.ide.structureView.impl.java.AccessLevelProvider
 import com.intellij.openapi.util.UserDataHolderEx
 import com.intellij.psi.*
 
@@ -13,7 +14,7 @@ interface OCamlNamedElement : OCamlElement, PsiNamedElement, NavigatablePsiEleme
 interface OCamlQualifiedNamedElement : OCamlNamedElement, PsiQualifiedNamedElement
 
 // an element with a name given from another element
-interface OCamlNameIdentifierOwner : OCamlQualifiedNamedElement, PsiNameIdentifierOwner
+interface OCamlNameIdentifierOwner : OCamlQualifiedNamedElement, PsiNameIdentifierOwner, AccessLevelProvider
 
 // a fake element created from a source
 interface OCamlFakeElement : OCamlElement {

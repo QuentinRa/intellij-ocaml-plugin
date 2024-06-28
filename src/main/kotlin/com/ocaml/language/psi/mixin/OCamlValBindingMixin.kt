@@ -5,6 +5,7 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
 import com.intellij.psi.impl.ElementBase
 import com.intellij.psi.stubs.IStubElementType
+import com.intellij.psi.util.PsiUtil
 import com.intellij.util.PlatformIcons
 import com.ocaml.icons.OCamlIcons
 import com.ocaml.language.OCamlLanguageUtils.pretty
@@ -41,4 +42,7 @@ abstract class OCamlValBindingMixin : OCamlStubbedNamedElementImpl<OCamlValBindi
         val icon = if (isFunction()) OCamlIcons.Nodes.FUNCTION else OCamlIcons.Nodes.LET
         return ElementBase.iconWithVisibilityIfNeeded(flags, icon, visibilityIcon)
     }
+
+    override fun getAccessLevel(): Int = PsiUtil.ACCESS_LEVEL_PUBLIC
+    override fun getSubLevel(): Int = 0
 }

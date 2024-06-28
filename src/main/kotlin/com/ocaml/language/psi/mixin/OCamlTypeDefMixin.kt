@@ -5,6 +5,7 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.impl.ElementBase
 import com.intellij.psi.impl.source.tree.LeafPsiElement
 import com.intellij.psi.stubs.IStubElementType
+import com.intellij.psi.util.PsiUtil
 import com.intellij.util.PlatformIcons
 import com.ocaml.icons.OCamlIcons
 import com.ocaml.language.psi.OCamlTypedef
@@ -30,4 +31,7 @@ abstract class OCamlTypeDefMixin : OCamlStubbedNamedElementImpl<OCamlTypeDefStub
         val icon = OCamlIcons.Nodes.TYPE
         return ElementBase.iconWithVisibilityIfNeeded(flags, icon, visibilityIcon)
     }
+
+    override fun getAccessLevel(): Int = PsiUtil.ACCESS_LEVEL_PUBLIC
+    override fun getSubLevel(): Int = 0
 }
