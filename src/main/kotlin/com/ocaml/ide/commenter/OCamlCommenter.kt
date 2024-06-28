@@ -22,6 +22,9 @@ class OCamlCommenter : Commenter, CommenterWithLineSuffix, CustomUncommenter, Se
     override fun getBlockCommentSuffix(): String  = "*)"
     override fun getCommentedBlockCommentPrefix(): String  = "(*"
     override fun getCommentedBlockCommentSuffix(): String  = "*)"
+    override fun getCommentPrefix(line: Int, document: Document, data: CommenterData): String = "(*"
+    override fun getBlockCommentPrefix(selectionStart: Int, document: Document, data: CommenterData): String = "(*"
+    override fun getBlockCommentSuffix(selectionEnd: Int, document: Document, data: CommenterData): String = "*)"
 
     override fun createLineCommentingState(
         startLine: Int,
@@ -44,15 +47,12 @@ class OCamlCommenter : Commenter, CommenterWithLineSuffix, CustomUncommenter, Se
 
     override fun commentLine(line: Int, offset: Int, document: Document, data: CommenterData) {
         val lineEndOffset = document.getLineEndOffset(line)
-        val chars = document.charsSequence
-        val startWithSpace = chars[offset] == ' '
-        val endsWithSpace = chars[lineEndOffset - 1] == ' '
         SelfManagingCommenterUtil.insertBlockComment(
             offset,
             lineEndOffset,
             document,
-            if (startWithSpace) "(*" else "(* ",
-            if (endsWithSpace) "*)" else " *)"
+            getLineCommentPrefix(),
+            getLineCommentSuffix()
         )
     }
 
@@ -68,10 +68,6 @@ class OCamlCommenter : Commenter, CommenterWithLineSuffix, CustomUncommenter, Se
         return charSequence.toString() == blockCommentPrefix
     }
 
-    override fun getCommentPrefix(line: Int, document: Document, data: CommenterData): String {
-        return "(*"
-    }
-
     override fun getBlockCommentRange(
         selectionStart: Int,
         selectionEnd: Int,
@@ -79,14 +75,6 @@ class OCamlCommenter : Commenter, CommenterWithLineSuffix, CustomUncommenter, Se
         data: CommenterData
     ): TextRange? {
         return SelfManagingCommenterUtil.getBlockCommentRange(selectionStart, selectionEnd, document, "(*", "*)")
-    }
-
-    override fun getBlockCommentPrefix(selectionStart: Int, document: Document, data: CommenterData): String {
-        return "(*"
-    }
-
-    override fun getBlockCommentSuffix(selectionEnd: Int, document: Document, data: CommenterData): String {
-        return "*)"
     }
 
     override fun uncommentBlockComment(startOffset: Int, endOffset: Int, document: Document, data: CommenterData) {
@@ -107,7 +95,7 @@ class OCamlCommenter : Commenter, CommenterWithLineSuffix, CustomUncommenter, Se
         endOffset: Int,
         document: Document,
         data: CommenterData
-    ): TextRange? {
+    ): TextRange {
         val chars = document.charsSequence
         val startHasLF = chars[startOffset] == '\n'
         val endHasLF = chars[endOffset - 1] == '\n'

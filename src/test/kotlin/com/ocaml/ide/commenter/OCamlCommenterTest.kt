@@ -14,9 +14,9 @@ class OCamlCommenterTest : OCamlBasePlatformTestCase() {
         configureCode("A.ml", "  comment<caret>")
         val action = CommentByLineCommentAction()
         action.actionPerformedImpl(project, myFixture.editor)
-        myFixture.checkResult("(*  comment *)")
+        myFixture.checkResult("(*  comment*)")
         action.actionPerformedImpl(project, myFixture.editor)
-        myFixture.checkResult("  comment ")
+        myFixture.checkResult("  comment")
     }
 
     @Test
@@ -89,7 +89,7 @@ class OCamlCommenterTest : OCamlBasePlatformTestCase() {
         configureCode("A.ml", "line with (<caret>")
         val a = CommentByLineCommentAction()
         a.actionPerformedImpl(project, myFixture.editor)
-        myFixture.checkResult("(* line with ( *)")
+        myFixture.checkResult("(*line with (*)")
     }
 
     @Test

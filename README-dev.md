@@ -5,7 +5,6 @@ This README is for internal use and a reference for any developer.
 **Roadmap**
 
 * [ ] Documentation: tests for resolving (+add below)
-* [ ] Documentation: fix issue please
 * [ ] Index: module files
 * [ ] SmartElements: visibility
 * [ ] Navigation: add "resolve" to "let/val/type"
