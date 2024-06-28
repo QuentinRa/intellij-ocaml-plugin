@@ -42,7 +42,7 @@ import com.ocaml.language.psi.mixin.utils.handleStructuredLetBinding
 // Otherwise, we can't display them (error)
 
 
-class OCamlStructureViewElement(element: PsiElement, private val useAnchor: Boolean = true) : StructureViewTreeElement, Queryable {
+class OCamlStructureViewElement(element: PsiElement, val depth: Int = 0, private val useAnchor: Boolean = true) : StructureViewTreeElement, Queryable {
     private val root : OCamlFakeElement? = element as? OCamlFakeElement
 
     // During tests, the anchor services is not working well with "fake" elements
@@ -84,7 +84,7 @@ class OCamlStructureViewElement(element: PsiElement, private val useAnchor: Bool
         } ?: PresentationData("unknown", null, null, null)
     }
 
-    override fun getChildren(): Array<out TreeElement> = childElements.map2Array { OCamlStructureViewElement(it, useAnchor) }
+    override fun getChildren(): Array<out TreeElement> = childElements.map2Array { OCamlStructureViewElement(it, depth+1, useAnchor) }
 
     override fun putInfo(info: MutableMap<in String, in String>) {
         val presentation = presentation

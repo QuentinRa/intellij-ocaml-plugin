@@ -16,7 +16,7 @@ import com.ocaml.language.psi.OCamlLetBindings
 
 // JavaFileTreeModel
 class OCamlStructureViewModel(editor: Editor?, psiFile: PsiFile, useAnchor: Boolean = true) :
-    StructureViewModelBase(psiFile, editor, OCamlStructureViewElement(psiFile, useAnchor)),
+    StructureViewModelBase(psiFile, editor, OCamlStructureViewElement(psiFile, useAnchor = useAnchor)),
     StructureViewModel.ElementInfoProvider {
 
     override fun getSorters(): Array<Sorter> = arrayOf(Sorter.ALPHA_SORTER, VisibilitySorter.INSTANCE)
@@ -24,6 +24,7 @@ class OCamlStructureViewModel(editor: Editor?, psiFile: PsiFile, useAnchor: Bool
         OCamlStructureViewVariablesFilter,
         OCamlStructureViewFunctionsFilter,
         OCamlStructureViewTypesFilter,
+        OCamlStructureViewNestedFilter,
     )
     override fun getGroupers(): Array<Grouper> = super.getGroupers()
 

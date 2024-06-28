@@ -5,7 +5,6 @@ This README is for internal use and a reference for any developer.
 **Roadmap**
 
 * [ ] Documentation: tests for resolving (+add below)
-* [ ] StructureView: nested variables
 * [ ] Documentation: fix issue please
 * [ ] Index: module files
 * [ ] SmartElements: visibility
@@ -186,11 +185,10 @@ The Structure View can be opened with `ALT+7` for OCaml files. It only shows ann
 
 The structure view panel itself can have more features:
 
-* [ ] Filter: nested variables
+* [x] Filter: nested variables
 * [x] Filter: variables, functions, types
 * [x] Sort: name | Manual test
-* [x] Sort: visibility
-  * [ ] Test it
+* [ ] Sort: visibility
 * [ ] Group: refer to JAVA implementation for inspiration
 
 A few tests were implemented:
@@ -267,6 +265,7 @@ There is a bug I can't patch, so the user cannot edit anymore the OCaml manual/A
 Currently, every element is considering itself as public.
 
 * [ ] Fix this, detect MLI, none==PUBLIC, if MLI, inside==PUBLIC
+  * [ ] Sort elements in structure view
 * [ ] #isFunction: use type inference?
 
 # Special notes

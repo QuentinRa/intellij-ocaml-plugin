@@ -10,7 +10,7 @@ abstract class OCamlStructureViewBaseFilter : Filter {
         return isVisible((treeNode as OCamlStructureViewElement).value!!)
     }
 
-    protected abstract fun isVisible(element: PsiElement): Boolean
+    protected open fun isVisible(element: PsiElement): Boolean = true
 
     override fun isReverted(): Boolean = true
 }
