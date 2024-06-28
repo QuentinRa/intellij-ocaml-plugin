@@ -2,22 +2,15 @@ package com.ocaml.ide.structure.filters
 
 import com.intellij.ide.util.treeView.smartTree.ActionPresentation
 import com.intellij.ide.util.treeView.smartTree.ActionPresentationData
-import com.intellij.ide.util.treeView.smartTree.Filter
-import com.intellij.ide.util.treeView.smartTree.TreeElement
+import com.intellij.psi.PsiElement
 import com.ocaml.OCamlBundle
 import com.ocaml.icons.OCamlIcons
-import com.ocaml.ide.structure.OCamlStructureViewElement
 import com.ocaml.language.psi.api.OCamlLetDeclaration
 
-object OCamlStructureViewFunctionsFilter : Filter {
-    const val FILTER_ID = "SHOW_FUNCTIONS"
+object OCamlStructureViewFunctionsFilter : OCamlStructureViewBaseFilter() {
+    private const val FILTER_ID = "SHOW_FUNCTIONS"
 
-    override fun isVisible(treeNode: TreeElement): Boolean {
-        return isVisible(treeNode as OCamlStructureViewElement)
-    }
-
-    private fun isVisible(treeNode: OCamlStructureViewElement): Boolean {
-        val element = treeNode.value
+    override fun isVisible(element: PsiElement): Boolean {
         return if (element is OCamlLetDeclaration) !element.isFunction() else true
     }
 
@@ -29,5 +22,4 @@ object OCamlStructureViewFunctionsFilter : Filter {
     }
 
     override fun getName(): String = FILTER_ID
-    override fun isReverted(): Boolean = true
 }

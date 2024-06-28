@@ -6,11 +6,7 @@ This README is for internal use and a reference for any developer.
 
 * [ ] Documentation: tests for resolving (+add below)
 * [ ] StructureView: nested variables
-  * [x] Can detect nested Let
-  * [x] Add to structure view
-  * [x] Implements tests
-  * [ ] Add nested filter
-  * [ ] Add variable filter
+* [ ] Documentation: fix issue please
 * [ ] Index: module files
 * [ ] SmartElements: visibility
 * [ ] Navigation: add "resolve" to "let/val/type"
@@ -191,8 +187,7 @@ The Structure View can be opened with `ALT+7` for OCaml files. It only shows ann
 The structure view panel itself can have more features:
 
 * [ ] Filter: nested variables
-* [x] Filter: variables
-* [x] Filter: functions
+* [x] Filter: variables, functions, types
 * [x] Sort: name | Manual test
 * [x] Sort: visibility
   * [ ] Test it
@@ -306,6 +301,7 @@ Adding support for a new element, e.g. making the element "smart" so that you ca
 * Update the color settings page
 * Update the structure view
 * Update the presentation handler
+* Update the structure view filters
 * Update spellchecker if you need to
 * Update template contexts if you want
 * Update navigation

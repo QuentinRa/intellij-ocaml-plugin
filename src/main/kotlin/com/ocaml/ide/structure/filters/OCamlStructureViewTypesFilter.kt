@@ -5,19 +5,19 @@ import com.intellij.ide.util.treeView.smartTree.ActionPresentationData
 import com.intellij.psi.PsiElement
 import com.ocaml.OCamlBundle
 import com.ocaml.icons.OCamlIcons
-import com.ocaml.language.psi.api.OCamlLetDeclaration
+import com.ocaml.language.psi.OCamlTypedef
 
-object OCamlStructureViewVariablesFilter : OCamlStructureViewBaseFilter() {
-    private const val FILTER_ID = "SHOW_VARIABLES"
+object OCamlStructureViewTypesFilter : OCamlStructureViewBaseFilter() {
+    private const val FILTER_ID = "SHOW_TYPES"
 
     override fun isVisible(element: PsiElement): Boolean {
-        return if (element is OCamlLetDeclaration) !element.isVariable() else true
+        return element !is OCamlTypedef
     }
 
     override fun getPresentation(): ActionPresentation {
         return ActionPresentationData(
-            OCamlBundle.message("action.structureview.show.variables"), null,
-            OCamlIcons.Nodes.VARIABLE
+            OCamlBundle.message("action.structureview.show.types"), null,
+            OCamlIcons.Nodes.TYPE
         )
     }
 

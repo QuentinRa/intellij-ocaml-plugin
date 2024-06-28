@@ -22,7 +22,8 @@ class OCamlStructureViewModel(editor: Editor?, psiFile: PsiFile, useAnchor: Bool
     override fun getSorters(): Array<Sorter> = arrayOf(Sorter.ALPHA_SORTER, VisibilitySorter.INSTANCE)
     override fun getFilters(): Array<Filter> = arrayOf(
         OCamlStructureViewVariablesFilter,
-        OCamlStructureViewFunctionsFilter
+        OCamlStructureViewFunctionsFilter,
+        OCamlStructureViewTypesFilter,
     )
     override fun getGroupers(): Array<Grouper> = super.getGroupers()
 
