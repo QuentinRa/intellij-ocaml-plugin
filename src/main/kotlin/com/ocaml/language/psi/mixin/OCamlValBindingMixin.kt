@@ -29,10 +29,9 @@ abstract class OCamlValBindingMixin : OCamlStubbedNamedElementImpl<OCamlValBindi
         return super.getName()
     }
 
-    override fun isFunction() : Boolean {
-        // we should actually check the type using type inference
-        return OCamlImplUtils.nextSiblingWithTokenType(typexpr.firstChild, OCamlTypes.RIGHT_ARROW) != null
-    }
+    // we should actually check the type using type inference
+    override fun isFunction() : Boolean = OCamlImplUtils.nextSiblingWithTokenType(typexpr.firstChild, OCamlTypes.RIGHT_ARROW) != null
+    override fun isVariable() : Boolean = !isFunction()
 
     // PsiFile.ValueDescription.<this>
     override fun isGlobal(): Boolean = parent?.parent is PsiFile

@@ -47,11 +47,10 @@ abstract class OCamlLetBindingMixin : OCamlStubbedNamedElementImpl<OCamlLetBindi
         return super.getName()
     }
 
-    override fun isFunction(): Boolean {
-        // we should check the type as this check is not enough
-        // but there is no type inference yet
-        return getParameterList().isNotEmpty()
-    }
+    // we should check the type as this check is not enough
+    // but there is no type inference yet
+    override fun isVariable(): Boolean = getParameterList().isEmpty()
+    override fun isFunction(): Boolean = !isVariable()
 
     // PsiFile.LetBindings.<this>
     override fun isGlobal(): Boolean = parent.parent is PsiFile

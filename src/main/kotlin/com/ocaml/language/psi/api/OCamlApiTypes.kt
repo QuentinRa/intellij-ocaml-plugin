@@ -4,6 +4,7 @@ import com.intellij.psi.impl.source.tree.LeafPsiElement
 
 interface OCamlLetDeclaration {
     fun isFunction() : Boolean
+    fun isVariable() : Boolean
 
     /**
      * Is this variable or function directly inside the file (global=true)
