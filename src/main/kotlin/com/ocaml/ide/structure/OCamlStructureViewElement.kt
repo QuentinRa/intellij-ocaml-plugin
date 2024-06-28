@@ -42,11 +42,15 @@ import com.ocaml.language.psi.mixin.utils.handleStructuredLetBinding
 // Otherwise, we can't display them (error)
 
 
-class OCamlStructureViewElement(element: PsiElement) : StructureViewTreeElement, Queryable {
-    // Ensure TreeAnchorizer is still working as expected
+class OCamlStructureViewElement(element: PsiElement, private val useAnchor: Boolean = true) : StructureViewTreeElement, Queryable {
     private val root : OCamlFakeElement? = element as? OCamlFakeElement
-    private val psiAnchor = TreeAnchorizer.getService().createAnchor(root?.source ?: element)
-    private val myElement: PsiElement? get() = TreeAnchorizer.getService().retrieveElement(psiAnchor) as? PsiElement
+
+    // During tests, the anchor services is not working well with "fake" elements
+    private val psiAnchor = if (useAnchor) TreeAnchorizer.getService().createAnchor(element) else element
+    private val myElement: PsiElement? get() =
+        if (useAnchor) TreeAnchorizer.getService().retrieveElement(psiAnchor) as? PsiElement
+        else psiAnchor as? PsiElement
+
     private val childElements: List<PsiElement>
         get() {
             return when (val psi = myElement) {
@@ -80,7 +84,7 @@ class OCamlStructureViewElement(element: PsiElement) : StructureViewTreeElement,
         } ?: PresentationData("unknown", null, null, null)
     }
 
-    override fun getChildren(): Array<out TreeElement> = childElements.map2Array { OCamlStructureViewElement(it) }
+    override fun getChildren(): Array<out TreeElement> = childElements.map2Array { OCamlStructureViewElement(it, useAnchor) }
 
     override fun putInfo(info: MutableMap<in String, in String>) {
         val presentation = presentation

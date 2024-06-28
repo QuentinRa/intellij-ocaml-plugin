@@ -20,6 +20,6 @@ class OCamlLetBindingDeconstruction(private val psi: PsiElement, override val so
     override fun isFunction(): Boolean = false
 
     // Ensure TreeAnchorizer is still working as expected:
-    override fun equals(other: Any?): Boolean = source == other
-    override fun hashCode(): Int = source.hashCode()
+    override fun equals(other: Any?): Boolean = psi == other
+    override fun hashCode(): Int = psi.hashCode()
 }

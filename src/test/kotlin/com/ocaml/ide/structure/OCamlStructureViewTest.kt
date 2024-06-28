@@ -11,7 +11,7 @@ class OCamlStructureViewTest : OCamlBasePlatformTestCase() {
     // OCamlBaseStructureTestCase
     private fun configureStructureView(filename: String, code: String): Array<out TreeElement> {
         val a = configureCode(filename, code)
-        val viewModel = OCamlStructureViewModel(myFixture.editor, a)
+        val viewModel = OCamlStructureViewModel(myFixture.editor, a, false)
         return viewModel.root.children
     }
     private fun assertStructureTree(filename: String, code: String, vararg expectedTree : TreeElement) {
@@ -136,7 +136,8 @@ class OCamlStructureViewTest : OCamlBasePlatformTestCase() {
             "let a = let b = 5,6 in let (c, d) = b in c * d",
             FakeTreeElement("a", listOf(
                 FakeTreeElement("b"),
-                FakeTreeElement("c, d"),
+                FakeTreeElement("c"),
+                FakeTreeElement("d"),
             ))
         )
     }
