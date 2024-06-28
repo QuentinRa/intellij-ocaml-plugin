@@ -18,7 +18,7 @@ object OCamlStructureViewFunctionsFilter : Filter {
 
     private fun isVisible(treeNode: OCamlStructureViewElement): Boolean {
         val element = treeNode.value
-        return element is OCamlLetDeclaration && element.isFunction()
+        return if (element is OCamlLetDeclaration) !element.isFunction() else true
     }
 
     override fun getPresentation(): ActionPresentation {

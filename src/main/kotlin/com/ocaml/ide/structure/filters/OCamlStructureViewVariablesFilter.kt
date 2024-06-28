@@ -18,7 +18,7 @@ object OCamlStructureViewVariablesFilter : Filter {
 
     private fun isVisible(treeNode: OCamlStructureViewElement): Boolean {
         val element = treeNode.value
-        return element is OCamlLetDeclaration && element.isVariable()
+        return if (element is OCamlLetDeclaration) !element.isVariable() else true
     }
 
     override fun getPresentation(): ActionPresentation {

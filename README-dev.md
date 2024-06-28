@@ -191,6 +191,8 @@ The Structure View can be opened with `ALT+7` for OCaml files. It only shows ann
 The structure view panel itself can have more features:
 
 * [ ] Filter: nested variables
+* [x] Filter: variables
+* [x] Filter: functions
 * [x] Sort: name | Manual test
 * [x] Sort: visibility
   * [ ] Test it
