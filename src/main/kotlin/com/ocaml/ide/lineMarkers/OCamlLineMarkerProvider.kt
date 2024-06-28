@@ -16,7 +16,7 @@ import com.ocaml.language.psi.api.OCamlNameIdentifierOwner
 import com.ocaml.language.psi.api.OCamlNamedElement
 import com.ocaml.language.psi.mixin.utils.computeValueNames
 import com.ocaml.language.psi.mixin.utils.expandLetBindingStructuredName
-import com.ocaml.language.psi.stubs.index.OCamlVariablesIndex
+import com.ocaml.language.psi.stubs.index.*
 
 // For tests:
 // - In ML, can go to ML or MLI for VAL
@@ -35,50 +35,29 @@ class OCamlLineMarkerProvider : RelatedItemLineMarkerProvider() {
     override fun collectNavigationMarkers(
         element: PsiElement, result: MutableCollection<in RelatedItemLineMarkerInfo<*>>
     ) {
-        val project = element.project
-        val scope = GlobalSearchScope.allScope(project)
-        (element as? OCamlLetBinding)?.let {
-            // From LET, Resolve VAL
-            collectLetNavigationMarkers(it, project, scope, result)
-        }
-        (element as? OCamlValueBinding)?.let {
-            // From VAL, Resolve LET
-            collectNamedElementNavigationMarkers<OCamlLetBinding>(it, "let/val", true, project, scope, result)
+        when (element) {
+            is OCamlLetBinding -> {
+                // From LET, Resolve VAL
+                collectValNavigationMarkers(element, element.project, GlobalSearchScope.allScope(element.project), result)
+            }
+            is OCamlValueBinding -> {
+                // From VAL, Resolve LET
+                collectLetNavigationMarkers(element,  element.project, GlobalSearchScope.allScope(element.project), result)
+            }
         }
     }
 
-    private inline fun <reified T : OCamlNameIdentifierOwner> collectNamedElementNavigationMarkers(
-        element: OCamlNameIdentifierOwner,
-        text: String,
-        isInterface: Boolean,
-        project: Project,
-        scope: GlobalSearchScope,
-        result: MutableCollection<in RelatedItemLineMarkerInfo<*>>
-    ) {
+    private fun collectLetNavigationMarkers(element: OCamlNameIdentifierOwner, project: Project, scope: GlobalSearchScope, result: MutableCollection<in RelatedItemLineMarkerInfo<*>>) {
         if (element !is OCamlLetDeclaration || !element.isGlobal()) return
         val qualifiedName = element.qualifiedName ?: return
-        processQualifiedName<T>(qualifiedName, element.nameIdentifier?.toLeaf(), text, isInterface, project, scope, result)
-    }
-
-    private inline fun <reified T : OCamlNameIdentifierOwner> processQualifiedName(
-        qualifiedName: String,
-        element: PsiElement?,
-        text: String,
-        isInterface: Boolean,
-        project: Project,
-        scope: GlobalSearchScope,
-        result: MutableCollection<in RelatedItemLineMarkerInfo<*>>
-    ) {
-        val elements = OCamlVariablesIndex.Utils.findElementsByName(project, qualifiedName, scope)
-        val filtered: Collection<OCamlNameIdentifierOwner> = elements.filterIsInstance<T>()
-        if (filtered.isEmpty()) return
-        val marker: RelatedItemLineMarkerInfo<PsiElement>? = createMarkerInfo(
-            element, isInterface, text, filtered
+        processCollectedElements(
+            element.nameIdentifier?.toLeaf(),
+            OCamlLetFQNIndex.Utils.findElementsByName(project, qualifiedName, scope),
+            "let/val", true, result
         )
-        if (marker != null) result.add(marker)
     }
 
-    private fun collectLetNavigationMarkers(
+    private fun collectValNavigationMarkers(
         element: OCamlLetBinding,
         project: Project,
         scope: GlobalSearchScope,
@@ -88,29 +67,29 @@ class OCamlLineMarkerProvider : RelatedItemLineMarkerProvider() {
         // Handle variable declarations of multiple variables
         val nameIdentifier = element.nameIdentifier?.toLeaf()
         if (nameIdentifier != null) {
-            processQualifiedName<OCamlValueBinding>(
-                element.qualifiedName!!,
+            processCollectedElements(
                 nameIdentifier,
-                "let/val",
-                false,
-                project,
-                scope,
-                result
+                OCamlLetFQNIndex.Utils.findElementsByName(project, element.qualifiedName!!, scope),
+                "let/val", false, result
             )
         } else if (element.qualifiedName !== null) {
             val qualifiedNames = expandLetBindingStructuredName(element.qualifiedName!!)
             element.computeValueNames().forEachIndexed { index, it ->
-                processQualifiedName<OCamlValueBinding>(
-                    qualifiedNames[index],
+                processCollectedElements(
                     it.toLeaf(),
-                    "let/val",
-                    false,
-                    project,
-                    scope,
-                    result
+                    OCamlLetFQNIndex.Utils.findElementsByName(project, qualifiedNames[index], scope),
+                    "let/val", false, result
                 )
             }
         }
+    }
+
+    private fun processCollectedElements(element: PsiElement?, elements: Collection<OCamlNamedElement>, text: String, isInterface: Boolean, result: MutableCollection<in RelatedItemLineMarkerInfo<*>>) {
+        if (elements.isEmpty()) return
+        val marker: RelatedItemLineMarkerInfo<PsiElement>? = createMarkerInfo(
+            element, isInterface, text, elements
+        )
+        if (marker != null) result.add(marker)
     }
 
     private fun <T : OCamlNamedElement?> createMarkerInfo(

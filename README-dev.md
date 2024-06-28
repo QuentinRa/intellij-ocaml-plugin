@@ -5,6 +5,9 @@ This README is for internal use and a reference for any developer.
 **Roadmap**
 
 * [ ] Documentation: tests for resolving (+add below)
+* [ ] Indexes: use Int+hashcode for FQN
+* [ ] Indexes: create separates indexes for VAL/LET
+* [ ] Indexes: use String for Name
 * [ ] Index: module files
 * [ ] SmartElements: visibility
 * [ ] Navigation: add "resolve" to "let/val/type"
@@ -293,7 +296,8 @@ Adding support for a new element, e.g. making the element "smart" so that you ca
   * Second, create the stub class such as in `OCamlTypeDefStub`
   * Third, update the mixin such as in `OCamlTypeDefMixin`
   * Generate the parser
-* Add or connect to the stub to an index
+* Add a new index (FQN and not)
+* Add or connect to the stub to every index
 * Is the element anonymous?
 * Update the annotator
 * Update the color settings page

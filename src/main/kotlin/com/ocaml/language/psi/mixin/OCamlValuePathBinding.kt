@@ -6,7 +6,7 @@ import com.intellij.psi.tree.IElementType
 import com.ocaml.language.psi.OCamlValuePath
 import com.ocaml.language.psi.api.OCamlElementImpl
 import com.ocaml.language.psi.files.OCamlInterfaceFile
-import com.ocaml.language.psi.stubs.index.OCamlVariablesIndex
+import com.ocaml.language.psi.stubs.index.*
 
 abstract class OCamlValuePathBindingMixin(type: IElementType) : OCamlElementImpl(type), OCamlValuePath {
     override fun getReference(): PsiReference? {
@@ -40,7 +40,8 @@ class OCamlValuePathReference(element: OCamlValuePathBindingMixin) : PsiReferenc
 
     override fun multiResolve(incompleteCode: Boolean): Array<ResolveResult> {
         val propertiesFiles = mutableListOf<PsiElement>()
-        propertiesFiles += OCamlVariablesIndex.Utils.findElementsByName(element.project, element.text)
+        propertiesFiles += OCamlLetFQNIndex.Utils.findElementsByName(element.project, element.text)
+        propertiesFiles += OCamlValFQNIndex.Utils.findElementsByName(element.project, element.text)
         return PsiElementResolveResult.createResults(propertiesFiles)
     }
 

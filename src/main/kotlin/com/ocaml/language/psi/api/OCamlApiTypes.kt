@@ -2,6 +2,7 @@ package com.ocaml.language.psi.api
 
 import com.intellij.psi.impl.source.tree.LeafPsiElement
 
+// fixme: rename to OCamlVariableDeclaration
 interface OCamlLetDeclaration {
     fun isFunction() : Boolean
     fun isVariable() : Boolean

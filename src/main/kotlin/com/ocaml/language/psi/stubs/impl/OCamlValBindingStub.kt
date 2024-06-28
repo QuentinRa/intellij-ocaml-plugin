@@ -5,7 +5,7 @@ import com.intellij.psi.stubs.*
 import com.ocaml.language.psi.OCamlValueBinding
 import com.ocaml.language.psi.impl.OCamlValueBindingImpl
 import com.ocaml.language.psi.stubs.OCamlBaseNamedStub
-import com.ocaml.language.psi.stubs.index.OCamlVariablesIndex
+import com.ocaml.language.psi.stubs.index.OCamlValFQNIndex
 
 class OCamlValBindingStub(parent: StubElement<*>?, elementType: IStubElementType<*, *>, name: String?, qualifiedName: String?) :
     OCamlBaseNamedStub<OCamlValueBinding>(parent, elementType, name, qualifiedName) {
@@ -21,7 +21,7 @@ class OCamlValBindingStub(parent: StubElement<*>?, elementType: IStubElementType
         )
 
         override fun indexStub(stub: OCamlValBindingStub, sink: IndexSink) {
-            stub.qualifiedName?.let { OCamlVariablesIndex.Utils.index(sink, it) }
+            stub.qualifiedName?.let { OCamlValFQNIndex.Utils.index(sink, it) }
         }
     }
 }

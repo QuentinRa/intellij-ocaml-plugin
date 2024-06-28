@@ -48,7 +48,8 @@
         <stubElementTypeHolder class="com.ocaml.language.psi.OCamlTypes" externalIdPrefix="ocaml."/>
 
         <!-- INDICES -->
-        <stubIndex implementation="com.ocaml.language.psi.stubs.index.OCamlVariablesIndex"/>
+        <stubIndex implementation="com.ocaml.language.psi.stubs.index.OCamlLetFQNIndex"/>
+        <stubIndex implementation="com.ocaml.language.psi.stubs.index.OCamlValFQNIndex"/>
         <stubIndex implementation="com.ocaml.language.psi.stubs.index.OCamlTypesIndex"/>
 
         <!-- HIGHLIGHT -->
