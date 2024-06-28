@@ -12,7 +12,7 @@ class OCamlTypeIndexTest : BaseIndexTestCase<OCamlNamedElement>() {
     @Test
     fun test_simple_statements() {
         // Test duplicate, nested, and anonymous
-        val indexSink = testIndex("A.mli", """
+        val indexSink = testFQNIndex("A.mli", """
                 type u
                 type u = unit
                 module X : sig type t end

@@ -5,12 +5,13 @@ This README is for internal use and a reference for any developer.
 **Roadmap**
 
 * [ ] Documentation: tests for resolving (+add below)
-* [ ] Indexes: use Int+hashcode for FQN
-* [ ] Indexes: create separates indexes for VAL/LET
-* [ ] Indexes: use String for Name
 * [ ] Index: module files
 * [ ] SmartElements: visibility
 * [ ] Navigation: add "resolve" to "let/val/type"
+  * [x] Can resolve let
+  * [x] Can resolve val
+  * [ ] Can resolve type
+  * [ ] Tested
 * [ ] Navigation: add "line markers" to "type"
 * [ ] Add: open
   * let open

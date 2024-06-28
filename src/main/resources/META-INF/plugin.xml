@@ -50,7 +50,7 @@
         <!-- INDICES -->
         <stubIndex implementation="com.ocaml.language.psi.stubs.index.OCamlLetFQNIndex"/>
         <stubIndex implementation="com.ocaml.language.psi.stubs.index.OCamlValFQNIndex"/>
-        <stubIndex implementation="com.ocaml.language.psi.stubs.index.OCamlTypesIndex"/>
+        <stubIndex implementation="com.ocaml.language.psi.stubs.index.OCamlTypesFQNIndex"/>
 
         <!-- HIGHLIGHT -->
         <lang.syntaxHighlighterFactory language="OCaml" implementationClass="com.ocaml.ide.highlight.OCamlSyntaxHighlighterFactory"/>
