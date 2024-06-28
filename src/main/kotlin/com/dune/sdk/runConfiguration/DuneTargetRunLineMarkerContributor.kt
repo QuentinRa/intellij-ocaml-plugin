@@ -34,10 +34,10 @@ class DuneTargetRunLineMarkerContributor : RunLineMarkerContributor() {
         } ?: return null
         //  argument - list   <--->    (name ...)
         val name = (base.parent as? DuneArgument)?.parent as? DuneList ?: return null
-        if (name.value?.text != DuneKeywords.NAME) return null
+        if (name.value?.text != DuneKeywords.NAME && name.value?.text != DuneKeywords.NAMES) return null
         // argument - list    <--->   (executable ...)
         val root = name.parent?.parent as? DuneList ?: return null
-        if (root.value?.text != DuneKeywords.EXECUTABLE) return null
+        if (root.value?.text != DuneKeywords.EXECUTABLE && root.value?.text != DuneKeywords.EXECUTABLES) return null
 
         return Info(ACTION_ICON, { "" }, DuneRunTargetAction(element))
     }
