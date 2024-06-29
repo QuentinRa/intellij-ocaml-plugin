@@ -9,7 +9,7 @@ import com.intellij.psi.PsiFile
 import com.intellij.psi.impl.source.tree.LeafPsiElement
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.testFramework.ParsingTestCase
-import com.ocaml.language.parser.OCamlInterfaceParserDefinition
+import com.ocaml.ide.OCamlBasePlatformTestCase
 import com.ocaml.language.parser.OCamlParserDefinition
 import com.ocaml.language.psi.OCamlImplUtils.toLeaf
 import com.ocaml.language.psi.api.OCamlNameIdentifierOwner
@@ -73,4 +73,19 @@ abstract class OCamlBaseParsingTestCase(fileExt: String, parserDefinition: Parse
 }
 
 abstract class OCamlParsingTestCase : OCamlBaseParsingTestCase("ml", OCamlParserDefinition())
-abstract class OCamlInterfaceParsingTestCase : OCamlBaseParsingTestCase("mli", OCamlInterfaceParserDefinition())
+
+abstract class OCamlInterfaceParsingTestCase : OCamlBasePlatformTestCase() {
+    protected inline fun <reified T : PsiElement> initWith(code: String): List<T> {
+        return PsiTreeUtil.findChildrenOfAnyType(
+            configureCode("$FILE_NAME.mli", code), false, T::class.java
+        ).toList()
+    }
+
+    protected fun assertIsNameIdentifierALeaf(element: PsiElement?) {
+        assertInstanceOf(element?.toLeaf(), LeafPsiElement::class.java)
+    }
+
+    protected fun assertQualifiedNameEquals(element: OCamlNameIdentifierOwner?, name: String) {
+        assertEquals(OCAML_FILE_QUALIFIED_NAME_DOT + name, element?.qualifiedName)
+    }
+}
