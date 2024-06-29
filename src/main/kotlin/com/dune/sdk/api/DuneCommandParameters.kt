@@ -7,7 +7,8 @@ package com.dune.sdk.api
  * @param outputDirectory the output directory
  * @param env environment variables
  */
-data class DuneCommandParameters(val duneFolderPath: String, val duneTargetName: String,
+data class DuneCommandParameters(val command: DuneCommand,
+                                 val duneFolderPath: String, val duneTargetName: String,
                                  val workingDirectory: String, val outputDirectory: String,
                                  val commandsArgs: String, val executableArgs: String,
                                  val env: MutableMap<String, String>)

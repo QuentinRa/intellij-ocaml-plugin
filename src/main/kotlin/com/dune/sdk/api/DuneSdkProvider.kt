@@ -17,5 +17,5 @@ interface DuneSdkProvider {
      * @param sdkHomePath path to the SDK home
      * @param args refer to DuneCommandParameters
      */
-    fun getDuneExecCommand(sdkHomePath: String, args: DuneCommandParameters): GeneralCommandLine?
+    fun prepareDuneCommand(sdkHomePath: String, args: DuneCommandParameters): GeneralCommandLine?
 }

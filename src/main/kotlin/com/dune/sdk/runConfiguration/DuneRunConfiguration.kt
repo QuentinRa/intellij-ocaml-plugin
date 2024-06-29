@@ -4,6 +4,7 @@ package com.dune.sdk.runConfiguration
 import com.dune.DuneBundle
 import com.dune.icons.DuneIcons
 import com.dune.ide.files.DuneFileType
+import com.dune.sdk.api.DuneCommand
 import com.dune.sdk.api.DuneCommandParameters
 import com.intellij.application.options.ModuleDescriptionsComboBox
 import com.intellij.execution.ExecutionBundle
@@ -154,10 +155,10 @@ class DuneRunConfiguration(project: Project, factory: DuneRunConfigurationFactor
                 val outputFolder = OCamlSdkIDEUtils.findOutputFolder(module, project)
 
                 // Invoke command
-                val cmd = OCamlSdkProvidersManager.getDuneExecCommand(
+                val cmd = OCamlSdkProvidersManager.prepareDuneCommand(
                     sdk.homePath!!,
                     DuneCommandParameters(
-                        duneFolder, target,
+                        DuneCommand.EXEC, duneFolder, target,
                         workingDirectory, outputFolder, commandArguments, executableArguments, env
                     )
                 ) ?: error("Your SDK is not supported (${sdk.homePath}).")

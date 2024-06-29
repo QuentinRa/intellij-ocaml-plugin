@@ -7,7 +7,6 @@ import com.intellij.execution.wsl.*
 import com.intellij.openapi.vfs.encoding.EncodingManager
 import com.intellij.util.execution.ParametersListUtil
 import com.ocaml.sdk.providers.InvalidHomeError
-import com.dune.sdk.api.DuneSdkProvider
 import com.dune.sdk.utils.DuneSdkUtils
 import com.ocaml.sdk.providers.unix.UnixOCamlSdkProvider
 import java.io.IOException
@@ -280,7 +279,7 @@ class WSLSdkProvider : UnixOCamlSdkProvider() {
         }
     }
 
-    override fun getDuneExecCommand(sdkHomePath: String, args: DuneCommandParameters): GeneralCommandLine? {
+    override fun prepareDuneCommand(sdkHomePath: String, args: DuneCommandParameters): GeneralCommandLine? {
         if (!isDuneInstalled(sdkHomePath)) return null
         val wslSdkHome = WslPath.parseWindowsUncPath(windowsUncPath = sdkHomePath) ?: return null
         val wslDistribution = wslSdkHome.distribution
@@ -291,7 +290,7 @@ class WSLSdkProvider : UnixOCamlSdkProvider() {
         // must be a WSL path
         args.env += DuneSdkUtils.DUNE_BUILD_DIR to wslOutputDirectory
 
-        val params = mutableListOf("exec")
+        val params = mutableListOf(args.command.value)
         if (args.commandsArgs != "") params.addAll(ParametersListUtil.parse(args.commandsArgs))
         params.add("--")
         params.add(DuneSdkUtils.computeTargetName(wslDuneFolder, wslWorkingDirectory, args.duneTargetName))

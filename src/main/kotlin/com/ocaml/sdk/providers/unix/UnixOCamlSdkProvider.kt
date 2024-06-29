@@ -258,7 +258,7 @@ open class UnixOCamlSdkProvider : OCamlSdkProvider {
         }
     }
 
-    override fun getDuneExecCommand(sdkHomePath: String, args: DuneCommandParameters): GeneralCommandLine? {
+    override fun prepareDuneCommand(sdkHomePath: String, args: DuneCommandParameters): GeneralCommandLine? {
         return null
     }
 

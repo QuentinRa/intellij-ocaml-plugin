@@ -1,5 +1,7 @@
 package com.dune.sdk.api
 
+import java.util.*
+
 enum class DuneCommand {
     BUILD, CACHE, CLEAN, COQ,
     DESCRIBE, DIAGNOSTICS, EXEC,
@@ -8,5 +10,7 @@ enum class DuneCommand {
     INTERNAL, MONITOR, OCAML, OCAML_MERLIN, PKG,
     PRINTENV, PROMOTE, PROMOTION, RPC, RULES,
     RUNTEST, SHOW, SHUTDOWN, SUBST, TEST,
-    TOP, UNINSTALL, UPGRADE, UTOP
+    TOP, UNINSTALL, UPGRADE, UTOP;
+
+    val value = name.lowercase(Locale.getDefault())
 }

@@ -73,8 +73,8 @@ object OCamlSdkProvidersManager : OCamlSdkProvider {
     override fun isDuneInstalled(sdkHomePath: String?): Boolean =
         callProvidersValue { provider -> provider.isDuneInstalled(sdkHomePath) } ?: false
 
-    override fun getDuneExecCommand(sdkHomePath: String, args: DuneCommandParameters) =
-        callProvidersValue { provider -> provider.getDuneExecCommand(sdkHomePath, args) }
+    override fun prepareDuneCommand(sdkHomePath: String, args: DuneCommandParameters) =
+        callProvidersValue { provider -> provider.prepareDuneCommand(sdkHomePath, args) }
 
     override fun getDuneVersion(sdkHomePath: String?): String?  {
         var result : String? = null
