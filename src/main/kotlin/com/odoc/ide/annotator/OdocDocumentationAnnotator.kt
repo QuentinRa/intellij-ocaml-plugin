@@ -25,7 +25,7 @@ class OdocDocumentationAnnotator : Annotator {
         lexer.consumeTokens(element.text) {
             if (it.tokenType !== OdocTypes.CODE) return@consumeTokens
             holder.newSilentAnnotation(HighlightSeverity.INFORMATION)
-                .range(TextRange(it.start, it.stop))
+                .range(element.textRange.cutOut(TextRange(it.start, it.stop)))
                 .textAttributes(OdocColor.PARAMETER.textAttributesKey).create()
         }
     }

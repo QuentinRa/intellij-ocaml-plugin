@@ -12,7 +12,12 @@ class OdocHighlightingAnnotatorTest : OdocBasePlatformTestCase() {
     }
 
     @Test
-    fun fix_regex_usage() {
+    fun test_fix_regex_usage() {
         configureHighlight("dummy.ml", "(** <info>[aaaa [] yyy]</info>: test **)\nlet _ = 5", OdocColor.PARAMETER)
+    }
+
+    @Test
+    fun test_fix_use_absolute_range() {
+        configureHighlight("dummy.ml", "(*test*)\n\n(** <info>[aaaa [] yyy]</info>: test **)\nlet _ = 5", OdocColor.PARAMETER)
     }
 }
