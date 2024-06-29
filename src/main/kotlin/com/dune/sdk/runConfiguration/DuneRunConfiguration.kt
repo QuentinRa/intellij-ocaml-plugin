@@ -38,7 +38,6 @@ import com.intellij.ui.components.fields.ExpandableTextField
 import com.intellij.util.EnvironmentUtil
 import com.intellij.util.ui.FormBuilder
 import com.intellij.util.ui.UIUtil
-import com.dune.sdk.api.DuneSdkProvider
 import com.ocaml.sdk.providers.OCamlSdkProvidersManager
 import com.ocaml.sdk.utils.OCamlSdkIDEUtils
 import org.jdom.Element

@@ -28,10 +28,12 @@ class OCamlImplUtils {
 
         @JvmStatic
         fun PsiElement.toLeaf(): PsiElement? = when (val psi = this) {
-            is OCamlValueName -> if (psi.operatorName != null) psi.operatorName!!.firstChild // OCamlInfixOp or OCamlPrefixSymbol
-                ?.firstChild // OCamlInfixSymbol or <TOKEN>
-                ?.firstChild // <TOKEN>
-            else psi.lowercaseIdent!!.firstChild
+            is OCamlValueName ->
+                if (psi.operatorName != null) psi.operatorName!!.firstChild // OCamlInfixOp or OCamlPrefixSymbol
+                    ?.firstChild // OCamlInfixSymbol or <TOKEN>
+                    ?.firstChild // <TOKEN>
+                else psi.lowercaseIdent!!.toLeaf()
+            is OCamlLowercaseIdent -> firstChild
             else -> this
         }
     }

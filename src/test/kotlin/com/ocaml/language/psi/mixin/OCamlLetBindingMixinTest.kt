@@ -1,12 +1,9 @@
 package com.ocaml.language.psi.mixin
 
-import com.intellij.psi.impl.DebugUtil
 import com.intellij.psi.impl.source.tree.LeafPsiElement
-import com.intellij.testFramework.UsefulTestCase
 import com.ocaml.language.OCamlParsingTestCase
 import com.ocaml.language.psi.OCamlImplUtils.Companion.toLeaf
 import com.ocaml.language.psi.OCamlLetBinding
-import com.ocaml.language.psi.OCamlLetBindings
 import com.ocaml.language.psi.mixin.utils.expandLetBindingStructuredName
 import com.ocaml.language.psi.mixin.utils.getNestedLetBindings
 import com.ocaml.language.psi.mixin.utils.handleStructuredLetBinding
@@ -26,8 +23,6 @@ class OCamlLetBindingMixinTest : OCamlParsingTestCase() {
 
     override fun setUp() {
         super.setUp()
-        // These expressions are syntactically valid
-        // But, they are compiling
         val letBindings = initWith<OCamlLetBinding>("""
             let a = ()
             let b,c = ()

@@ -6,7 +6,6 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiElementVisitor
 import com.intellij.psi.PsiErrorElement
 import com.intellij.psi.PsiFile
-import com.intellij.psi.impl.DebugUtil
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.testFramework.ParsingTestCase
 import com.ocaml.language.parser.OCamlInterfaceParserDefinition
@@ -29,8 +28,7 @@ abstract class OCamlBaseParsingTestCase(fileExt: String, parserDefinition: Parse
 
     private fun parseRawCode(code: String): PsiFile {
         myFile = createPsiFile(FILE_NAME, code)
-//        println("» " + this.javaClass)
-//        println(DebugUtil.psiToString(myFile, false, true))
+        println(com.intellij.psi.impl.DebugUtil.psiToString(myFile, false, true))
         return myFile
     }
 
@@ -39,8 +37,8 @@ abstract class OCamlBaseParsingTestCase(fileExt: String, parserDefinition: Parse
     }
 
     protected inline fun <reified T : PsiElement> initWith(code: String): List<T> {
-        return PsiTreeUtil.findChildrenOfType(
-            parseCode(code), T::class.java
+        return PsiTreeUtil.findChildrenOfAnyType(
+            parseCode(code), false, T::class.java
         ).toList()
     }
 
