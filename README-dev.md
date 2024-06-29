@@ -4,6 +4,10 @@ This README is for internal use and a reference for any developer.
 
 **Roadmap**
 
+* Add tests for "dune run configuration"
+  * Then test with "odoc" project
+  * Then add libraries (runConfig starting build)
+  * That is to make something flexible before using it for OCaml/...
 * [ ] Documentation: tests for resolving (+add below)
 * [ ] Index: module files
 * [ ] SmartElements: visibility
@@ -23,6 +27,9 @@ This README is for internal use and a reference for any developer.
 * [ ] Add: include (inherit another module)
 * [ ] Add: exception
 * [ ] Add: function parameters
+* Add back the editor (doc+REPL actions)
+* Add back the REPL
+* Add auto completion for FQN
 
 ```none
 FilenameIndex.getVirtualFilesByName(

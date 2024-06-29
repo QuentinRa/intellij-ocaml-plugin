@@ -74,6 +74,8 @@ abstract class OCamlBaseParsingTestCase(fileExt: String, parserDefinition: Parse
 
 abstract class OCamlParsingTestCase : OCamlBaseParsingTestCase("ml", OCamlParserDefinition())
 
+// I copy-pasted stuff to ensure both classes are the "same" if I manage to fix the bug with the PSI elements
+// being nul for MLI but not for ML files
 abstract class OCamlInterfaceParsingTestCase : OCamlBasePlatformTestCase() {
     protected inline fun <reified T : PsiElement> initWith(code: String): List<T> {
         return PsiTreeUtil.findChildrenOfAnyType(
