@@ -20,6 +20,7 @@
 
         <!-- TYPING -->
         <lang.braceMatcher language="Dune" implementationClass="com.dune.ide.typing.DuneBraceMatcher"/>
+        <lang.quoteHandler language="Dune" implementationClass="com.dune.ide.typing.DuneQuoteHandler"/>
 
         <!-- BUILD -->
         <runLineMarkerContributor language="Dune" implementationClass="com.dune.sdk.runConfiguration.DuneTargetRunLineMarkerContributor"/>

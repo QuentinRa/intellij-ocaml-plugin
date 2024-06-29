@@ -286,6 +286,13 @@ They impact:
 
 Currently, only `LET` is known to introduce variables like this.
 
+## Random
+
+A few random stuff:
+
+* [x] Pair matching (braces, brackets, etc.) for Dune/OCaml
+* [x] Quotes handler for Dune/OCaml
+
 # Supporting a new element
 
 Adding support for a new element, e.g. making the element "smart" so that you can resolve its references, usages, etc. requires quite a few steps.

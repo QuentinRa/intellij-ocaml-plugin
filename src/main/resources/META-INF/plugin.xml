@@ -80,6 +80,7 @@
 
         <!-- TYPING -->
         <lang.braceMatcher language="OCaml" implementationClass="com.ocaml.ide.typing.OCamlBraceMatcher"/>
+        <lang.quoteHandler language="OCaml" implementationClass="com.ocaml.ide.typing.OCamlQuoteHandler"/>
 
         <!-- TEMPLATES -->
         <defaultLiveTemplates file="liveTemplates/default"/>

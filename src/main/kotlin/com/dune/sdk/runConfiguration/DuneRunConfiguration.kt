@@ -25,7 +25,6 @@ import com.intellij.openapi.fileChooser.FileElement
 import com.intellij.openapi.fileTypes.FileTypeRegistry
 import com.intellij.openapi.module.Module
 import com.intellij.openapi.module.ModuleManager
-import com.intellij.openapi.module.ModuleType
 import com.intellij.openapi.options.SettingsEditor
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.FixedSizeButton
@@ -38,8 +37,6 @@ import com.intellij.ui.components.fields.ExpandableTextField
 import com.intellij.util.EnvironmentUtil
 import com.intellij.util.ui.FormBuilder
 import com.intellij.util.ui.UIUtil
-import com.ocaml.OCamlBundle
-import com.ocaml.ide.module.OCamlIdeaModuleType
 import com.ocaml.sdk.providers.OCamlSdkProviderDune
 import com.ocaml.sdk.providers.OCamlSdkProvidersManager
 import com.ocaml.sdk.utils.OCamlSdkIDEUtils
@@ -105,9 +102,9 @@ class DuneRunConfiguration(project: Project, factory: DuneRunConfigurationFactor
         // Check Module and SDK
         val module = configurationModule.module
         if (module == null) {
-            throw RuntimeConfigurationException(OCamlBundle.message("ocaml.runConfigurationType.module.not.found"))
+            throw RuntimeConfigurationException(DuneBundle.message("run.configuration.module.not.found"))
         } else if (OCamlSdkIDEUtils.getModuleSdk(module) == null) {
-            throw RuntimeConfigurationException(OCamlBundle.message("ocaml.runConfigurationType.module.sdk.not.set"))
+            throw RuntimeConfigurationException(DuneBundle.message("run.configuration.module.sdk.not.set"))
         }
     }
 
@@ -211,7 +208,7 @@ class DuneRunConfigurationEditor(project: Project) : SettingsEditor<DuneRunConfi
             .setAlignLabelOnRight(false)
             .setHorizontalGap(UIUtil.DEFAULT_HGAP)
             .setVerticalGap(UIUtil.DEFAULT_VGAP)
-            .addLabeledComponent(OCamlBundle.message("ocaml.runConfigurationType.use.sdk.of.module.label"), moduleChooser)
+            .addLabeledComponent(DuneBundle.message("run.configuration.use.sdk.of.module.label"), moduleChooser)
             .addLabeledComponent(DuneBundle.message("run.configuration.editor.filename.label"), filenameField)
             .addLabeledComponent(DuneBundle.message("run.configuration.editor.target.label"), targetField)
             .addComponent(LabeledComponent.create(commandArguments, DuneBundle.message("run.configuration.editor.command.arguments.label")))
