@@ -29,12 +29,14 @@ import com.intellij.openapi.module.Module
 import com.intellij.openapi.module.ModuleManager
 import com.intellij.openapi.options.SettingsEditor
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.ui.ComboBox
 import com.intellij.openapi.ui.FixedSizeButton
 import com.intellij.openapi.ui.LabeledComponent
 import com.intellij.openapi.ui.TextFieldWithBrowseButton
 import com.intellij.openapi.ui.popup.JBPopupFactory
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.ui.EditorTextField
+import com.intellij.ui.EnumComboBoxModel
 import com.intellij.ui.components.fields.ExpandableTextField
 import com.intellij.util.EnvironmentUtil
 import com.intellij.util.ui.FormBuilder
@@ -57,6 +59,7 @@ class DuneRunConfiguration(project: Project, factory: DuneRunConfigurationFactor
     var workingDirectory: String = defaultWorkingDirectory()
     var environmentVariables: EnvironmentVariablesData = EnvironmentVariablesData.DEFAULT
     var executableArguments: String = ""
+    var command: String? = ""
     var commandArguments: String = ""
 
     override fun getValidModules(): Collection<Module> = ModuleManager.getInstance(project).modules.toList()
@@ -73,6 +76,7 @@ class DuneRunConfiguration(project: Project, factory: DuneRunConfigurationFactor
         const val TARGET = "target"
         const val WORKING_DIRECTORY = "workingDirectory"
         const val EXECUTABLE_ARGUMENTS = "executableArguments"
+        const val COMMAND = "command"
         const val COMMAND_ARGUMENTS = "commandArguments"
     }
 
@@ -118,6 +122,7 @@ class DuneRunConfiguration(project: Project, factory: DuneRunConfigurationFactor
         child.setAttribute(TARGET, target)
         child.setAttribute(WORKING_DIRECTORY, workingDirectory)
         child.setAttribute(EXECUTABLE_ARGUMENTS, executableArguments)
+        child.setAttribute(COMMAND, command)
         child.setAttribute(COMMAND_ARGUMENTS, commandArguments)
         environmentVariables.writeExternal(child)
     }
@@ -130,6 +135,7 @@ class DuneRunConfiguration(project: Project, factory: DuneRunConfigurationFactor
             target = child.getAttributeValue(TARGET) ?: ""
             workingDirectory = child.getAttributeValue(WORKING_DIRECTORY) ?: ""
             executableArguments = child.getAttributeValue(EXECUTABLE_ARGUMENTS) ?: ""
+            command = child.getAttributeValue(COMMAND) ?: ""
             commandArguments = child.getAttributeValue(COMMAND_ARGUMENTS) ?: ""
             environmentVariables = EnvironmentVariablesData.readExternal(child)
         }
@@ -138,13 +144,16 @@ class DuneRunConfiguration(project: Project, factory: DuneRunConfigurationFactor
     override fun getState(executor: Executor, executionEnvironment: ExecutionEnvironment): RunProfileState {//
         return object : CommandLineState(executionEnvironment) {
             override fun startProcess(): ProcessHandler {
+                // Check the command
+                if (command == "") error("Missing command.")
+
                 // Locate the dune file
                 val duneFilePath = PathMacroManager.getInstance(project).expandPath(duneFile)
                 val duneFolder = File(duneFilePath).parentFile.toPath().toAbsolutePath().toString()
 
                 // Locate the module and the sdk
-                val module = configurationModule.module ?: error("Error: Module was set found.")
-                val sdk = OCamlSdkIDEUtils.getModuleSdk(module) ?: error("Error: Module SDK was not set.")
+                val module = configurationModule.module ?: error("Module was set found.")
+                val sdk = OCamlSdkIDEUtils.getModuleSdk(module) ?: error("Module SDK was not set.")
 
                 // Compile arguments
                 val parentEnvironment = when {
@@ -158,7 +167,7 @@ class DuneRunConfiguration(project: Project, factory: DuneRunConfigurationFactor
                 val cmd = OCamlSdkProvidersManager.prepareDuneCommand(
                     sdk.homePath!!,
                     DuneCommandParameters(
-                        DuneCommand.EXEC, duneFolder, target,
+                        DuneCommand.valueOf(command!!), duneFolder, target,
                         workingDirectory, outputFolder, commandArguments, executableArguments, env
                     )
                 ) ?: error("Your SDK is not supported (${sdk.homePath}).")
@@ -196,6 +205,8 @@ class DuneRunConfigurationType : ConfigurationType {
 class DuneRunConfigurationEditor(project: Project) : SettingsEditor<DuneRunConfiguration>() {
     private val filenameField = TextFieldWithBrowseButton()
     private val targetField = EditorTextField("")
+    private val yyy = EnumComboBoxModel(DuneCommand::class.java)
+    private val xxx = ComboBox(yyy)
     private val executableArguments = ExpandableTextField()
     private val commandArguments = ExpandableTextField()
     private val workingDirectoryField = TextFieldWithBrowseButton()
@@ -212,6 +223,7 @@ class DuneRunConfigurationEditor(project: Project) : SettingsEditor<DuneRunConfi
             .addLabeledComponent(DuneBundle.message("run.configuration.use.sdk.of.module.label"), moduleChooser)
             .addLabeledComponent(DuneBundle.message("run.configuration.editor.filename.label"), filenameField)
             .addLabeledComponent(DuneBundle.message("run.configuration.editor.target.label"), targetField)
+            .addLabeledComponent(DuneBundle.message("run.configuration.editor.command"), xxx)
             .addComponent(LabeledComponent.create(commandArguments, DuneBundle.message("run.configuration.editor.command.arguments.label")))
             .addComponent(LabeledComponent.create(executableArguments, DuneBundle.message("run.configuration.editor.executable.arguments.label")))
             .addLabeledComponent(DuneBundle.message("run.configuration.editor.working.directory.label"), createComponentWithMacroBrowse(workingDirectoryField))
@@ -242,6 +254,7 @@ class DuneRunConfigurationEditor(project: Project) : SettingsEditor<DuneRunConfi
         configuration.environmentVariables = environmentVarsComponent.envData
         configuration.executableArguments = executableArguments.text
         configuration.commandArguments = commandArguments.text
+        configuration.command = yyy.selectedItem.name
         configuration.configurationModule.module = moduleSelector.module
     }
 
@@ -253,6 +266,7 @@ class DuneRunConfigurationEditor(project: Project) : SettingsEditor<DuneRunConfi
         executableArguments.text = configuration.executableArguments
         commandArguments.text = configuration.commandArguments
         moduleSelector.reset(configuration)
+        configuration.command?.let { yyy.setSelectedItem(DuneCommand.valueOf(it)) }
     }
 
     // copied & converted to Kotlin from com.intellij.execution.ui.CommonProgramParametersPanel
