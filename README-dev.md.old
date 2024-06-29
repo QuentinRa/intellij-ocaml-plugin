@@ -4,9 +4,7 @@
 
 * Add tests for "VAL"/"TYPE" (cf. README)
 * Add tests for "dune run configuration"
-  * Then add executables/names
   * Then test with "odoc" project
-  * Then add tests
   * Then add libraries (runConfig starting build)
   * That is to make something flexible before using it for OCaml/...
 * ~~Then work on the FileIndex and index files as modules~~

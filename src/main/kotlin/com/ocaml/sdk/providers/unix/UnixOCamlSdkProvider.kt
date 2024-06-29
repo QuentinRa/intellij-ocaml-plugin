@@ -1,12 +1,13 @@
 package com.ocaml.sdk.providers.unix
 
 
+import com.dune.sdk.api.DuneCommandParameters
+import com.dune.sdk.utils.DuneSdkUtils
 import com.intellij.execution.ExecutionException
 import com.intellij.execution.configurations.GeneralCommandLine
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.util.SystemProperties
 import com.ocaml.sdk.providers.*
-import com.ocaml.sdk.providers.OCamlSdkProviderDune.DuneCommandParameters
 import com.ocaml.sdk.utils.OCamlSdkScanner
 import com.ocaml.sdk.utils.OCamlSdkVersionUtils
 import java.io.IOException
@@ -242,7 +243,7 @@ open class UnixOCamlSdkProvider : OCamlSdkProvider {
         if (!canUseProviderForHome(sdkHomePath!!)) return null
         try {
             val s = String(
-                GeneralCommandLine(OCamlSdkProviderDune.getDuneExecutable(sdkHomePath), "--version")
+                GeneralCommandLine(DuneSdkUtils.getDuneExecutable(sdkHomePath), "--version")
                     .createProcess()
                     .inputStream
                     .readAllBytes()

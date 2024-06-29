@@ -4,6 +4,7 @@ package com.dune.sdk.runConfiguration
 import com.dune.DuneBundle
 import com.dune.icons.DuneIcons
 import com.dune.ide.files.DuneFileType
+import com.dune.sdk.api.DuneCommandParameters
 import com.intellij.application.options.ModuleDescriptionsComboBox
 import com.intellij.execution.ExecutionBundle
 import com.intellij.execution.Executor
@@ -37,7 +38,7 @@ import com.intellij.ui.components.fields.ExpandableTextField
 import com.intellij.util.EnvironmentUtil
 import com.intellij.util.ui.FormBuilder
 import com.intellij.util.ui.UIUtil
-import com.ocaml.sdk.providers.OCamlSdkProviderDune
+import com.dune.sdk.api.DuneSdkProvider
 import com.ocaml.sdk.providers.OCamlSdkProvidersManager
 import com.ocaml.sdk.utils.OCamlSdkIDEUtils
 import org.jdom.Element
@@ -156,7 +157,7 @@ class DuneRunConfiguration(project: Project, factory: DuneRunConfigurationFactor
                 // Invoke command
                 val cmd = OCamlSdkProvidersManager.getDuneExecCommand(
                     sdk.homePath!!,
-                    OCamlSdkProviderDune.DuneCommandParameters(
+                    DuneCommandParameters(
                         duneFolder, target,
                         workingDirectory, outputFolder, commandArguments, executableArguments, env
                     )

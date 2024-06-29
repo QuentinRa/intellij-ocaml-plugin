@@ -1,10 +1,10 @@
 package com.ocaml.sdk.providers
 
-import com.intellij.execution.configurations.GeneralCommandLine
+import com.dune.sdk.api.DuneSdkProvider
 import java.nio.file.Path
 
 interface OCamlSdkProvider : OCamlCustomSdkProvider, OCamlSdkProviderUtils,
-    OCamlSdkProviderAnnot, OCamlSdkProviderREPL, OCamlSdkProviderDune, OCamlSdkProviderOpam {
+    OCamlSdkProviderAnnot, OCamlSdkProviderREPL, DuneSdkProvider, OCamlSdkProviderOpam {
     /**
      * If a provider is made of multiples providers, you shall
      * return them using this method.
@@ -139,62 +139,6 @@ interface OCamlSdkProviderREPL {
 //     * @return "ocaml -no-version"
 //     */
 //    fun getREPLCommand(sdkHomePath: String?): GeneralCommandLine?
-}
-
-interface OCamlSdkProviderDune {
-    companion object {
-        const val DUNE_BUILD_DIR = "DUNE_BUILD_DIR"
-
-        /**
-         * @return the path to the dune binary relative to the SDK home
-         */
-        fun getDuneExecutable(sdkHomePath: String): String = "$sdkHomePath/bin/dune"
-
-        /**
-         * @return convert "X.Y.Z" to "X.Y"
-         */
-        fun getDunProjectLang(duneVersion: String?) : String {
-            if (duneVersion == null) return "2.9" // default
-            val last = duneVersion.lastIndexOf('.')
-            if (last != duneVersion.indexOf('.')) return duneVersion.substring(0, last)
-            return duneVersion
-        }
-
-        /**
-         * @return "./{relative dune folder}/{targetName}.exe"
-         */
-        fun computeTargetName(wslDuneFolder: String, wslWorkingDirectory: String, duneTargetName: String): String {
-            return "./${wslDuneFolder.replace(wslWorkingDirectory, "").removePrefix("/")}/$duneTargetName.exe"
-        }
-    }
-
-    /**
-     * @param duneFolderPath path to the folder with the Dune file
-     * @param duneTargetName name of the target
-     * @param workingDirectory the working directory
-     * @param outputDirectory the output directory
-     * @param env environment variables
-     */
-    data class DuneCommandParameters(val duneFolderPath: String, val duneTargetName: String,
-                                     val workingDirectory: String, val outputDirectory: String,
-                                     val commandsArgs: String, val executableArgs: String,
-                                     val env: MutableMap<String, String>)
-
-    fun isDuneInstalled(sdkHomePath: String?): Boolean
-
-    /**
-     * @param sdkHomePath path to the sdkHome
-     * @return Version of dune
-     */
-    fun getDuneVersion(sdkHomePath: String?): String?
-
-    /**
-     * "dune exec ${duneFolderPath}/test_hello_world.exe" (build+run)
-     *
-     * @param sdkHomePath path to the SDK home
-     * @param args refer to DuneCommandParameters
-     */
-    fun getDuneExecCommand(sdkHomePath: String, args: DuneCommandParameters): GeneralCommandLine?
 }
 
 interface OCamlSdkProviderOpam {

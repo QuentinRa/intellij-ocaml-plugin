@@ -1,7 +1,7 @@
 package com.ocaml.sdk.providers
 
+import com.dune.sdk.api.DuneCommandParameters
 import com.intellij.openapi.util.SystemInfo
-import com.ocaml.sdk.providers.OCamlSdkProviderDune.DuneCommandParameters
 import com.ocaml.sdk.providers.unix.UnixOCamlSdkProvider
 import com.ocaml.sdk.providers.windows.WindowsOCamlSdkProvider
 import java.nio.file.Path

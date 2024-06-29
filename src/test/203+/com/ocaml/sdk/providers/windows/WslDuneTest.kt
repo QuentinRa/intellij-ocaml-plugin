@@ -1,6 +1,8 @@
 package com.ocaml.sdk.providers.windows
 
-import com.ocaml.sdk.providers.OCamlSdkProviderDune
+import com.dune.sdk.api.DuneCommandParameters
+import com.dune.sdk.api.DuneSdkProvider
+import com.dune.sdk.utils.DuneSdkUtils
 import com.ocaml.sdk.providers.OCamlSdkProvidersManager
 import org.junit.Assume.assumeTrue
 import org.junit.Test
@@ -23,7 +25,7 @@ class WslDuneTest : BaseWSLProviderTest() {
         folders.OPAM_VALID_SDK?.let {
             val directory = myFixture.testDataPath
             val targetName = "dummy"
-            val args = OCamlSdkProviderDune.DuneCommandParameters(directory, targetName, directory, directory,
+            val args = DuneCommandParameters(directory, targetName, directory, directory,
                 cmdArgs, executableArgs, mutableMapOf())
             val res = OCamlSdkProvidersManager.getDuneExecCommand(it.path!!, args)
             assertNotNull(res) ; res!!
@@ -32,7 +34,7 @@ class WslDuneTest : BaseWSLProviderTest() {
                 // the command
                 "exec",
                 // the target
-                OCamlSdkProviderDune.computeTargetName("", "", targetName)
+                DuneSdkUtils.computeTargetName("", "", targetName)
             )
             return parts
         }
@@ -42,7 +44,7 @@ class WslDuneTest : BaseWSLProviderTest() {
     @Test
     fun testDuneExecInvalid() {
         folders.OPAM_INVALID_DIST?.let { assertNull(OCamlSdkProvidersManager.getDuneExecCommand(it.path!!,
-            OCamlSdkProviderDune.DuneCommandParameters("", "", "", "", "", "", mutableMapOf())))
+            DuneCommandParameters("", "", "", "", "", "", mutableMapOf())))
         }
     }
 

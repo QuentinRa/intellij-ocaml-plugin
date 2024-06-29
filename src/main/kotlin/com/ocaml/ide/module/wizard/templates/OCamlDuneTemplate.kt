@@ -8,7 +8,7 @@ import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.platform.ProjectTemplate
 import com.ocaml.OCamlBundle.message
 import com.ocaml.icons.OCamlIcons
-import com.ocaml.sdk.providers.OCamlSdkProviderDune
+import com.dune.sdk.utils.DuneSdkUtils
 import com.ocaml.sdk.providers.OCamlSdkProvidersManager
 import com.ocaml.utils.OCamlFileSystemUtils
 import javax.swing.Icon
@@ -47,7 +47,7 @@ internal class OCamlDuneTemplate : ProjectTemplate, TemplateBuildInstructions {
         OCamlFileSystemUtils.createFile(sourceFolder, "dune", "(executable\n (name test_hello_world))")
         ApplicationManager.getApplication().executeOnPooledThread {
             val duneVersion = OCamlSdkProvidersManager.getDuneVersion(sdkHomePath)
-            val version = OCamlSdkProviderDune.getDunProjectLang(duneVersion)
+            val version = DuneSdkUtils.getDunProjectLang(duneVersion)
             OCamlFileSystemUtils.createFile(rootFolder, "dune-project", "(lang dune $version)")
         }
     }

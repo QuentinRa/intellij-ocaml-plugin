@@ -323,7 +323,6 @@ A few of the things that are missing:
 
 * [ ] Warning/Error Annotations
 * [ ] Surround With
-* [ ] Quotes handler
 * [ ] Paste processor
 * [ ] Smart enter processor
 * [ ] Folding
