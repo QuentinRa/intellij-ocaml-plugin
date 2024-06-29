@@ -8,7 +8,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiElement
 import com.intellij.psi.search.GlobalSearchScope
 import com.ocaml.icons.OCamlIcons
-import com.ocaml.language.psi.OCamlImplUtils.Companion.toLeaf
+import com.ocaml.language.psi.OCamlImplUtils.toLeaf
 import com.ocaml.language.psi.OCamlLetBinding
 import com.ocaml.language.psi.OCamlValueBinding
 import com.ocaml.language.psi.api.OCamlLetDeclaration

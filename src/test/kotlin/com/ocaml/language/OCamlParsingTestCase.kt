@@ -6,10 +6,13 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiElementVisitor
 import com.intellij.psi.PsiErrorElement
 import com.intellij.psi.PsiFile
+import com.intellij.psi.impl.source.tree.LeafPsiElement
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.testFramework.ParsingTestCase
 import com.ocaml.language.parser.OCamlInterfaceParserDefinition
 import com.ocaml.language.parser.OCamlParserDefinition
+import com.ocaml.language.psi.OCamlImplUtils.toLeaf
+import com.ocaml.language.psi.api.OCamlNameIdentifierOwner
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
 
@@ -19,13 +22,14 @@ abstract class OCamlBaseParsingTestCase(fileExt: String, parserDefinition: Parse
     protected companion object {
         const val FILE_NAME = "dummy"
         const val OCAML_FILE_QUALIFIED_NAME = "Dummy"
-        const val OCAML_FILE_QUALIFIED_NAME_DOT = "Dummy."
+        const val OCAML_FILE_QUALIFIED_NAME_DOT = "$OCAML_FILE_QUALIFIED_NAME."
     }
 
     override fun getTestDataPath(): String {
         return "resources/testData"
     }
 
+    // Parse
     private fun parseRawCode(code: String): PsiFile {
         myFile = createPsiFile(FILE_NAME, code)
         println(com.intellij.psi.impl.DebugUtil.psiToString(myFile, false, true))
@@ -36,12 +40,23 @@ abstract class OCamlBaseParsingTestCase(fileExt: String, parserDefinition: Parse
         return parseRawCode(code) as PsiFileBase
     }
 
+    // Doesn't work well with MLI wtf
     protected inline fun <reified T : PsiElement> initWith(code: String): List<T> {
         return PsiTreeUtil.findChildrenOfAnyType(
             parseCode(code), false, T::class.java
         ).toList()
     }
 
+    // Asserts
+    protected fun assertIsNameIdentifierALeaf(element: PsiElement?) {
+        assertInstanceOf(element?.toLeaf(), LeafPsiElement::class.java)
+    }
+
+    protected fun assertQualifiedNameEquals(element: OCamlNameIdentifierOwner?, name: String) {
+        assertEquals(OCAML_FILE_QUALIFIED_NAME_DOT + name, element?.qualifiedName)
+    }
+
+    // Utils
     protected fun hasError(file: PsiFile): Boolean {
         var hasErrors = false
         file.accept(object : PsiElementVisitor() {

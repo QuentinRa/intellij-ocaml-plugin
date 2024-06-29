@@ -1,8 +1,6 @@
 package com.ocaml.language.psi.mixin
 
-import com.intellij.psi.impl.source.tree.LeafPsiElement
 import com.ocaml.language.OCamlParsingTestCase
-import com.ocaml.language.psi.OCamlImplUtils.Companion.toLeaf
 import com.ocaml.language.psi.OCamlTypedef
 import org.junit.Test
 
@@ -14,7 +12,7 @@ class OCamlTypeBindingMixinTest : OCamlParsingTestCase() {
         super.setUp()
         val typeBindings = initWith<OCamlTypedef>("""
             type a = unit
-            type a
+            type b
         """)
         simpleType = typeBindings[0]
         abstractType = typeBindings[1]
@@ -28,7 +26,19 @@ class OCamlTypeBindingMixinTest : OCamlParsingTestCase() {
 
     @Test
     fun test_name_identifier_is_leaf() {
-        assertInstanceOf(simpleType?.nameIdentifier?.toLeaf(), LeafPsiElement::class.java)
-        assertInstanceOf(abstractType?.nameIdentifier?.toLeaf(), LeafPsiElement::class.java)
+        assertIsNameIdentifierALeaf(simpleType?.nameIdentifier)
+        assertIsNameIdentifierALeaf(abstractType?.nameIdentifier)
+    }
+
+    @Test
+    fun test_name() {
+        assertEquals("a", simpleType?.name)
+        assertEquals("b", abstractType?.name)
+    }
+
+    @Test
+    fun test_qualified_name() {
+        assertQualifiedNameEquals(simpleType, "a")
+        assertQualifiedNameEquals(abstractType, "b")
     }
 }

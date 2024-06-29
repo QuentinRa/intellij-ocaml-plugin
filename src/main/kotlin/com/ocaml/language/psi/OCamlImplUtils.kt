@@ -9,33 +9,32 @@ import com.ocaml.language.psi.api.isAnonymous
 import com.ocaml.language.psi.stubs.impl.*
 
 // nothing for now
-class OCamlImplUtils {
-    companion object {
-        @JvmStatic
-        fun nextSiblingWithTokenType(root: PsiElement, elementType: IElementType): PsiElement? {
-            var found: PsiElement? = null
-            var sibling = root.nextSibling
-            while (sibling != null) {
-                if (sibling.node.elementType === elementType) {
-                    found = sibling
-                    sibling = null
-                } else {
-                    sibling = sibling.nextSibling
-                }
-            }
-            return found
-        }
+object OCamlImplUtils {
 
-        @JvmStatic
-        fun PsiElement.toLeaf(): PsiElement? = when (val psi = this) {
-            is OCamlValueName ->
-                if (psi.operatorName != null) psi.operatorName!!.firstChild // OCamlInfixOp or OCamlPrefixSymbol
-                    ?.firstChild // OCamlInfixSymbol or <TOKEN>
-                    ?.firstChild // <TOKEN>
-                else psi.lowercaseIdent!!.toLeaf()
-            is OCamlLowercaseIdent -> firstChild
-            else -> this
+    @JvmStatic
+    fun nextSiblingWithTokenType(root: PsiElement, elementType: IElementType): PsiElement? {
+        var found: PsiElement? = null
+        var sibling = root.nextSibling
+        while (sibling != null) {
+            if (sibling.node.elementType === elementType) {
+                found = sibling
+                sibling = null
+            } else {
+                sibling = sibling.nextSibling
+            }
         }
+        return found
+    }
+
+    @JvmStatic
+    fun PsiElement.toLeaf(): PsiElement? = when (val psi = this) {
+        is OCamlValueName ->
+            if (psi.operatorName != null) psi.operatorName!!.firstChild // OCamlInfixOp or OCamlPrefixSymbol
+                ?.firstChild // OCamlInfixSymbol or <TOKEN>
+                ?.firstChild // <TOKEN>
+            else psi.lowercaseIdent!!.toLeaf()
+        is OCamlLowercaseIdent -> firstChild
+        else -> this
     }
 }
 

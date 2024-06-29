@@ -1,8 +1,6 @@
 package com.ocaml.language.psi.mixin
 
-import com.intellij.psi.impl.source.tree.LeafPsiElement
 import com.ocaml.language.OCamlParsingTestCase
-import com.ocaml.language.psi.OCamlImplUtils.Companion.toLeaf
 import com.ocaml.language.psi.OCamlLetBinding
 import com.ocaml.language.psi.mixin.utils.expandLetBindingStructuredName
 import com.ocaml.language.psi.mixin.utils.getNestedLetBindings
@@ -66,9 +64,9 @@ class OCamlLetBindingMixinTest : OCamlParsingTestCase() {
 
     @Test
     fun test_name_identifier_is_leaf() {
-        assertInstanceOf(letSimple?.nameIdentifier?.toLeaf(), LeafPsiElement::class.java)
-        assertInstanceOf(letOperatorName?.nameIdentifier?.toLeaf(), LeafPsiElement::class.java)
-        assertInstanceOf(letOperatorNameNoSpace?.nameIdentifier?.toLeaf(), LeafPsiElement::class.java)
+        assertIsNameIdentifierALeaf(letSimple?.nameIdentifier)
+        assertIsNameIdentifierALeaf(letOperatorName?.nameIdentifier)
+        assertIsNameIdentifierALeaf(letOperatorNameNoSpace?.nameIdentifier)
 
         assertNull(letDeconstruction?.nameIdentifier)
         assertNull(letDeconstructionComplex?.nameIdentifier)
