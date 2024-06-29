@@ -39,6 +39,7 @@ import com.intellij.ui.EditorTextField
 import com.intellij.ui.EnumComboBoxModel
 import com.intellij.ui.components.fields.ExpandableTextField
 import com.intellij.util.EnvironmentUtil
+import com.intellij.util.io.createDirectories
 import com.intellij.util.ui.FormBuilder
 import com.intellij.util.ui.UIUtil
 import com.ocaml.sdk.providers.OCamlSdkProvidersManager
@@ -51,6 +52,7 @@ import java.nio.file.InvalidPathException
 import java.nio.file.Paths
 import javax.swing.JComponent
 import javax.swing.JPanel
+import kotlin.io.path.Path
 
 class DuneRunConfiguration(project: Project, factory: DuneRunConfigurationFactory, name: String)
     : ModuleBasedConfiguration<RunConfigurationModule, Element>(name, RunConfigurationModule(project), factory) {
@@ -63,6 +65,11 @@ class DuneRunConfiguration(project: Project, factory: DuneRunConfigurationFactor
     var commandArguments: String = ""
 
     override fun getValidModules(): Collection<Module> = ModuleManager.getInstance(project).modules.toList()
+
+    // we must not build the project with Dune
+    override fun isBuildProjectOnEmptyModuleList(): Boolean = false
+    override fun isBuildBeforeLaunchAddedByDefault(): Boolean = false
+    override fun isExcludeCompileBeforeLaunchOption(): Boolean = false
 
     init {
         configurationModule.setModuleToAnyFirstIfNotSpecified()
@@ -162,6 +169,7 @@ class DuneRunConfiguration(project: Project, factory: DuneRunConfigurationFactor
                 }
                 val env = (parentEnvironment + environmentVariables.envs).toMutableMap()
                 val outputFolder = OCamlSdkIDEUtils.findOutputFolder(module, project)
+                Path(outputFolder).createDirectories()
 
                 // Invoke command
                 val cmd = OCamlSdkProvidersManager.prepareDuneCommand(
@@ -205,8 +213,8 @@ class DuneRunConfigurationType : ConfigurationType {
 class DuneRunConfigurationEditor(project: Project) : SettingsEditor<DuneRunConfiguration>() {
     private val filenameField = TextFieldWithBrowseButton()
     private val targetField = EditorTextField("")
-    private val yyy = EnumComboBoxModel(DuneCommand::class.java)
-    private val xxx = ComboBox(yyy)
+    private val commandModel = EnumComboBoxModel(DuneCommand::class.java)
+    private val command = ComboBox(commandModel)
     private val executableArguments = ExpandableTextField()
     private val commandArguments = ExpandableTextField()
     private val workingDirectoryField = TextFieldWithBrowseButton()
@@ -223,7 +231,7 @@ class DuneRunConfigurationEditor(project: Project) : SettingsEditor<DuneRunConfi
             .addLabeledComponent(DuneBundle.message("run.configuration.use.sdk.of.module.label"), moduleChooser)
             .addLabeledComponent(DuneBundle.message("run.configuration.editor.filename.label"), filenameField)
             .addLabeledComponent(DuneBundle.message("run.configuration.editor.target.label"), targetField)
-            .addLabeledComponent(DuneBundle.message("run.configuration.editor.command"), xxx)
+            .addLabeledComponent(DuneBundle.message("run.configuration.editor.command"), command)
             .addComponent(LabeledComponent.create(commandArguments, DuneBundle.message("run.configuration.editor.command.arguments.label")))
             .addComponent(LabeledComponent.create(executableArguments, DuneBundle.message("run.configuration.editor.executable.arguments.label")))
             .addLabeledComponent(DuneBundle.message("run.configuration.editor.working.directory.label"), createComponentWithMacroBrowse(workingDirectoryField))
@@ -254,7 +262,7 @@ class DuneRunConfigurationEditor(project: Project) : SettingsEditor<DuneRunConfi
         configuration.environmentVariables = environmentVarsComponent.envData
         configuration.executableArguments = executableArguments.text
         configuration.commandArguments = commandArguments.text
-        configuration.command = yyy.selectedItem.name
+        configuration.command = commandModel.selectedItem.name
         configuration.configurationModule.module = moduleSelector.module
     }
 
@@ -266,7 +274,7 @@ class DuneRunConfigurationEditor(project: Project) : SettingsEditor<DuneRunConfi
         executableArguments.text = configuration.executableArguments
         commandArguments.text = configuration.commandArguments
         moduleSelector.reset(configuration)
-        configuration.command?.let { yyy.setSelectedItem(DuneCommand.valueOf(it)) }
+        configuration.command?.let { commandModel.setSelectedItem(DuneCommand.valueOf(it)) }
     }
 
     // copied & converted to Kotlin from com.intellij.execution.ui.CommonProgramParametersPanel

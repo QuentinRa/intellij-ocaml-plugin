@@ -2,6 +2,7 @@
 package com.dune.sdk.runConfiguration
 
 import com.dune.language.psi.files.DuneFile
+import com.dune.sdk.api.DuneCommand
 import com.intellij.execution.actions.ConfigurationContext
 import com.intellij.execution.actions.LazyRunConfigurationProducer
 import com.intellij.execution.configurations.ConfigurationFactory
@@ -13,13 +14,14 @@ import java.io.File
 
 // Generate a configuration based on the PSI element
 // that triggered the generation
-class DuneRunConfigurationProducer : LazyRunConfigurationProducer<DuneRunConfiguration>() {
+class DuneRunConfigurationProducer(private val command: DuneCommand) : LazyRunConfigurationProducer<DuneRunConfiguration>() {
     override fun setupConfigurationFromContext(configuration: DuneRunConfiguration, context: ConfigurationContext, sourceElement: Ref<PsiElement>): Boolean {
         if (context.psiLocation?.containingFile !is DuneFile) return false
         val macroManager = PathMacroManager.getInstance(context.project)
         val path = context.location?.virtualFile?.path
         configuration.duneFile = macroManager.collapsePath(path) ?: ""
         configuration.target = context.psiLocation?.text ?: ""
+        configuration.command = command.name
         configuration.configurationModule.module = ModuleUtilCore.findModuleForFile(context.location?.virtualFile!!, context.project)
 
         if (configuration.target.isNotEmpty()) {
@@ -34,7 +36,7 @@ class DuneRunConfigurationProducer : LazyRunConfigurationProducer<DuneRunConfigu
     override fun isConfigurationFromContext(configuration: DuneRunConfiguration, context: ConfigurationContext): Boolean {
         val macroManager = PathMacroManager.getInstance(context.project)
         return macroManager.expandPath(configuration.duneFile) == context.location?.virtualFile?.path &&
-                configuration.target == context.psiLocation?.text
+                configuration.target == context.psiLocation?.text && configuration.command == command.name
     }
 
     override fun getConfigurationFactory(): ConfigurationFactory =

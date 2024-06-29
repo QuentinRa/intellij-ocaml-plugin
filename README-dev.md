@@ -4,10 +4,9 @@ This README is for internal use and a reference for any developer.
 
 **Roadmap**
 
-* Add tests for "dune run configuration"
-  * Then test with "odoc" project
-  * Then add libraries (runConfig starting build)
-  * That is to make something flexible before using it for OCaml/...
+* [ ] DuneConfig: instead of computing the target name, use the field for the full dune argument (src/xxx.a, src/yyy.exe, empty==build project, etc.)
+* [ ] DuneConfig: test library
+* [ ] DuneConfig: test building odoc project
 * [ ] Documentation: tests for resolving (+add below)
 * [ ] Index: module files
 * [ ] SmartElements: visibility
