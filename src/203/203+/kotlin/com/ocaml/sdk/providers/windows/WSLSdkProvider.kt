@@ -283,7 +283,6 @@ class WSLSdkProvider : UnixOCamlSdkProvider() {
         if (!isDuneInstalled(sdkHomePath)) return null
         val wslSdkHome = WslPath.parseWindowsUncPath(windowsUncPath = sdkHomePath) ?: return null
         val wslDistribution = wslSdkHome.distribution
-        val wslDuneFolder = wslDistribution.getWslPath(Path.of(args.duneFolderPath)) ?: return null
         val wslWorkingDirectory = wslDistribution.getWslPath(Path.of(args.workingDirectory)) ?: return null
         val wslOutputDirectory = wslDistribution.getWslPath(Path.of(args.outputDirectory)) ?: return null
 
@@ -293,7 +292,7 @@ class WSLSdkProvider : UnixOCamlSdkProvider() {
         val params = mutableListOf(args.command.value)
         if (args.commandsArgs != "") params.addAll(ParametersListUtil.parse(args.commandsArgs))
         params.add("--")
-        params.add(DuneSdkUtils.computeTargetName(wslDuneFolder, wslWorkingDirectory, args.duneTargetName))
+        if (args.duneTargetPath != "") params.add(args.duneTargetPath)
         if (args.executableArgs != "") params.addAll(ParametersListUtil.parse(args.executableArgs, false))
 
         val cli = GeneralCommandLine().apply {

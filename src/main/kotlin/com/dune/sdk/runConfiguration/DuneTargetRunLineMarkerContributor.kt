@@ -2,6 +2,7 @@ package com.dune.sdk.runConfiguration
 
 import com.dune.DuneBundle
 import com.dune.language.parser.DuneKeywords
+import com.dune.language.parser.DuneTargetExtension
 import com.dune.language.psi.DuneArgument
 import com.dune.language.psi.DuneAtom
 import com.dune.language.psi.DuneList
@@ -39,18 +40,23 @@ class DuneTargetRunLineMarkerContributor : RunLineMarkerContributor() {
         if (name.value?.text != DuneKeywords.NAME && name.value?.text != DuneKeywords.NAMES) return null
         // argument - list    <--->   (executable ...)
         val root = name.parent?.parent as? DuneList ?: return null
-        val (icon, command) = when(root.value?.text) {
-            DuneKeywords.EXECUTABLE, DuneKeywords.EXECUTABLES -> AllIcons.RunConfigurations.TestState.Run to DuneCommand.EXEC
-            DuneKeywords.LIBRARY -> AllIcons.Actions.Compile to DuneCommand.BUILD
+        val (extension, command) = when(root.value?.text) {
+            DuneKeywords.EXECUTABLE, DuneKeywords.EXECUTABLES -> DuneTargetExtension.EXECUTABLE to DuneCommand.EXEC
+            DuneKeywords.LIBRARY -> DuneTargetExtension.LIBRARY to DuneCommand.BUILD
             else -> return null
         }
-        return Info(icon, { "" }, DuneRunTargetAction(element, command, icon))
+        val icon = when (extension) {
+            DuneTargetExtension.LIBRARY -> AllIcons.Actions.Compile
+            DuneTargetExtension.EXECUTABLE -> AllIcons.RunConfigurations.TestState.Run
+            else -> error("Extension: $extension is not supported yet.")
+        }
+        return Info(icon, { "" }, DuneRunTargetAction(element, command, extension.value, icon))
     }
 }
 
 // Copyright 2000-2024 JetBrains s.r.o. Use of this source code is governed by the Apache 2.0 license that can be found in the LICENSE file.
 @Suppress("DialogTitleCapitalization")
-class DuneRunTargetAction(private val target: PsiElement, private val command: DuneCommand, icon: Icon) :
+class DuneRunTargetAction(private val target: PsiElement, private val command: DuneCommand, private val extension: String, icon: Icon) :
     AnAction(
         DuneBundle.message("action.run.target.text", command.value, target.text.replace("_", "__")),
         DuneBundle.message("action.run.target.description", command.value, target.text),
@@ -58,7 +64,7 @@ class DuneRunTargetAction(private val target: PsiElement, private val command: D
     override fun actionPerformed(event: AnActionEvent) {
         val dataContext = SimpleDataContext.getSimpleContext(Location.DATA_KEY, PsiLocation(target), event.dataContext)
         val context = ConfigurationContext.getFromContext(dataContext, event.place)
-        val producer = DuneRunConfigurationProducer(command)
+        val producer = DuneRunConfigurationProducer(command, extension)
         val configuration = producer.findOrCreateConfigurationFromContext(context)?.configurationSettings ?: return
         (context.runManager as RunManagerEx).setTemporaryConfiguration(configuration)
         ExecutionUtil.runConfiguration(configuration, Executor.EXECUTOR_EXTENSION_NAME.extensionList.first())

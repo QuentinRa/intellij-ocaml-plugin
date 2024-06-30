@@ -21,8 +21,9 @@ object DuneSdkUtils {
     /**
      * @return "./{relative dune folder}/{targetName}.exe"
      */
-    fun computeTargetName(wslDuneFolder: String, wslWorkingDirectory: String, duneTargetName: String): String {
-        val extension = ".exe"
-        return "./${wslDuneFolder.replace(wslWorkingDirectory, "").removePrefix("/")}/$duneTargetName$extension"
+    fun computeTargetName(duneFolder: String?, workingDirectory: String, duneTargetName: String?): String {
+        if (duneTargetName.isNullOrBlank()) return ""
+        if (duneFolder.isNullOrBlank()) return ""
+        return "./${duneFolder.replace(workingDirectory, "").removePrefix("/")}/$duneTargetName"
     }
 }

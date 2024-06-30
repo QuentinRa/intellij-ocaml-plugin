@@ -4,7 +4,7 @@ This README is for internal use and a reference for any developer.
 
 **Roadmap**
 
-* [ ] DuneConfig: instead of computing the target name, use the field for the full dune argument (src/xxx.a, src/yyy.exe, empty==build project, etc.)
+* [ ] DuneConfig: instead of computing the target name, use the field for the full dune argument (src/xxx.a, src/yyy.exe, empty==build project, etc.) + add a placeholder
 * [ ] DuneConfig: test library
 * [ ] DuneConfig: test building odoc project
 * [ ] Documentation: tests for resolving (+add below)
@@ -89,13 +89,13 @@ Once created, we can use the project structure to edit the module configuration 
 
 ## Building/Running the project
 
-We can only run dune executables for now:
+We can only run/build dune projects for now:
 
-* [x] Run icon shown next to the executables name
+* [x] Can run any dune command
+* [x] Run icon shown next to the executable name
+* [x] Build icon shown next to the library name
 * [x] Verify the configuration
 * [x] Build in the module output folder
-* [x] Trigger "dune exec" on Run
-* [ ] Support "executables"+"names"
 * [ ] Use variables (e.g. Project dir, etc.)
 * [ ] Autocompletion of the target
 * [ ] Limit the values of target (select?)

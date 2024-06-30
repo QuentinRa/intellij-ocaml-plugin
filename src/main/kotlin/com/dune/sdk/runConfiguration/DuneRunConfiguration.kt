@@ -3,7 +3,6 @@ package com.dune.sdk.runConfiguration
 
 import com.dune.DuneBundle
 import com.dune.icons.DuneIcons
-import com.dune.ide.files.DuneFileType
 import com.dune.sdk.api.DuneCommand
 import com.dune.sdk.api.DuneCommandParameters
 import com.intellij.application.options.ModuleDescriptionsComboBox
@@ -21,10 +20,7 @@ import com.intellij.execution.ui.ConfigurationModuleSelector
 import com.intellij.icons.AllIcons
 import com.intellij.openapi.application.PathMacros
 import com.intellij.openapi.components.PathMacroManager
-import com.intellij.openapi.fileChooser.FileChooserDescriptor
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory
-import com.intellij.openapi.fileChooser.FileElement
-import com.intellij.openapi.fileTypes.FileTypeRegistry
 import com.intellij.openapi.module.Module
 import com.intellij.openapi.module.ModuleManager
 import com.intellij.openapi.options.SettingsEditor
@@ -34,7 +30,6 @@ import com.intellij.openapi.ui.FixedSizeButton
 import com.intellij.openapi.ui.LabeledComponent
 import com.intellij.openapi.ui.TextFieldWithBrowseButton
 import com.intellij.openapi.ui.popup.JBPopupFactory
-import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.ui.EditorTextField
 import com.intellij.ui.EnumComboBoxModel
 import com.intellij.ui.components.fields.ExpandableTextField
@@ -46,7 +41,6 @@ import com.ocaml.sdk.providers.OCamlSdkProvidersManager
 import com.ocaml.sdk.utils.OCamlSdkIDEUtils
 import org.jdom.Element
 import java.awt.BorderLayout
-import java.io.File
 import java.nio.file.Files
 import java.nio.file.InvalidPathException
 import java.nio.file.Paths
@@ -90,19 +84,18 @@ class DuneRunConfiguration(project: Project, factory: DuneRunConfigurationFactor
     override fun checkConfiguration() {
         // Check that the dune file exists
         val pathMacroManager = PathMacroManager.getInstance(project)
-        val duneFilePath = pathMacroManager.expandPath(duneFile)
-        var exists = try {
-            Files.exists(Paths.get(duneFilePath))
-        } catch (e: InvalidPathException) {
-            false
-        }
-        if (!exists) {
-            throw RuntimeConfigurationWarning(DuneBundle.message("dialog.message.dune.file.doesn.t.exist", duneFilePath))
-        }
+//        var exists = try {
+//            Files.exists(Paths.get(duneFilePath))
+//        } catch (e: InvalidPathException) {
+//            false
+//        }
+//        if (!exists) {
+//            throw RuntimeConfigurationWarning(DuneBundle.message("dialog.message.dune.file.doesn.t.exist", duneFilePath))
+//        }
 
         // Check working directory | ProgramParametersConfigurator
         val workingDir = pathMacroManager.expandPath(workingDirectory)
-        exists = try {
+        var exists = try {
             Files.exists(Paths.get(workingDir))
         } catch (e: InvalidPathException) {
             false
@@ -154,10 +147,6 @@ class DuneRunConfiguration(project: Project, factory: DuneRunConfigurationFactor
                 // Check the command
                 if (command == "") error("Missing command.")
 
-                // Locate the dune file
-                val duneFilePath = PathMacroManager.getInstance(project).expandPath(duneFile)
-                val duneFolder = File(duneFilePath).parentFile.toPath().toAbsolutePath().toString()
-
                 // Locate the module and the sdk
                 val module = configurationModule.module ?: error("Module was set found.")
                 val sdk = OCamlSdkIDEUtils.getModuleSdk(module) ?: error("Module SDK was not set.")
@@ -175,7 +164,7 @@ class DuneRunConfiguration(project: Project, factory: DuneRunConfigurationFactor
                 val cmd = OCamlSdkProvidersManager.prepareDuneCommand(
                     sdk.homePath!!,
                     DuneCommandParameters(
-                        DuneCommand.valueOf(command!!), duneFolder, target,
+                        DuneCommand.valueOf(command!!), target,
                         workingDirectory, outputFolder, commandArguments, executableArguments, env
                     )
                 ) ?: error("Your SDK is not supported (${sdk.homePath}).")
@@ -211,7 +200,6 @@ class DuneRunConfigurationType : ConfigurationType {
 }
 
 class DuneRunConfigurationEditor(project: Project) : SettingsEditor<DuneRunConfiguration>() {
-    private val filenameField = TextFieldWithBrowseButton()
     private val targetField = EditorTextField("")
     private val commandModel = EnumComboBoxModel(DuneCommand::class.java)
     private val command = ComboBox(commandModel)
@@ -229,7 +217,6 @@ class DuneRunConfigurationEditor(project: Project) : SettingsEditor<DuneRunConfi
             .setHorizontalGap(UIUtil.DEFAULT_HGAP)
             .setVerticalGap(UIUtil.DEFAULT_VGAP)
             .addLabeledComponent(DuneBundle.message("run.configuration.use.sdk.of.module.label"), moduleChooser)
-            .addLabeledComponent(DuneBundle.message("run.configuration.editor.filename.label"), filenameField)
             .addLabeledComponent(DuneBundle.message("run.configuration.editor.target.label"), targetField)
             .addLabeledComponent(DuneBundle.message("run.configuration.editor.command"), command)
             .addComponent(LabeledComponent.create(commandArguments, DuneBundle.message("run.configuration.editor.command.arguments.label")))
@@ -240,12 +227,6 @@ class DuneRunConfigurationEditor(project: Project) : SettingsEditor<DuneRunConfi
     }
 
     init {
-        filenameField.addBrowseFolderListener(
-            DuneBundle.message("file.chooser.title"),
-            DuneBundle.message("file.chooser.description"),
-            project,
-            DuneFileChooserDescriptor()
-        )
         workingDirectoryField.addBrowseFolderListener(
             DuneBundle.message("working.directory.file.chooser"),
             DuneBundle.message("working.directory.file.chooser.description"),
@@ -256,7 +237,6 @@ class DuneRunConfigurationEditor(project: Project) : SettingsEditor<DuneRunConfi
     override fun createEditor(): JPanel = panel
 
     override fun applyEditorTo(configuration: DuneRunConfiguration) {
-        configuration.duneFile = filenameField.text
         configuration.target = targetField.text
         configuration.workingDirectory = workingDirectoryField.text
         configuration.environmentVariables = environmentVarsComponent.envData
@@ -267,7 +247,6 @@ class DuneRunConfigurationEditor(project: Project) : SettingsEditor<DuneRunConfi
     }
 
     override fun resetEditorFrom(configuration: DuneRunConfiguration) {
-        filenameField.text = configuration.duneFile
         targetField.text = configuration.target
         workingDirectoryField.text = configuration.workingDirectory
         environmentVarsComponent.envData = configuration.environmentVariables
@@ -292,19 +271,4 @@ class DuneRunConfigurationEditor(project: Project) : SettingsEditor<DuneRunConfi
             add(button, BorderLayout.EAST)
         }
     }
-}
-
-class DuneFileChooserDescriptor : FileChooserDescriptor(true, false, false, false, false, false) {
-    init {
-        title = DuneBundle.message("file.chooser.title")
-    }
-
-    override fun isFileVisible(file: VirtualFile, showHiddenFiles: Boolean) = when {
-        !showHiddenFiles && FileElement.isFileHidden(file) -> false
-        file.isDirectory -> true
-        else -> FileTypeRegistry.getInstance().isFileOfType(file, DuneFileType)
-    }
-
-    override fun isFileSelectable(file: VirtualFile?) =
-        file != null && !file.isDirectory && isFileVisible(file, true)
 }

@@ -7,3 +7,8 @@ object DuneKeywords {
     const val NAME = "name"
     const val NAMES = "names"
 }
+
+enum class DuneTargetExtension(val value: String) {
+    EXECUTABLE(".exe"),
+    LIBRARY(".a"),
+}
