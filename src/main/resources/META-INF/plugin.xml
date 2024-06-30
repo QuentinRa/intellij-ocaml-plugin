@@ -51,7 +51,11 @@
         <stubIndex implementation="com.ocaml.language.psi.stubs.index.OCamlLowercaseIdentIndex"/>
         <stubIndex implementation="com.ocaml.language.psi.stubs.index.OCamlLetFQNIndex"/>
         <stubIndex implementation="com.ocaml.language.psi.stubs.index.OCamlValFQNIndex"/>
-        <stubIndex implementation="com.ocaml.language.psi.stubs.index.OCamlTypesFQNIndex"/>
+        <stubIndex implementation="com.ocaml.language.psi.stubs.index.OCamlTypeFQNIndex"/>
+
+        <lang.elementManipulator forClass="com.ocaml.language.psi.resolve.OCamlValuePathMixin" implementationClass="com.ocaml.language.psi.resolve.OCamlValuePathManipulator" />
+        <lang.elementManipulator forClass="com.ocaml.language.psi.resolve.OCamlLowercaseIdentMixin" implementationClass="com.ocaml.language.psi.resolve.OCamlLowercaseIdentManipulator" />
+        <lang.elementManipulator forClass="com.ocaml.language.psi.resolve.OCamlCapitalizedIdentMixin" implementationClass="com.ocaml.language.psi.resolve.OCamlCapitalizedIdentManipulator" />
 
         <!-- HIGHLIGHT -->
         <lang.syntaxHighlighterFactory language="OCaml" implementationClass="com.ocaml.ide.highlight.OCamlSyntaxHighlighterFactory"/>

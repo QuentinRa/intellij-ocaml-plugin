@@ -1,24 +1,22 @@
 package com.ocaml.language.psi.mixin
 
-import com.ocaml.ide.OCamlBasePlatformTestCase
 import com.ocaml.language.psi.OCamlLowercaseIdent
+import com.ocaml.language.psi.resolve.OCamlBaseResolveTestCase
 import org.junit.Test
 
-class OCamlLowercaseIdentMixinTest : OCamlBasePlatformTestCase() {
+class OCamlLowercaseIdentMixinTest : OCamlBaseResolveTestCase() {
 
     @Test
     fun test_resolve() {
-        configureCode("A.ml", "let y : unit = ()")
-        val type = myFixture.findElementByText("unit", OCamlLowercaseIdent::class.java)
-        val reference = type.reference?.resolve()
-        println(reference)
+        configureCode("A.ml", "type unit = ()")
+        configureCode("B.ml", "let y : unit = ()")
+        assertReferenceToVariableEquals<OCamlLowercaseIdent>("unit", "unit")
     }
 
     @Test
     fun test_resolve_xxx() {
-        configureCode("A.ml", "type t = unit")
-
-        val xxx = myFixture.findElementByText("unit", OCamlLowercaseIdent::class.java)
-        println(xxx)
+        configureCode("A.ml", "type unit = ()")
+        configureCode("B.ml", "type t = unit")
+        assertReferenceToVariableEquals<OCamlLowercaseIdent>("unit", "unit")
     }
 }

@@ -1,24 +1,30 @@
 package com.ocaml.language.psi.mixin
 
-import com.ocaml.ide.OCamlBasePlatformTestCase
-import com.ocaml.language.psi.api.OCamlNameIdentifierOwner
+import com.ocaml.language.psi.resolve.OCamlBaseResolveTestCase
+import com.ocaml.language.psi.resolve.OCamlValuePathMixin
 import org.junit.Test
 
-class OCamlValuePathBindingTest : OCamlBasePlatformTestCase() {
+class OCamlValuePathBindingTest : OCamlBaseResolveTestCase() {
 
     @Test
-    fun test_resolve() {
+    fun test_resolve_let() {
         configureCode("A.ml", "let x = 5")
-        configureCode("B.ml", "open A\nlet y = A.x")
+        configureCode("B.ml", "let y = A.x")
+        assertReferenceToVariableEquals<OCamlValuePathMixin>("A.x", "x")
+    }
 
-        val valuePath = myFixture.findElementByText("A.x", OCamlValuePathMixin::class.java)
-        val reference = valuePath.reference?.resolve()
-        assertNotNull(valuePath) ; valuePath!!
-        assertNotNull(reference) ; reference!!
-        assertSize(1, valuePath.references)
-        assertEquals(reference, valuePath.references[0].resolve())
+    @Test
+    fun test_resolve_val() {
+        configureCode("A.mli", "val x : int")
+        configureCode("B.ml", "let y = A.x")
+        assertReferenceToVariableEquals<OCamlValuePathMixin>("A.x", "x")
+    }
 
-        reference as OCamlNameIdentifierOwner
-        assertEquals("x", reference.name)
+    @Test
+    fun test_resolve_type() {
+        // syntactically OK but not valid
+        configureCode("A.mli", "type none = unit")
+        configureCode("B.ml", "let test = A.none")
+        assertReferenceToVariableEquals<OCamlValuePathMixin>("A.none", "none")
     }
 }
