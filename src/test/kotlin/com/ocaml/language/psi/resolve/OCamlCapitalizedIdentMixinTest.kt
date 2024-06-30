@@ -1,8 +1,7 @@
-package com.ocaml.language.psi.mixin
+package com.ocaml.language.psi.resolve
 
 import com.ocaml.ide.OCamlBasePlatformTestCase
 import com.ocaml.language.psi.OCamlCapitalizedIdent
-import com.ocaml.language.psi.OCamlLowercaseIdent
 import org.junit.Test
 
 class OCamlCapitalizedIdentMixinTest : OCamlBasePlatformTestCase() {

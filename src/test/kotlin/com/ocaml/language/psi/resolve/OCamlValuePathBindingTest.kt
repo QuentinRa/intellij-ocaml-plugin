@@ -1,7 +1,5 @@
-package com.ocaml.language.psi.mixin
+package com.ocaml.language.psi.resolve
 
-import com.ocaml.language.psi.resolve.OCamlBaseResolveTestCase
-import com.ocaml.language.psi.resolve.OCamlValuePathMixin
 import org.junit.Test
 
 class OCamlValuePathBindingTest : OCamlBaseResolveTestCase() {
