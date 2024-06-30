@@ -201,6 +201,9 @@ private unit_interface ::=  { specification [SEMISEMI] }*
 // [CHANGES]: using the lexer
 ident ::= capitalized_ident | lowercase_ident
 capitalized_ident ::= CAPITALIZED_IDENT_VALUE
+{
+    mixin="com.ocaml.language.psi.mixin.OCamlCapitalizedIdentMixin"
+}
 lowercase_ident ::= LOWERCASE_IDENT_VALUE | UNDERSCORE // underscore alone is not lexed as lowercase
                                                        // which is *normal* but not "expected"
 {

@@ -34,13 +34,17 @@ fun OCamlLetBinding.getNestedLetBindings(): List<OCamlLetBindings> {
     } ?: emptyList()
 }
 
-fun expandLetBindingStructuredName(structuredName: String?): List<String> {
+fun expandLetBindingStructuredName(structuredName: String?, fqn: Boolean): List<String> {
     if (structuredName.isNullOrEmpty()) return listOf()
     if (!structuredName.contains(",")) return listOf(structuredName)
     val parts = structuredName.split(",").toMutableList()
-    val prefix = parts[0].substringBeforeLast('.')
-    parts[0] = parts[0].removePrefix("$prefix.")
-    return parts.map { part -> "$prefix.$part" }
+    if (fqn) {
+        val prefix = parts[0].substringBeforeLast('.')
+        parts[0] = parts[0].removePrefix("$prefix.")
+        return parts.map { part -> "$prefix.$part" }
+    } else {
+        return parts
+    }
 }
 
 fun handleStructuredLetBinding(letBinding: OCamlLetBinding): List<PsiElement> {

@@ -73,7 +73,7 @@ class OCamlLineMarkerProvider : RelatedItemLineMarkerProvider() {
                 "let/val", false, result
             )
         } else if (element.qualifiedName !== null) {
-            val qualifiedNames = expandLetBindingStructuredName(element.qualifiedName!!)
+            val qualifiedNames = expandLetBindingStructuredName(element.qualifiedName!!, true)
             element.computeValueNames().forEachIndexed { index, it ->
                 processCollectedElements(
                     it.toLeaf(),

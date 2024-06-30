@@ -8,6 +8,7 @@ import com.ocaml.language.psi.createStubIfNotAnonymous
 import com.ocaml.language.psi.impl.OCamlLetBindingImpl
 import com.ocaml.language.psi.mixin.utils.expandLetBindingStructuredName
 import com.ocaml.language.psi.stubs.index.OCamlLetFQNIndex
+import com.ocaml.language.psi.stubs.index.OCamlLetIndex
 
 class OCamlLetBindingStub(
     parent: StubElement<*>?,
@@ -34,8 +35,10 @@ class OCamlLetBindingStub(
         }
 
         override fun indexStub(stub: OCamlLetBindingStub, sink: IndexSink) {
-            expandLetBindingStructuredName(stub.qualifiedName)
+            expandLetBindingStructuredName(stub.qualifiedName, true)
                 .forEach { OCamlLetFQNIndex.Utils.index(sink, it) }
+            expandLetBindingStructuredName(stub.name, false)
+                .forEach { OCamlLetIndex.Utils.index(sink, it) }
         }
     }
 }

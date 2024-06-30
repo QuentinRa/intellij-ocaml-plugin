@@ -21,3 +21,20 @@ class OCamlLetFQNIndex : OCamlBaseFQNIndex<OCamlNamedElement>(Constants.KEY) {
             StubIndexKey.createIndexKey("com.ocaml.index.OCamlLetFQNIndex")
     }
 }
+
+class OCamlLetIndex : OCamlBaseIndex<OCamlNamedElement>(Constants.KEY) {
+    object Utils : OCamlBaseIndexUtils<OCamlNamedElement>(Constants.KEY) {
+        fun findElementsByName(
+            project: Project,
+            target: String,
+            scope: GlobalSearchScope = GlobalSearchScope.allScope(project),
+        ): Collection<OCamlNamedElement> {
+            return findElementsByName(Constants.KEY, project, target, scope)
+        }
+    }
+
+    private object Constants {
+        val KEY: StubIndexKey<String, OCamlNamedElement> =
+            StubIndexKey.createIndexKey("com.ocaml.index.OCamlLetIndex")
+    }
+}

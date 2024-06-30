@@ -107,19 +107,34 @@ class OCamlLetBindingMixinTest : OCamlParsingTestCase() {
     }
 
     @Test
-    fun test_expand_structured_name() {
+    fun test_expand_structured_fqn_name() {
         fun assertExpanded (name: String, count: Int) {
             assertSize(
                 count,
-                expandLetBindingStructuredName(name)
+                expandLetBindingStructuredName(name, true)
             )
         }
 
         assertExpanded("Dummy.a", 1)
         assertExpanded("Dummy.a,b", 2)
         assertExpanded("Dummy.c,d,e", 3)
-        assertExpanded("Dummy.(+)", 1)
-        assertExpanded("Dummy.a,b,(+)", 3)
+        assertExpanded("Dummy.( + )", 1)
+        assertExpanded("Dummy.a,b,( + )", 3)
+    }
+
+    @Test
+    fun test_expand_structured_name() {
+        fun assertExpandedEquals (name: String, expected: List<String>) {
+            val expanded = expandLetBindingStructuredName(name, false)
+            assertSize(expected.size, expanded)
+            assertEquals(expected, expanded)
+        }
+
+        assertExpandedEquals("a", listOf("a"))
+        assertExpandedEquals("a,b", listOf("a", "b"))
+        assertExpandedEquals("c,d,e", listOf("c", "d", "e"))
+        assertExpandedEquals("( + )", listOf("( + )"))
+        assertExpandedEquals("a,b,( + )", listOf("a", "b", "( + )"))
     }
 
     @Test
