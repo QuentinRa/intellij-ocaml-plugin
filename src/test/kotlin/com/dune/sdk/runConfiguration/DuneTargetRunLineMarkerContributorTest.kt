@@ -29,6 +29,16 @@ class DuneTargetRunLineMarkerContributorTest : DuneBasePlatformTestCase() {
     }
 
     @Test
+    fun test_library_name() {
+        assertInfoNotNull("(library (name hello_world<caret>))")
+    }
+
+    @Test
+    fun test_library_quoted_name() {
+        assertInfoNotNull("(library (name \"hello_world\"))", "\"hello_world\"")
+    }
+
+    @Test
     fun test_executables_names() {
         assertInfoNotNull("(executables (names hello_world<caret>))")
     }

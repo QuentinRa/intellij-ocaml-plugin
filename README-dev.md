@@ -4,10 +4,8 @@ This README is for internal use and a reference for any developer.
 
 **Roadmap**
 
-* [ ] DuneConfig: instead of computing the target name, use the field for the full dune argument (src/xxx.a, src/yyy.exe, empty==build project, etc.) + add a placeholder
-* [ ] DuneConfig: test library
-* [ ] DuneConfig: test building odoc project
-* [ ] Documentation: tests for resolving (+add below)
+* [x] PSI: tests for resolving
+* [ ] Documentation: tests for resolving
 * [ ] Index: module files
 * [ ] SmartElements: visibility
 * [ ] Navigation: add "resolve" to "let/val/type"
@@ -22,6 +20,7 @@ This README is for internal use and a reference for any developer.
   * open Stdlib
   * open List (`let length = List.length [1; 2; 3] ;;  print_int length ;;`)
 * [ ] Add: module
+* [ ] Internal: "X.a" (X and A should not point to the same thing)
 * [ ] Documentation: element under the cursor (Module?)
 * [ ] Add: include (inherit another module)
 * [ ] Add: exception
@@ -36,6 +35,18 @@ FilenameIndex.getVirtualFilesByName(
   false,
   GlobalSearchScope.projectScope(element.project)
 )
+```
+
+* What is that
+
+```kt!
+//         <lang.elementManipulator forClass="com.ocaml.language.psi.mixin.OCamlValuePathBindingMixin"
+//                                 implementationClass="com.ocaml.language.psi.mixin.OCamlValuePathManipulator" />
+class OCamlValuePathManipulator : AbstractElementManipulator<OCamlValuePathBindingMixin>() {
+    override fun handleContentChange(element: OCamlValuePathBindingMixin, range: TextRange, newContent: String?): OCamlValuePathBindingMixin? {
+        return element
+    }
+}
 ```
 
 ## Parser
@@ -87,6 +98,10 @@ Once created, we can use the project structure to edit the module configuration 
 
 📚 We can also create new modules the same way as for projects.
 
+## Import/Open A Project
+
+TODO.
+
 ## Building/Running the project
 
 We can only run/build dune projects for now:
@@ -97,13 +112,11 @@ We can only run/build dune projects for now:
 * [x] Verify the configuration
 * [x] Build in the module output folder
 * [ ] Use variables (e.g. Project dir, etc.)
-* [ ] Autocompletion of the target
-* [ ] Limit the values of target (select?)
+* [ ] Autocompletion of the target (empty, src/xxx.a)
 
 We would want:
 
 * [coq](https://github.com/coq/coq.git)
-* [ ] Build dune libraries
 * [ ] Work on the "build" dependency
 * [ ] Test if "makefile" works
 * [ ] Implement "IntelliJ" Build&Run

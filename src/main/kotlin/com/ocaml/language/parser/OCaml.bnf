@@ -590,7 +590,7 @@ private local_open_group ::= local_open
  | array_constructor_with_local_open_expr
  | record_constructor_with_local_open_expr
 
-local_open ::= LET OPEN module_path IN seq_expr
+local_open ::= LET open_statement IN seq_expr
 expr_with_local_open_expr ::= module_path DOT LPAREN seq_expr RPAREN
 list_constructor_with_local_open_expr ::= module_path DOT LBRACKET seq_expr RBRACKET
 object_copy_with_local_open_expr ::= module_path DOT LBRACELESS seq_expr RGREATERRBRACE
@@ -700,7 +700,7 @@ class_type ::=
 class_body_type ::=
       OBJECT [LPAREN typexpr RPAREN] { class_field_spec } * END
     | LBRACKET typexpr { COMMA typexpr } * RBRACKET classtype_path
-    | LET OPEN module_path IN class_body_type
+    | LET open_statement IN class_body_type
 
 class_field_spec ::=
     INHERIT class_body_type
@@ -716,7 +716,7 @@ class_expr ::=
   | class_simple_expr
   | FUN { parameter } + RIGHT_ARROW class_expr
   | let_bindings IN class_expr
-  | LET OPEN module_path IN class_expr
+  | LET open_statement IN class_expr
 
 private class_simple_expr ::=
     LBRACKET typexpr { COMMA typexpr } * RBRACKET class_path
@@ -821,7 +821,7 @@ private module_type_specification ::=
     MODULE TYPE modtype_name EQ module_type
   | MODULE TYPE modtype_name
 
-private open_statement ::= OPEN module_path
+open_statement ::= OPEN module_path
 
 private sig_include_statement ::= INCLUDE module_type
 { pin=1 }

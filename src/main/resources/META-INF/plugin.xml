@@ -60,8 +60,6 @@
         <!-- ANNOTATOR -->
         <annotator language="OCaml" implementationClass="com.ocaml.ide.annotator.OCamlHighlightingAnnotator"/>
         <annotator language="OCaml" implementationClass="com.odoc.ide.annotator.OdocDocumentationAnnotator"/>
-        <lang.elementManipulator forClass="com.ocaml.language.psi.mixin.OCamlValuePathBindingMixin"
-                                 implementationClass="com.ocaml.language.psi.mixin.OCamlValuePathManipulator" />
 
         <!-- INSIGHT -->
 <!--        <codeInsight.lineMarkerProvider language="OCaml" implementationClass="com.ocaml.ide.navigation.OCamlLineMarkerProvider"/>-->

@@ -14,12 +14,6 @@ abstract class OCamlValuePathBindingMixin(type: IElementType) : OCamlElementImpl
     }
 }
 
-class OCamlValuePathManipulator : AbstractElementManipulator<OCamlValuePathBindingMixin>() {
-    override fun handleContentChange(element: OCamlValuePathBindingMixin, range: TextRange, newContent: String?): OCamlValuePathBindingMixin? {
-        return element
-    }
-}
-
 class OCamlValuePathReference(element: OCamlValuePathBindingMixin) : PsiReferenceBase<PsiElement>(element),
     PsiPolyVariantReference {
     // when we return null, the IDE will check multiResolve
@@ -44,5 +38,4 @@ class OCamlValuePathReference(element: OCamlValuePathBindingMixin) : PsiReferenc
         propertiesFiles += OCamlValFQNIndex.Utils.findElementsByName(element.project, element.text)
         return PsiElementResolveResult.createResults(propertiesFiles)
     }
-
 }
