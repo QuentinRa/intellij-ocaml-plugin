@@ -3,6 +3,8 @@ package com.ocaml.language.psi.api
 import com.intellij.ide.structureView.impl.java.AccessLevelProvider
 import com.intellij.openapi.util.UserDataHolderEx
 import com.intellij.psi.*
+import com.intellij.psi.impl.source.tree.CompositePsiElement
+import com.intellij.psi.tree.IElementType
 
 // an element
 interface OCamlElement : PsiElement, UserDataHolderEx
@@ -20,3 +22,6 @@ interface OCamlNameIdentifierOwner : OCamlQualifiedNamedElement, PsiNameIdentifi
 interface OCamlFakeElement : OCamlElement {
     val source : PsiElement
 }
+
+// Base class for elements implementation
+abstract class OCamlElementImpl(type: IElementType) : CompositePsiElement(type)

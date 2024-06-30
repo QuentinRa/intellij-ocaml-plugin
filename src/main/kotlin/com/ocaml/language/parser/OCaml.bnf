@@ -203,6 +203,9 @@ ident ::= capitalized_ident | lowercase_ident
 capitalized_ident ::= CAPITALIZED_IDENT_VALUE
 lowercase_ident ::= LOWERCASE_IDENT_VALUE | UNDERSCORE // underscore alone is not lexed as lowercase
                                                        // which is *normal* but not "expected"
+{
+    mixin="com.ocaml.language.psi.mixin.OCamlLowercaseIdentMixin"
+}
 // actually, in some scenarios, such as in VAL
 // underscore alone is not allowed
 lowercase_ident_no_underscore ::= LOWERCASE_IDENT_VALUE
@@ -279,7 +282,7 @@ method_name ::= lowercase_ident
 // https://v2.ocaml.org/releases/4.14/htmlman/names.html#sss:refer-named
 value_path ::= [ module_path DOT ] value_name
 {
-    mixin="com.ocaml.language.psi.mixin.OCamlValuePathBindingMixin"
+    mixin="com.ocaml.language.psi.mixin.OCamlValuePathMixin"
 }
 
 // [CHANGES]: we need to ensure that the

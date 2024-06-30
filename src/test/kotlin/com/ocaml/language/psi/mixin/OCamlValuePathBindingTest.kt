@@ -11,7 +11,7 @@ class OCamlValuePathBindingTest : OCamlBasePlatformTestCase() {
         configureCode("A.ml", "let x = 5")
         configureCode("B.ml", "open A\nlet y = A.x")
 
-        val valuePath = myFixture.findElementByText("A.x", OCamlValuePathBindingMixin::class.java)
+        val valuePath = myFixture.findElementByText("A.x", OCamlValuePathMixin::class.java)
         val reference = valuePath.reference?.resolve()
         assertNotNull(valuePath) ; valuePath!!
         assertNotNull(reference) ; reference!!

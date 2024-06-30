@@ -14,7 +14,7 @@ import com.ocaml.language.psi.OCamlLetBindings
 import com.ocaml.language.psi.OCamlTypeDefinition
 import com.ocaml.language.psi.OCamlValueDescription
 import com.ocaml.language.psi.api.OCamlQualifiedNamedElement
-import com.ocaml.language.psi.mixin.OCamlValuePathBindingMixin
+import com.ocaml.language.psi.mixin.OCamlValuePathMixin
 import com.ocaml.language.psi.mixin.OCamlValuePathReference
 import com.odoc.language.parser.OdocConverter
 import com.odoc.utils.OdocPsiUtils
@@ -28,7 +28,7 @@ class OCamlDocumentationProvider : DocumentationProvider {
     // CTRL+Q/hover
     override fun generateDoc(base: PsiElement?, originalElement: PsiElement?): String? {
         val element = when (base) {
-            is OCamlValuePathBindingMixin -> OCamlValuePathReference(base).resolveFirst()
+            is OCamlValuePathMixin -> OCamlValuePathReference(base).resolveFirst()
             else -> base
         }
 
