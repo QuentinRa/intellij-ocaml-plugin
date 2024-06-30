@@ -38,16 +38,11 @@ FilenameIndex.getVirtualFilesByName(
 )
 ```
 
-* What is that
+Todo
 
-```kt!
-//         <lang.elementManipulator forClass="com.ocaml.language.psi.mixin.OCamlValuePathBindingMixin"
-//                                 implementationClass="com.ocaml.language.psi.mixin.OCamlValuePathManipulator" />
-class OCamlValuePathManipulator : AbstractElementManipulator<OCamlValuePathBindingMixin>() {
-    override fun handleContentChange(element: OCamlValuePathBindingMixin, range: TextRange, newContent: String?): OCamlValuePathBindingMixin? {
-        return element
-    }
-}
+```none
+configureCode("B.ml", "type test = A.none")
+configureCode("B.ml", "let test : A.none = ()")
 ```
 
 ## Parser
@@ -325,6 +320,7 @@ Adding support for a new element, e.g. making the element "smart" so that you ca
   * Third, update the mixin such as in `OCamlTypeDefMixin`
   * Generate the parser
 * Add a new index (FQN and not)
+* Add to the file stub
 * Add or connect to the stub to every index
 * Is the element anonymous?
 * Update the annotator

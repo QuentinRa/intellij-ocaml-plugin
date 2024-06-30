@@ -22,8 +22,9 @@ class OCamlFileStub(file: OCamlFile?) : PsiFileStubImpl<OCamlFile>(file) {
 
         override fun getBuilder(): StubBuilder = object : DefaultStubBuilder() {
             override fun skipChildProcessingWhenBuildingStubs(parent: ASTNode, node: ASTNode) = when (parent.elementType) {
-                OCamlTypes.LET_BINDINGS -> false // Parse LET_BINDING
                 is IFileElementType -> false // Parse direct children of PsiFile
+                OCamlTypes.TYPE_DEFINITION -> false // Parse direct children of TYPE
+                OCamlTypes.LET_BINDINGS -> false // Parse direct children of LET_BINDINGS
                 else -> true // Skip everything else
             }
 

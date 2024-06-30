@@ -21,9 +21,9 @@ class OCamlInterfaceFileStub(file: OCamlInterfaceFile?) : PsiFileStubImpl<OCamlI
 
         override fun getBuilder(): StubBuilder = object : DefaultStubBuilder() {
             override fun skipChildProcessingWhenBuildingStubs(parent: ASTNode, node: ASTNode) = when (parent.elementType) {
+                is IFileElementType -> false // Parse direct children of PsiFile
                 OCamlTypes.TYPE_DEFINITION -> false // Parse direct children of TYPE
                 OCamlTypes.VALUE_DESCRIPTION -> false // Parse direct children of VAL
-                is IFileElementType -> false // Parse direct children of PsiFile
                 else -> true // Skip everything else
             }
 

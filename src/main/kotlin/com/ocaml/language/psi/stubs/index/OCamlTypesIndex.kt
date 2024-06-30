@@ -5,7 +5,7 @@ import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.psi.stubs.StubIndexKey
 import com.ocaml.language.psi.api.OCamlNamedElement
 
-class OCamlTypesFQNIndex : OCamlBaseFQNIndex<OCamlNamedElement>(Constants.KEY) {
+class OCamlTypeFQNIndex : OCamlBaseFQNIndex<OCamlNamedElement>(Constants.KEY) {
     object Utils : OCamlBaseIndexUtils<OCamlNamedElement>(Constants.KEY) {
         fun findElementsByName(
             project: Project,

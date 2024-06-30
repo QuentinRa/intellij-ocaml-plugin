@@ -3,6 +3,7 @@ package com.ocaml.language.psi.api
 import com.intellij.psi.*
 import com.ocaml.language.psi.files.OCamlInterfaceFile
 import com.ocaml.language.psi.stubs.index.OCamlLetFQNIndex
+import com.ocaml.language.psi.stubs.index.OCamlTypeFQNIndex
 import com.ocaml.language.psi.stubs.index.OCamlValFQNIndex
 
 abstract class BaseOCamlReference(element: PsiElement) : PsiReferenceBase<PsiElement>(element), PsiPolyVariantReference {
@@ -33,6 +34,7 @@ abstract class BaseOCamlFQNReference(element: PsiElement) : BaseOCamlReference(e
         val propertiesFiles = mutableListOf<PsiElement>()
         propertiesFiles += OCamlLetFQNIndex.Utils.findElementsByName(element.project, element.text)
         propertiesFiles += OCamlValFQNIndex.Utils.findElementsByName(element.project, element.text)
+        propertiesFiles += OCamlTypeFQNIndex.Utils.findElementsByName(element.project, element.text)
         return PsiElementResolveResult.createResults(propertiesFiles)
     }
 }

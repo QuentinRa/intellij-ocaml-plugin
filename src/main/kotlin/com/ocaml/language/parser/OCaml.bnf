@@ -202,12 +202,12 @@ private unit_interface ::=  { specification [SEMISEMI] }*
 ident ::= capitalized_ident | lowercase_ident
 capitalized_ident ::= CAPITALIZED_IDENT_VALUE
 {
-    mixin="com.ocaml.language.psi.mixin.OCamlCapitalizedIdentMixin"
+    mixin="com.ocaml.language.psi.resolve.OCamlCapitalizedIdentMixin"
 }
 lowercase_ident ::= LOWERCASE_IDENT_VALUE | UNDERSCORE // underscore alone is not lexed as lowercase
                                                        // which is *normal* but not "expected"
 {
-    mixin="com.ocaml.language.psi.mixin.OCamlLowercaseIdentMixin"
+    mixin="com.ocaml.language.psi.resolve.OCamlLowercaseIdentMixin"
 }
 // actually, in some scenarios, such as in VAL
 // underscore alone is not allowed
@@ -285,7 +285,7 @@ method_name ::= lowercase_ident
 // https://v2.ocaml.org/releases/4.14/htmlman/names.html#sss:refer-named
 value_path ::= [ module_path DOT ] value_name
 {
-    mixin="com.ocaml.language.psi.mixin.OCamlValuePathMixin"
+    mixin="com.ocaml.language.psi.resolve.OCamlValuePathMixin"
 }
 
 // [CHANGES]: we need to ensure that the
