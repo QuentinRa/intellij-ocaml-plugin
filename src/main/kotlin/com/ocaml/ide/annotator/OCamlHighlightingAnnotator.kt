@@ -8,7 +8,7 @@ import com.intellij.psi.impl.source.tree.LeafPsiElement
 import com.ocaml.ide.colors.OCamlColor
 import com.ocaml.language.psi.OCamlTypedef
 import com.ocaml.language.psi.OCamlTypes
-import com.ocaml.language.psi.api.OCamlLetDeclaration
+import com.ocaml.language.psi.api.OCamlVariableDeclaration
 import com.ocaml.language.psi.api.OCamlNameIdentifierOwner
 
 class OCamlHighlightingAnnotator : Annotator {
@@ -27,7 +27,7 @@ class OCamlHighlightingAnnotator : Annotator {
         // Determine the color
         val color = when (ancestor) {
             // LET and VAL
-            is OCamlLetDeclaration -> {
+            is OCamlVariableDeclaration -> {
                 if (ancestor.isFunction()) OCamlColor.FUNCTION_DECLARATION
                 else if (ancestor.isGlobal()) OCamlColor.GLOBAL_VARIABLE
                 else OCamlColor.LOCAL_VARIABLE

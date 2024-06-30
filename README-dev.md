@@ -6,6 +6,8 @@ This README is for internal use and a reference for any developer.
 
 * [x] PSI: tests for resolving
 * [ ] Documentation: tests for resolving
+* [ ] Add: module
+  * [ ] Add tests for resolve
 * [ ] Index: module files
 * [ ] SmartElements: visibility
 * [ ] Navigation: add "resolve" to "let/val/type"
@@ -19,7 +21,6 @@ This README is for internal use and a reference for any developer.
   * Stdlib (OCaml 4.07+)
   * open Stdlib
   * open List (`let length = List.length [1; 2; 3] ;;  print_int length ;;`)
-* [ ] Add: module
 * [ ] Internal: "X.a" (X and A should not point to the same thing)
 * [ ] Documentation: element under the cursor (Module?)
 * [ ] Add: include (inherit another module)

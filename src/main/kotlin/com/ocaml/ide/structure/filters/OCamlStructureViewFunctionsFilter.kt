@@ -5,13 +5,13 @@ import com.intellij.ide.util.treeView.smartTree.ActionPresentationData
 import com.intellij.psi.PsiElement
 import com.ocaml.OCamlBundle
 import com.ocaml.icons.OCamlIcons
-import com.ocaml.language.psi.api.OCamlLetDeclaration
+import com.ocaml.language.psi.api.OCamlVariableDeclaration
 
 object OCamlStructureViewFunctionsFilter : OCamlStructureViewBaseFilter() {
     private const val FILTER_ID = "SHOW_FUNCTIONS"
 
     override fun isVisible(element: PsiElement): Boolean {
-        return if (element is OCamlLetDeclaration) !element.isFunction() else true
+        return if (element is OCamlVariableDeclaration) !element.isFunction() else true
     }
 
     override fun getPresentation(): ActionPresentation {

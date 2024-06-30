@@ -2,8 +2,8 @@ package com.ocaml.language.psi.api
 
 import com.intellij.psi.impl.source.tree.LeafPsiElement
 
-// fixme: rename to OCamlVariableDeclaration
-interface OCamlLetDeclaration {
+// Both LET/VAL can reference a variable (which can be a function)
+interface OCamlVariableDeclaration {
     fun isFunction() : Boolean
     fun isVariable() : Boolean
 

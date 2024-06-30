@@ -11,7 +11,7 @@ import com.ocaml.icons.OCamlIcons
 import com.ocaml.language.psi.OCamlImplUtils.toLeaf
 import com.ocaml.language.psi.OCamlLetBinding
 import com.ocaml.language.psi.OCamlValueBinding
-import com.ocaml.language.psi.api.OCamlLetDeclaration
+import com.ocaml.language.psi.api.OCamlVariableDeclaration
 import com.ocaml.language.psi.api.OCamlNameIdentifierOwner
 import com.ocaml.language.psi.api.OCamlNamedElement
 import com.ocaml.language.psi.mixin.utils.computeValueNames
@@ -48,7 +48,7 @@ class OCamlLineMarkerProvider : RelatedItemLineMarkerProvider() {
     }
 
     private fun collectLetNavigationMarkers(element: OCamlNameIdentifierOwner, project: Project, scope: GlobalSearchScope, result: MutableCollection<in RelatedItemLineMarkerInfo<*>>) {
-        if (element !is OCamlLetDeclaration || !element.isGlobal()) return
+        if (element !is OCamlVariableDeclaration || !element.isGlobal()) return
         val qualifiedName = element.qualifiedName ?: return
         processCollectedElements(
             element.nameIdentifier?.toLeaf(),

@@ -558,7 +558,7 @@ let_binding ::= value_name COLON poly_typexpr let_binding_body
 {
     implements=[
         "com.ocaml.language.psi.api.OCamlNameIdentifierOwner"
-        "com.ocaml.language.psi.api.OCamlLetDeclaration"
+        "com.ocaml.language.psi.api.OCamlVariableDeclaration"
     ]
     mixin="com.ocaml.language.psi.mixin.OCamlLetBindingMixin"
     extends = "com.ocaml.language.psi.api.OCamlStubbedElementImpl<?>"
@@ -805,7 +805,7 @@ private specification ::= top_level_directive
 value_description ::= VAL value_binding { pin=1 }
 value_binding ::= value_name_no_underscore COLON typexpr
 {
-    implements=["com.ocaml.language.psi.api.OCamlNameIdentifierOwner"; "com.ocaml.language.psi.api.OCamlLetDeclaration"]
+    implements=["com.ocaml.language.psi.api.OCamlNameIdentifierOwner"; "com.ocaml.language.psi.api.OCamlVariableDeclaration"]
     mixin="com.ocaml.language.psi.mixin.OCamlValBindingMixin"
     extends = "com.ocaml.language.psi.api.OCamlStubbedElementImpl<?>"
     stubClass = "com.ocaml.language.psi.stubs.impl.OCamlValBindingStub"
