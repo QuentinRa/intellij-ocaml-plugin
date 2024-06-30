@@ -9,6 +9,7 @@ class OCamlLetIndexTest : BaseIndexTestCase<OCamlNamedElement>() {
     override val builder: StubBuilder
         get() = OCamlFileStub.Type.builder
 
+    // Test duplicate, nested, and anonymous
     private val simpleCode = """
                 let a = ()
                 let a = ()
@@ -28,7 +29,6 @@ class OCamlLetIndexTest : BaseIndexTestCase<OCamlNamedElement>() {
 
     @Test
     fun test_simple_statements_fqn() {
-        // Test duplicate, nested, and anonymous
         val indexSink = testFQNIndex("A.ml", simpleCode)
         assertEquals(3, indexSink.total)
         assertEquals(2, indexSink.count("A.a"))
@@ -45,7 +45,6 @@ class OCamlLetIndexTest : BaseIndexTestCase<OCamlNamedElement>() {
 
     @Test
     fun test_simple_statements() {
-        // Test duplicate, nested, and anonymous
         val indexSink = testIndex("A.ml", simpleCode)
         assertEquals(3, indexSink.total)
         assertEquals(2, indexSink.count("a"))

@@ -5,6 +5,7 @@ import com.intellij.psi.stubs.*
 import com.ocaml.language.psi.OCamlValueBinding
 import com.ocaml.language.psi.impl.OCamlValueBindingImpl
 import com.ocaml.language.psi.stubs.OCamlBaseNamedStub
+import com.ocaml.language.psi.stubs.index.OCamlLowercaseIdentIndex
 import com.ocaml.language.psi.stubs.index.OCamlValFQNIndex
 
 class OCamlValBindingStub(parent: StubElement<*>?, elementType: IStubElementType<*, *>, name: String?, qualifiedName: String?) :
@@ -21,6 +22,7 @@ class OCamlValBindingStub(parent: StubElement<*>?, elementType: IStubElementType
         )
 
         override fun indexStub(stub: OCamlValBindingStub, sink: IndexSink) {
+            stub.name?.let { OCamlLowercaseIdentIndex.Utils.index(sink, it) }
             stub.qualifiedName?.let { OCamlValFQNIndex.Utils.index(sink, it) }
         }
     }

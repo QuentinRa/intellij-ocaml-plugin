@@ -5,7 +5,7 @@ import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.psi.stubs.StubIndexKey
 import com.ocaml.language.psi.api.OCamlNamedElement
 
-class OCamlLetFQNIndex : OCamlBaseFQNIndex<OCamlNamedElement>(Constants.KEY) {
+class OCamlLowercaseIdentIndex : OCamlBaseIndex<OCamlNamedElement>(Constants.KEY) {
     object Utils : OCamlBaseIndexUtils<OCamlNamedElement>(Constants.KEY) {
         fun findElementsByName(
             project: Project,
@@ -17,7 +17,7 @@ class OCamlLetFQNIndex : OCamlBaseFQNIndex<OCamlNamedElement>(Constants.KEY) {
     }
 
     private object Constants {
-        val KEY: StubIndexKey<Int, OCamlNamedElement> =
-            StubIndexKey.createIndexKey("com.ocaml.index.OCamlLetFQNIndex")
+        val KEY: StubIndexKey<String, OCamlNamedElement> =
+            StubIndexKey.createIndexKey("com.ocaml.index.OCamlLowercaseIdentIndex")
     }
 }

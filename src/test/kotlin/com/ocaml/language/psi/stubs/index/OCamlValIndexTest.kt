@@ -10,7 +10,7 @@ class OCamlValIndexTest : BaseIndexTestCase<OCamlNamedElement>() {
         get() = OCamlInterfaceFileStub.Type.builder
 
     @Test
-    fun test_simple_statements() {
+    fun test_simple_fqn_statements() {
         // Test duplicate, nested, and anonymous
         val indexSink = testFQNIndex("A.mli", """
                 val a : unit
@@ -19,6 +19,17 @@ class OCamlValIndexTest : BaseIndexTestCase<OCamlNamedElement>() {
             """)
         assertEquals(2, indexSink.total)
         assertEquals(2, indexSink.count("A.a"))
-        assertEquals(null, indexSink.count("A.X.c"))
+    }
+
+    @Test
+    fun test_simple_statements() {
+        // Test duplicate, nested, and anonymous
+        val indexSink = testIndex("A.mli", """
+                val a : unit
+                val a : unit
+                module X : sig val c : unit end
+            """)
+        assertEquals(2, indexSink.total)
+        assertEquals(2, indexSink.count("a"))
     }
 }
