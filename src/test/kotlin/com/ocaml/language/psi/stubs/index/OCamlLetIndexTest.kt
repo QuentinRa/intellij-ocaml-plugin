@@ -46,7 +46,7 @@ class OCamlLetIndexTest : BaseIndexTestCase<OCamlNamedElement>() {
     @Test
     fun test_simple_statements() {
         // Test duplicate, nested, and anonymous
-        val indexSink = testFQNIndex("A.ml", simpleCode)
+        val indexSink = testIndex("A.ml", simpleCode)
         assertEquals(3, indexSink.total)
         assertEquals(2, indexSink.count("a"))
         assertEquals(1, indexSink.count("c"))
@@ -54,7 +54,7 @@ class OCamlLetIndexTest : BaseIndexTestCase<OCamlNamedElement>() {
 
     @Test
     fun test_pattern_statements() {
-        val indexSink = testFQNIndex("A.ml", patternCode)
+        val indexSink = testIndex("A.ml", patternCode)
         assertEquals(2, indexSink.total)
         assertEquals(1, indexSink.count("a"))
         assertEquals(1, indexSink.count("b"))

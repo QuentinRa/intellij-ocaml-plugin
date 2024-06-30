@@ -32,10 +32,13 @@ abstract class BaseIndexTestCase<T> : OCamlBasePlatformTestCase() where T : PsiE
          */
         override val namedIndexValuesCount : MutableMap<Key, Int> = HashMap()
 
+        abstract fun isValid(namedIndex: Any): Boolean
+
         @Suppress("UNCHECKED_CAST", "UNUSED_VARIABLE")
         override fun <Psi : PsiElement?, K : Any?> occurrence(indexKey: StubIndexKey<K, Psi>, value: K & Any) {
             val namedIndex = indexKey as? StubIndexKey<Key, T> ?: return
             val indexValue = value as? Key ?: return
+            if (!isValid(value)) return
             val count = namedIndexValuesCount[indexValue] ?: 0
             namedIndexValuesCount[indexValue] = count +1
             total++
@@ -47,11 +50,19 @@ abstract class BaseIndexTestCase<T> : OCamlBasePlatformTestCase() where T : PsiE
             val hashCode = key.hashCode()
             return namedIndexValuesCount[hashCode]
         }
+
+        override fun isValid(namedIndex: Any): Boolean {
+            return namedIndex is Int
+        }
     }
 
     private class FakeStubSinkIndex<T> : BaseFakeStubSinkIndex<String, T>() where T : PsiElement {
         override fun count(key: String): Int?  {
             return namedIndexValuesCount[key]
+        }
+
+        override fun isValid(namedIndex: Any): Boolean {
+            return namedIndex is String
         }
     }
 
